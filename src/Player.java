@@ -29,7 +29,32 @@ public class Player {
         return tickets;
     }
     public int getPoints() {
-        for(int )
+        int count = 0;
+        for(Route r : routes) {
+            if(r.getLength() == 1) {
+                count++;
+            }
+            if(r.getLength() == 2) {
+                count +=2; 
+            }
+            if(r.getLength() == 3) {
+                count+=4;
+            }
+            if(r.getLength() == 4) {
+                count+=7;
+
+            }
+            if(r.getLength() == 6) {
+                count+=15;
+            }
+            if(r.getLength() == 8) {
+                count+= 21;
+            }
+          
+            
+
+
+        }
     }
     public ArrayList<Route> getRoutes() {
         return routes;
