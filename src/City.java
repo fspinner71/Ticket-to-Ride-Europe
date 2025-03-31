@@ -4,8 +4,16 @@ public class City
     private ArrayList<Route> routes;
     private int x;
     private int y;
-    private BufferedImage image;
+    private Button cityButton;
 
+    public City(String name, ArrayList<Route> routes, int x, int y, BufferedImage image)
+    {
+        this.name = name;
+        this.routes = routes;
+        this.x = x;
+        this.y = y;
+        this.cityButton = new Button(x, y, , int height, image);
+    }
     public String getName()
     {
         return name;
