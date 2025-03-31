@@ -8,15 +8,118 @@ public class Player {
     private ArrayList<Route> routes;
     private int stations;
 
-    public void addRoute(Route r ) {
 
+    public Player() {
+        trains = 45;
+        trainCards = new int[9];
+        tickets = new ArrayList<>();
+        routes = new ArrayList<>();
+        stations = 3;
+
+
+    }
+    public void addRoute(Route r ) {
+        routes.add(r);
 
     }
     public void addTrainCard(int color) {
+        trainCards[color]++;
+    }
 
+    public void addTicket(Ticket a) {
+        tickets.add(a);
+    }
+    public boolean buyStation(int traincard1) { //if first station
+        if(trainCards[traincard1] > 0) {
+            trainCards[traincard1]--;
+            stations--;
+            return true; 
+        }
+        return false;
+        
+    }
+    public boolean buyStation(int traincard1, int traincard2) { //if seocnd
+        if(trainCards[traincard1] > 0 ) {
+            trainCards[traincard1]--;
+            if(trainCards[traincard2] > 0 ) {
+                trainCards[traincard2]--;
+                stations--;
+            return true; 
+        }
+        trainCards[traincard1]++;
+        return false;
+    }
+    return false;
+}
+    public boolean buyStation(int traincard1, int traincard2, int traincard3) { // if thir d
+        if(trainCards[traincard1] > 0 ) { //idk waht this is
+            trainCards[traincard1]--;
+            if(trainCards[traincard2] > 0 ) {
+                trainCards[traincard2]--; 
+            
+            if(trainCards[traincard3] > 0 ) {
+                trainCards[traincard3]--; 
+                stations--;
+            return true; 
+        }
+        trainCards[traincard2]++;
+        trainCards[traincard1]++;
+        return false;
+    }
+    trainCards[traincard1]++;
+    return false;
+        
+}
+return false;
     }
     
-    
+    public boolean buyRoute(Route p, int locomotivesused, int buyingcolor) { //buying color is what color u tryna buy with if its a grey route
+        //we will make sure buying color is same as route color if route has a color in the game class or wtv so they cant buy like a red route with a blue card
+
+        if(p.isTunnel()) { //if tunnel
+            
+        }
+
+        if(p.getLocomotivesRequired() > 0) { //if it is a fery
+       
+            int length = p.getLength();
+            int num = p.getLocomotivesRequired();
+            if(trainCards[8] < p.getLocomotivesRequired()) {
+                return false; // u dont have enough lcoomotive s
+            }
+
+            int extralocomotives = locomotivesused-num; //the extra num of locomtoives the player used so like the not required ones if they decide to use more
+            int newlength = length - num; // new length
+
+            if(trainCards[buyingcolor] + extralocomotives < newlength) {
+                return false; //u cant buy
+            }
+            else {
+                addRoute(p);
+                trainCards[buyingcolor] -= newlength-extralocomotives; //u buy the route
+                trainCards[8] -= extralocomotives;
+                return true;
+            
+        }
+
+        }//end of if ferry
+        //if regular route
+
+       
+        int length = p.getLength();
+
+        if(trainCards[buyingcolor] + locomotivesused < length) {
+            return false; //u cant buy
+        }
+        else {
+            addRoute(p);
+            trainCards[buyingcolor] -= length-locomotivesused; //u buy the route
+            trainCards[8] -= locomotivesused;
+            return true;
+        
+    }
+
+}
     //sdfsdfsdf
 
     public int getNumTrains() {
@@ -27,6 +130,9 @@ public class Player {
     }
     public ArrayList<Ticket> getTickets() {
         return tickets;
+    }
+    public int getNumStations() {
+        return stations; 
     }
     public int getPoints() {
         int count = 0;
@@ -42,7 +148,6 @@ public class Player {
             }
             if(r.getLength() == 4) {
                 count+=7;
-
             }
             if(r.getLength() == 6) {
                 count+=15;
@@ -50,15 +155,14 @@ public class Player {
             if(r.getLength() == 8) {
                 count+= 21;
             }
-          
-            
-
-
         }
+        return count;
     }
     public ArrayList<Route> getRoutes() {
         return routes;
 
     }
+
+   
 
 }

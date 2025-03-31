@@ -50,11 +50,22 @@ public class Route {
         return length;
     }
 
+    public int getColor() {
+        return color;
+    }
+
     public boolean hasStation() {
         if(stationOwner == null) {
             return false;
         }
     return true;
+    }
+
+    public int getLocomotivesRequired() {
+        return locomotivesRequired;
+    }
+    public boolean isTunnel() {
+        return tunnel;
     }
 
 }
