@@ -12,7 +12,7 @@ public class City
         this.routes = routes;
         this.x = x;
         this.y = y;
-        this.cityButton = new Button(x, y, , int height, image);
+        this.cityButton = new Button(x, y, 50, 50, image);
     }
     public String getName()
     {
