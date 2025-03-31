@@ -1,3 +1,6 @@
+import java.awt.*;
+import java.awt.image.*;
+import java.util.*;
 public class City
 {
     private String name;
