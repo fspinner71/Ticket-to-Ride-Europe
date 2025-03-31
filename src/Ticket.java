@@ -11,4 +11,8 @@ public class Ticket{
     {
         return points;
     }
+    public void setCities(String a, String b)
+    {
+        cities = new String[]{a, b};
+    }
 }
