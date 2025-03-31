@@ -1,9 +1,9 @@
-public class Ticket{
+public class Ticket extends JPanel{
     private String[] cities;
     private int points;
-    private Button[] images = new Button[46];
+    private BufferedImage[] images = new BufferedImage[46];
 
-    public Ticket(String[] cities, int points,)
+    public void paint(Graphics g)
     {
         
     }
