@@ -3,6 +3,15 @@ public class Ticket{
     private int points;
     private Button[] images = new Button[46];
 
+
+
+    public Ticket(String one, String two, int p) {
+
+        setCities(one, two);
+        points = p;
+
+
+    }
     public String[] getCities()
     {
         return cities;
