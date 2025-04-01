@@ -63,7 +63,7 @@ public class Game {
                 
                 
                 Ticket temp = new Ticket(info[0], info[1], points);
-                tickets.push(temp); // add patron
+                tickets.push(temp); // add normal tickets
                 
             }
 
@@ -82,7 +82,7 @@ public class Game {
                 
                 
                 Ticket temp = new Ticket(info[0], info[1], points);
-                bigtickets.push(temp); // add patron
+                bigtickets.push(temp); // add big tickets
                 
             }
             
