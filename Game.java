@@ -7,7 +7,7 @@ public class Game {
     private int currentPlayer;
     private Stack<Ticket> tickets;
     private Stack<Integer> deck;
-    private int turn;
+    public static int turn;
     private int shouldEnd;
     private boolean drawnOne;
     public static final int RED = 0;
@@ -20,7 +20,10 @@ public class Game {
     public static final int BLACK = 7;
     public static final int ANY = 8;
 
-    public static void drawCard(){
+    public Game(){
         
+    }
+    public static void drawCard(){
+
     }
 }
