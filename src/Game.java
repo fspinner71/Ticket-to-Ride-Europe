@@ -1,5 +1,14 @@
-import java.util.Stack;
+import java.awt.*;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.io.*;
+import java.net.URL;
+import java.util.*;
 public class Game {
     private Player players[];
     private City cities[];
@@ -26,4 +35,41 @@ public class Game {
     public static void drawCard(){
 
     }
+
+    public void makeTickets() {
+        tickets = new Stack<Ticket>(); //temporary patron deck that will contain all patrons from the csv file
+     
+        
+        String line; 
+
+        try {
+           
+            URL tem = Game.class.getResource("/csv/csvpatron.csv"); //create file reader
+            BufferedReader r = new BufferedReader(new InputStreamReader(tem.openStream()));
+         
+            while((line = r.readLine()) != null) {
+                String[] info = line.split(","); //array of the stuff in csv file
+                
+               
+                int points;
+
+              
+
+                    points = Integer.parseInt(info[2]); //convert to int
+                
+                
+                Ticket temp = new Ticket(info[0], info[1], points);
+                tickets.push(temp); // add patron
+                
+            }
+            
+        }
+        catch( Exception E){
+            System.out.println("smallticket dont work ");
+          
+        }
+    }
 }
+
+        
+
