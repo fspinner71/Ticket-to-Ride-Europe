@@ -1,5 +1,5 @@
 import java.util.Stack;
-
+import java.util.*;
 public class Game {
     public static Player player1;
 	public static Player player2;
@@ -8,11 +8,10 @@ public class Game {
     private Player players[] = new Player[4];
     private City cities[];
     private Route routes[];
-    private int currentPlayer;
     private Stack<Ticket> tickets = new Stack<Ticket>();
     private Stack<Integer> deck;
     public static int turn = 0;
-    private int shouldEnd;
+    public static int shouldEnd = 0;
     private boolean drawnOne;
     public static final int RED = 0;
     public static final int ORANGE = 1;
