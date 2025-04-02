@@ -12,7 +12,7 @@ public class Game {
     private int currentPlayer;
     private Stack<Ticket> tickets = new Stack<Ticket>();
     private Stack<Ticket> bigtickets = new Stack<Ticket>();
-    private Stack<Integer> deck;
+    public static Stack<Integer> deck;
     public static int turn = 0;
     public static int shouldEnd = 0;
     private boolean drawnOne;
@@ -35,14 +35,21 @@ public class Game {
         players[3] = player4;
 
         deck = new Stack<>();
-        
-
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 12; j++){
+                deck.add(i);
+            }
+        }
+        for(int i = 0; i < 14; i++){
+            deck.add(8);
+        }
+        Collections.shuffle(deck);
         makeTickets();
         distributeTickets();
 
     }
     public static void drawCard(){
-
+        int card = deck.pop();
     }
 
     public void distributeTickets(){ 
@@ -111,6 +118,7 @@ public class Game {
           
         }
     }
+
 }
 
         
