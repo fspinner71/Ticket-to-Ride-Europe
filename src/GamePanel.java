@@ -34,6 +34,13 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
         cityArray = new ArrayList<TempCity>();
         addKeyListener(this);
         addMouseListener(this);
+        addNotify();
+        requestFocus();
+    }
+    public void addNotify()
+    {
+        super.addNotify();
+        requestFocus();
     }
     public void paint(Graphics g)
     {
