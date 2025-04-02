@@ -9,10 +9,9 @@ public class Game {
     private Player players[] = new Player[4];
     private City cities[];
     private Route routes[];
-    private int currentPlayer;
     private Stack<Ticket> tickets = new Stack<Ticket>();
     private Stack<Ticket> bigtickets = new Stack<Ticket>();
-    public static Stack<Integer> deck;
+    public static ArrayList<Integer> deck;
     public static int turn = 0;
     public static int shouldEnd = 0;
     private boolean drawnOne;
@@ -34,7 +33,7 @@ public class Game {
         players[2] = player3;
         players[3] = player4;
 
-        deck = new Stack<>();
+        deck = new ArrayList<Integer>();
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 12; j++){
                 deck.add(i);
@@ -48,8 +47,14 @@ public class Game {
         distributeTickets();
 
     }
-    public static void drawCard(){
-        int card = deck.pop();
+    public void drawCard(){
+        int card = deck.removeFirst(); //CHANGE THIS LATER!!!
+        players[turn].addTrainCard(card);
+        if(card == 9){
+            turn ++;
+            turn = turn % 4;
+        }
+        
     }
 
     public void distributeTickets(){ 
