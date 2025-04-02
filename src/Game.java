@@ -1,11 +1,3 @@
-import java.awt.*;
-
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
@@ -17,6 +9,7 @@ public class Game {
     private Player players[] = new Player[4];
     private City cities[];
     private Route routes[];
+    private int currentPlayer;
     private Stack<Ticket> tickets = new Stack<Ticket>();
     private Stack<Ticket> bigtickets = new Stack<Ticket>();
     private Stack<Integer> deck;
@@ -34,15 +27,40 @@ public class Game {
     public static final int ANY = 8;
 
     public Game(){
+
+
+        players[0] = player1;
+        players[1] = player2;
+        players[2] = player3;
+        players[3] = player4;
+
+        deck = new Stack<>();
         
+
+        makeTickets();
+        distributeTickets();
+
     }
     public static void drawCard(){
 
     }
 
+    public void distributeTickets(){ 
+
+        for(Player a: players) {
+
+            a.addTicket(bigtickets.pop());
+            a.addTicket(tickets.pop());
+            a.addTicket(tickets.pop());
+            a.addTicket(tickets.pop());
+
+        }
+
+    }
+
     public void makeTickets() {
         tickets = new Stack<Ticket>(); //temporary patron deck that will contain all patrons from the csv file
-     
+        bigtickets = new Stack<Ticket>();
         
         String line; 
 
@@ -85,7 +103,8 @@ public class Game {
                 bigtickets.push(temp); // add big tickets
                 
             }
-            
+            Collections.shuffle(bigtickets);
+            Collections.shuffle(tickets);
         }
         catch( Exception E){
             System.out.println("tickets dont work ");
