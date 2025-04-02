@@ -10,11 +10,11 @@ public class Game {
     private City cities[];
     private Route routes[];
     private int currentPlayer;
-    private Stack<Ticket> tickets;
-    private Stack<Ticket> bigtickets;
+    private Stack<Ticket> tickets = new Stack<Ticket>();
+    private Stack<Ticket> bigtickets = new Stack<Ticket>();
     private Stack<Integer> deck;
     public static int turn = 0;
-    private int shouldEnd;
+    public static int shouldEnd = 0;
     private boolean drawnOne;
     public static final int RED = 0;
     public static final int ORANGE = 1;
@@ -81,7 +81,7 @@ public class Game {
                 
                 
                 Ticket temp = new Ticket(info[0], info[1], points);
-                tickets.push(temp); // add patron
+                tickets.push(temp); // add normal tickets
                 
             }
 
@@ -100,7 +100,7 @@ public class Game {
                 
                 
                 Ticket temp = new Ticket(info[0], info[1], points);
-                bigtickets.push(temp); // add patron
+                bigtickets.push(temp); // add big tickets
                 
             }
             Collections.shuffle(bigtickets);
