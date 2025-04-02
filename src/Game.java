@@ -54,7 +54,6 @@ public class Game {
             turn ++;
             turn = turn % 4;
         }
-        
     }
 
     public void distributeTickets(){ 
