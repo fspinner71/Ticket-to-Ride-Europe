@@ -32,6 +32,8 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
     {
         cities = new File("csv/cities.csv");
         cityArray = new ArrayList<TempCity>();
+
+        cities = new File("csv/cities.csv");
         addKeyListener(this);
         addMouseListener(this);
     }
@@ -63,7 +65,6 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
     }
     public void keyPressed(KeyEvent e)
     {
-        System.out.println("hi");
         if(currentCity == null)
         {
             return;
@@ -81,6 +82,13 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
         {
             currentCity.name = currentName;
             cityArray.add(currentCity);
+
+            try {
+                citiesWriter = new FileWriter("csv/cities.csv");
+            } catch (Exception er) {
+                System.out.println("Could not write city");
+            }
+
             currentCity = null;
             currentName = "";
         }
@@ -88,7 +96,7 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
     }
     public void keyTyped(KeyEvent e)
     {
-        if(currentCity != null)
+        if(currentCity != null && e.getKeyChar() != '')
         {
             currentName += e.getKeyChar();
         }

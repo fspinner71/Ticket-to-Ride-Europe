@@ -1,4 +1,4 @@
 public class TempCity {
     public int x, y;
-    public String name;
+    public String name = "";
 }
