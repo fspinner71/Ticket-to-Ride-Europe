@@ -63,6 +63,7 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
     }
     public void keyPressed(KeyEvent e)
     {
+        System.out.println("hi");
         if(currentCity == null)
         {
             return;
