@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class GamePanel extends JPanel implements MouseListener, KeyListener {
+public class EndPanel extends JPanel implements MouseListener, KeyListener {
 
     private static BufferedImage map, city;
     private File cities;
@@ -24,11 +24,11 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
             city = ImageIO.read(GamePanel.class.getResource("/Images/City.png"));
         } catch (Exception e)
         {
-            System.out.println("Failed to load GamePanel images");
+            System.out.println("Failed to load EndPanel images");
         }
     }
 
-    public GamePanel()
+    public EndPanel()
     {
         cities = new File("csv/cities.csv");
         cityArray = new ArrayList<TempCity>();
@@ -37,12 +37,12 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
     }
     public void paint(Graphics g)
     {
-        g.drawImage(map, 0, 0, map.getWidth(), map.getHeight(), null);
+        g.drawImage(map, getWidth()*1/2, 0, map.getWidth()*2/3, map.getHeight()*4/5, null);
 
         for(int i = 0; i < cityArray.size(); i++)
         {
             g.drawImage(city, cityArray.get(i).x - 8, cityArray.get(i).y - 8, 16, 16, null);
-            g.drawString(cityArray.get(i).name, cityArray.get(i).x, cityArray.get(i).y);
+            g.drawString(currentName, cityArray.get(i).x, cityArray.get(i).y);
         }
         if(currentCity != null && currentName != null)
         {
@@ -63,7 +63,6 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
     }
     public void keyPressed(KeyEvent e)
     {
-        System.out.println("hi");
         if(currentCity == null)
         {
             return;
@@ -72,14 +71,10 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
         {
             if(currentName.length() >= 1)
             {
-                String nextName = currentName.substring(0, currentName.length() - 1);
-                System.out.println("FROM: " + currentName + "\nTO:" + nextName + "\n");
-                currentName = nextName;
-                System.out.println(currentName);
+                currentName = currentName.substring(0, currentName.length() - 1);
             }
         } else if(e.getKeyCode() == e.VK_ENTER)
         {
-            currentCity.name = currentName;
             cityArray.add(currentCity);
             currentCity = null;
             currentName = "";
@@ -100,10 +95,4 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
     public void mouseClicked(MouseEvent e) {}
 
     public void keyReleased(KeyEvent e){}
-
-    public void addNotify()
-    {
-        super.addNotify();
-        requestFocus();
-    }
 }

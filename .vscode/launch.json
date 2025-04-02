@@ -6,10 +6,10 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Runner",
+            "name": "EndPanelRunner",
             "request": "launch",
-            "mainClass": "Runner",
-            "projectName": "Ticket-to-Ride-Europe_a21d9962"
+            "mainClass": "EndPanelRunner",
+            "projectName": "Ticket-to-Ride-Europe_ff0b08dc"
         },
         {
             "type": "java",
