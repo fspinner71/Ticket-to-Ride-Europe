@@ -54,7 +54,6 @@ public class Game {
             turn ++;
             turn = turn % 4;
         }
-        
     }
 
     public void distributeTickets(){ 
@@ -69,6 +68,10 @@ public class Game {
         }
 
     }
+    public void placeStation(){
+
+    }
+    
 
     public void makeTickets() {
         tickets = new Stack<Ticket>(); //temporary patron deck that will contain all patrons from the csv file
