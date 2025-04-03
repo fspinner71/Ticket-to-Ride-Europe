@@ -72,7 +72,6 @@ public class Game {
 
     }
     
-
     public void makeTickets() {
         tickets = new Stack<Ticket>(); //temporary patron deck that will contain all patrons from the csv file
         bigtickets = new Stack<Ticket>();
@@ -126,7 +125,9 @@ public class Game {
           
         }
     }
-
+    public void allPoints(){
+        
+    }
 }
 
         

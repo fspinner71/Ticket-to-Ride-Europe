@@ -57,20 +57,19 @@ public class Player {
             if(trainCards[traincard2] > 0 ) {
                 trainCards[traincard2]--; 
             
-            if(trainCards[traincard3] > 0 ) {
-                trainCards[traincard3]--; 
-                stations--;
-            return true; 
+                if(trainCards[traincard3] > 0 ) {
+                    trainCards[traincard3]--; 
+                    stations--;
+                return true; 
+                }
+            trainCards[traincard2]++;
+            trainCards[traincard1]++;
+            return false;
+            }
+            trainCards[traincard1]++;
+            return false;
         }
-        trainCards[traincard2]++;
-        trainCards[traincard1]++;
         return false;
-    }
-    trainCards[traincard1]++;
-    return false;
-        
-}
-return false;
     }
     
     public boolean buyRoute(Route p, int locomotivesused, int buyingcolor) { //buying color is what color u tryna buy with if its a grey route
@@ -98,9 +97,9 @@ return false;
                 addRoute(p);
                 trainCards[buyingcolor] -= newlength-extralocomotives; //u buy the route
                 trainCards[8] -= extralocomotives;
+                trains -= newlength;
                 return true;
-            
-        }
+            }
 
         }//end of if ferry
         //if regular route
@@ -115,11 +114,12 @@ return false;
             addRoute(p);
             trainCards[buyingcolor] -= length-locomotivesused; //u buy the route
             trainCards[8] -= locomotivesused;
+            trains -= length;
             return true;
         
-    }
+        }
 
-}
+    }
     //sdfsdfsdf
 
     public int getNumTrains() {
