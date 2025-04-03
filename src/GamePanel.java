@@ -30,12 +30,17 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
 
     public GamePanel()
     {
-        cities = new File("csv/cities.csv");
         cityArray = new ArrayList<TempCity>();
 
-        cities = new File("csv/cities.csv");
+        cities = new File("c:\\Users\\k1210611\\Downloads\\TTREurope\\Ticket-to-Ride-Europe\\src\\csv\\cities.csv");
         addKeyListener(this);
         addMouseListener(this);
+
+        try {
+            citiesWriter = new FileWriter("c:\\Users\\k1210611\\Downloads\\TTREurope\\Ticket-to-Ride-Europe\\src\\csv\\cities.csv");
+        } catch (Exception er) {
+            System.out.println(er);
+        }
     }
     public void paint(Graphics g)
     {
@@ -65,6 +70,18 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
     }
     public void keyPressed(KeyEvent e)
     {
+
+        if(e.getKeyCode() == e.VK_ESCAPE)
+        {
+            try{
+                citiesWriter.flush();
+                citiesWriter.close();
+                return;
+            } catch(Exception sfsdf)
+            {
+                System.out.println(e);
+            }
+        }
         if(currentCity == null)
         {
             return;
@@ -74,7 +91,6 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
             if(currentName.length() >= 1)
             {
                 String nextName = currentName.substring(0, currentName.length() - 1);
-                System.out.println("FROM: " + currentName + "\nTO:" + nextName + "\n");
                 currentName = nextName;
                 System.out.println(currentName);
             }
@@ -84,7 +100,7 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
             cityArray.add(currentCity);
 
             try {
-                citiesWriter = new FileWriter("csv/cities.csv");
+                citiesWriter.append(currentCity.name + "," + currentCity.x + "," + currentCity.y + ",");
             } catch (Exception er) {
                 System.out.println("Could not write city");
             }
