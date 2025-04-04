@@ -21,6 +21,7 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
     private ArrayList<TempCity> cityArray;
     private TempCity currentCity;
     private String currentName; 
+    private Track t;
     private Game game;
     static {
         try
@@ -112,6 +113,8 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
 
     public GamePanel()
     {
+
+        t = new Track(0, 500, 300, 0);
         cities = new File("csv/cities.csv");
         cityArray = new ArrayList<TempCity>();
 
@@ -122,6 +125,7 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
     }
     public void paint(Graphics g)
     {
+        super.paint(g);
         g.drawImage(map, 0, 0, map.getWidth(), map.getHeight(), null);
 
         for(int i = 0; i < cityArray.size(); i++)
@@ -134,15 +138,23 @@ public class GamePanel extends JPanel implements MouseListener, KeyListener {
             g.drawImage(city, currentCity.x - 8, currentCity.y - 8, 16, 16, null);
             g.drawString(currentName, currentCity.x, currentCity.y);
         }
+        t.paint((Graphics2D)g);
     }
     public void mousePressed(MouseEvent e)
     {
-        if(currentCity == null)
+        if(e.getButton() == MouseEvent.BUTTON1)
         {
-            currentCity = new TempCity();
-            currentCity.x = e.getX();
-            currentCity.y = e.getY();
-            currentName = "";
+            if(currentCity == null)
+            {
+                currentCity = new TempCity();
+                currentCity.x = e.getX();
+                currentCity.y = e.getY();
+                currentName = "";
+            }
+        } else if(e.getButton() == MouseEvent.BUTTON3)
+        {
+            t.rotate((float)Math.toRadians(5));
+            System.out.println(t.getRotation());
         }
         repaint();
     }
