@@ -6,7 +6,7 @@ public class City
     private ArrayList<Route> routes;
     private int x;
     private int y;
-    private Button cityButton;
+    private Button button;
 
     public City(String name, ArrayList<Route> routes, int x, int y, BufferedImage image)
     {
@@ -14,7 +14,7 @@ public class City
         this.routes = routes;
         this.x = x;
         this.y = y;
-        this.cityButton = new Button(x, y, 50, 50, image);
+        this.button = new Button(x, y, 50, 50, image);
     }
     public String getName()
     {
@@ -34,5 +34,9 @@ public class City
     public int getYCoord()
     {
         return y;
+    }
+
+    public Button getButton() {
+        return button;
     }
 }

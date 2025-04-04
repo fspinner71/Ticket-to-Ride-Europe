@@ -24,4 +24,10 @@ public class Ticket{
     {
         cities = new String[]{a, b};
     }
+
+    static {
+
+
+        
+    }
 }

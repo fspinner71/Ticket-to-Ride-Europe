@@ -2,10 +2,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 public class Game {
-    public static Player player1;
-	public static Player player2;
-	public static Player player3;
-	public static Player player4;
+ 
     private Player players[] = new Player[4];
     private City cities[];
     private Route routes[];
@@ -16,10 +13,10 @@ public class Game {
     public static int shouldEnd = 0;
     private boolean drawnOne;
     public static final int RED = 0;
-    public static final int ORANGE = 1;
+    public static final int BLUE = 1;
     public static final int YELLOW = 2;
     public static final int GREEN = 3;
-    public static final int BLUE = 4;
+    public static final int ORANGE = 4;
     public static final int PINK = 5;
     public static final int WHITE = 6;
     public static final int BLACK = 7;
@@ -28,10 +25,10 @@ public class Game {
     public Game(){
 
 
-        players[0] = player1;
-        players[1] = player2;
-        players[2] = player3;
-        players[3] = player4;
+        players[0] = new Player();
+        players[1] = new Player();
+        players[2] = new Player();
+        players[3] = new Player();
 
         deck = new ArrayList<Integer>();
         for(int i = 0; i < 8; i++){
@@ -66,6 +63,7 @@ public class Game {
             a.addTicket(tickets.pop());
 
         }
+
 
     }
     public void placeStation(){
