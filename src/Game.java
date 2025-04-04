@@ -1,11 +1,13 @@
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import jdk.jshell.DeclarationSnippet;
 public class Game {
  
     private Player players[] = new Player[4];
     private City cities[];
     private Route routes[];
+    private int cards[];
     private Stack<Ticket> tickets = new Stack<Ticket>();
     private Stack<Ticket> bigtickets = new Stack<Ticket>();
     public static ArrayList<Integer> deck;
@@ -37,21 +39,60 @@ public class Game {
             }
         }
         for(int i = 0; i < 14; i++){
-            deck.add(8);
+            deck.add(ANY);
         }
         Collections.shuffle(deck);
+        
+        cards = new int[5]; //make cards
+        for(int c = 0 ; c < 5; c++) {
+            cards[c] = deck.get(0);
+            deck.remove(0);
+        }
+
         makeTickets();
         distributeTickets();
 
     }
-    public void drawCard(){
-        int card = deck.removeFirst(); //CHANGE THIS LATER!!!
-        players[turn].addTrainCard(card);
-        if(card == 9){
-            turn ++;
-            turn = turn % 4;
+    public void drawCard(int index ){ //0-4 is the face up cards, 5 is the deck/facedown card
+
+        if(index == 5) {
+            int card = deck.get(0); 
+            players[turn].addTrainCard(card);
+            if(card == ANY){ //if locomotive 
+                turn ++; //end turn
+                turn = turn % 4;
         }
+
     }
+        else { 
+
+            if(drawnOne == false) { //firs tturn
+                int card = cards[index];
+                if(card == ANY) { //if locomotive 
+                    players[turn].addTrainCard(card);
+                    replaceCard(index);
+                    turn++; 
+                    turn = turn % 4;
+                }
+                else { //colored card
+                    players[turn].addTrainCard(card);
+                    replaceCard(index);
+                    drawnOne = true;
+
+                }
+
+
+            }
+
+
+        }
+
+        }
+
+
+        
+    
+
 
     public void distributeTickets(){ 
 
@@ -125,6 +166,14 @@ public class Game {
     }
     public void allPoints(){
         
+    }
+
+    public void replaceCard(int index) { //method to replace face up card with face down card
+        if(deck.isEmpty() == false) {
+            cards[index] = deck.get(0);
+            deck.remove(0);
+        }
+
     }
 }
 
