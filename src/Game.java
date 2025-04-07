@@ -54,20 +54,40 @@ public class Game {
 
     }
     public void drawCard(int index ){ //0-4 is the face up cards, 5 is the deck/facedown card
-
+        int card;
         if(index == 5) {
-            int card = deck.get(0); 
+          if(deck.isEmpty() == false) {   card = deck.get(0); }
+          else {
+            //error
+            return;
+          }
+
+  
+           
+            if(drawnOne == false ) {
+                
+                players[turn].addTrainCard(card);
+                deck.remove(0);
+                drawnOne = true;
+
+            }
+            else if(drawnOne  == true) { // u end the turn 
             players[turn].addTrainCard(card);
-            if(card == ANY){ //if locomotive 
-                turn ++; //end turn
-                turn = turn % 4;
+            deck.remove(0);
+            drawnOne = false;
+            turn++; 
+            turn = turn % 4;
+        
+          
+
+
         }
 
     }
         else { 
 
             if(drawnOne == false) { //firs tturn
-                int card = cards[index];
+                 card = cards[index];
                 if(card == ANY) { //if locomotive 
                     players[turn].addTrainCard(card);
                     replaceCard(index);
@@ -82,17 +102,89 @@ public class Game {
                 }
 
 
+            }   
+
+        else if(drawnOne == true) { //if second turn 
+             card = cards[index];
+                if(card == ANY) { //if locomotive 
+                    //do error
+                    
+                }
+                else { //any other card and then u end the turnrnrnrnrnr
+                    players[turn].addTrainCard(card);
+                    replaceCard(index);
+                    drawnOne = false;
+                    turn++; 
+                    turn = turn % 4;
+                    
+                }
+
+
+        }
+
+
+        }
+
+        }
+
+
+    public void drawTicket()    {
+
+
+
+
+    }
+
+    public void buyRoute(Route p, int locomotivesused, int buyingcolor) { // except tunel
+
+        if(locomotivesused < players[turn].getNumLocomotives()) { //if they dont even have enough locomotivs 
+            //error panel
+           
+
+        }
+        else if (p.getColor() != ANY && p.getColor() != buyingcolor) { //if route is not a grey route and the color doesnt match what they tryna buy wth yk
+            //error pael
+        }
+
+
+        else {
+            boolean a = players[turn].buyRoute(p, locomotivesused, buyingcolor);
+            if(a) { // if they buy the route mvoe the turn
+                turn++; 
+            turn = turn % 4;
+
+
             }
-
-
         }
-
-        }
-
-
         
-    
 
+
+    }
+/* idk how we should do 
+    public boolean buyTunnel(Route p, int locomotivesused, int buyingcolor) { //returns true if u succesfully buy it reutnr false if at least one card matches 
+        int[] threecards = new int[3];
+            for(int c  = 0; c < 3; c++) { //get the 3 drawn cards from the deck, if deck is empty and u cant draw it then it becomes -1;
+                if(deck.isEmpty() == false) {
+                threecards[c] = deck.get(0);
+                }
+                else {
+                    threecards[c] = -1;
+                }
+            }
+            int nummatching = 0;
+            for(int c = 0; c < threecards[c]; c++){ 
+                if(threecards[c] == buyingcolor) {
+                    nummatching++; // how many cards match
+                }
+
+            
+            }
+            if(nummatching > 0) {
+                return false;
+            }
+    }
+    
+*/
 
     public void distributeTickets(){ 
 
