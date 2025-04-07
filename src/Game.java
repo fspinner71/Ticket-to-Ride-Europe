@@ -61,9 +61,9 @@ public class Game {
             if(card == ANY){ //if locomotive 
                 turn ++; //end turn
                 turn = turn % 4;
-        }
+            }
 
-    }
+        }
         else { 
 
             if(drawnOne == false) { //firs tturn
@@ -87,12 +87,7 @@ public class Game {
 
         }
 
-        }
-
-
-        
-    
-
+    }
 
     public void distributeTickets(){ 
 
