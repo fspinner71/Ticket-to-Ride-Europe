@@ -1,17 +1,26 @@
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.*;
+import java.io.*;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class GamePanel extends JPanel implements MouseListener {
+public class GamePanel extends JPanel implements MouseListener, KeyListener {
 
     private static BufferedImage map, city, deck, ticket;
     public static BufferedImage[] tracks, tunnelTracks, cards, buttons;
     public static BufferedImage bottomBar, leftBar, rightBar, upArrow, errorWindow, notebookPaper, textBoxLarge, textBoxSmall;     
     public static BufferedImage[] stations, owns;
-    public static BufferedImage locomotiveTrack, locomotiveTunnelTrack; //extra stuff 
+    public static BufferedImage locomotiveTrack, locomotiveTunnelTrack; //extra stuff
+    private File cities;
+    private PrintWriter writer;
+    private ArrayList<TempCity> cityArray;
+    private TempCity currentCity;
+    private String currentName; 
     private Game game;
     static {
         try
@@ -103,21 +112,105 @@ public class GamePanel extends JPanel implements MouseListener {
 
     public GamePanel()
     {
+        cities = new File("c:\\Users\\k1210611\\Downloads\\TTREurope\\Ticket-to-Ride-Europe\\csv\\cities.csv");
+        cityArray = new ArrayList<TempCity>();
+        try {
+            writer = new PrintWriter("cities.csv", "UTF-8");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         game = new Game();
+        addKeyListener(this);
         addMouseListener(this);
     }
     public void paint(Graphics g)
     {
-        
+        super.paint(g);
+        g.drawImage(map, 0, 0, map.getWidth(), map.getHeight(), null);
+
+        for(int i = 0; i < cityArray.size(); i++)
+        {
+            g.drawImage(city, cityArray.get(i).x - 8, cityArray.get(i).y - 8, 16, 16, null);
+            g.drawString(cityArray.get(i).name, cityArray.get(i).x, cityArray.get(i).y);
+        }
+        if(currentCity != null && currentName != null)
+        {
+            g.drawImage(city, currentCity.x - 8, currentCity.y - 8, 16, 16, null);
+            g.drawString(currentName, currentCity.x, currentCity.y);
+        }
     }
     public void mousePressed(MouseEvent e)
     {
-        
+        if(e.getButton() == MouseEvent.BUTTON1)
+        {
+            if(currentCity == null)
+            {
+                currentCity = new TempCity();
+                currentCity.x = e.getX();
+                currentCity.y = e.getY();
+                currentName = "";
+            }
+        }
         repaint();
     }
-    
+    public void keyPressed(KeyEvent e)
+    {
+        if(e.getKeyCode() == e.VK_ESCAPE)
+        {
+            try {
+                
+                writer.close();
+            } catch (Exception er) {
+                System.out.println(er);
+            }
+        }
+        if(currentCity == null)
+        {
+            return;
+        }
+        if(e.getKeyCode() == e.VK_BACK_SPACE)
+        {
+            if(currentName.length() >= 1)
+            {
+                String nextName = currentName.substring(0, currentName.length() - 1);
+                System.out.println("FROM: " + currentName + "\nTO:" + nextName + "\n");
+                currentName = nextName;
+                System.out.println(currentName);
+            }
+        } else if(e.getKeyCode() == e.VK_ENTER)
+        {
+            currentCity.name = currentName;
+            cityArray.add(currentCity);
+
+            try {
+                writer.append(currentName + "," + currentCity.x + "," + currentCity.y + ",");
+            } catch (Exception er) {
+                System.out.println("Could not write city");
+            }
+
+            currentCity = null;
+            currentName = "";
+        }
+        repaint();
+    }
+    public void keyTyped(KeyEvent e)
+    {
+        if(currentCity != null && e.getKeyChar() != '')
+        {
+            currentName += e.getKeyChar();
+        }
+        repaint();
+    }
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
     public void mouseClicked(MouseEvent e) {}
+
+    public void keyReleased(KeyEvent e){}
+
+    public void addNotify()
+    {
+        super.addNotify();
+        requestFocus();
+    }
 }
