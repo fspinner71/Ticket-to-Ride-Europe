@@ -23,6 +23,7 @@ public class Game {
     public static final int WHITE = 6;
     public static final int BLACK = 7;
     public static final int ANY = 8;
+    public static ArrayList<Integer> discardPile;
 
     public Game(){
 
