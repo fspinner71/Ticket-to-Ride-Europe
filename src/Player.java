@@ -96,6 +96,9 @@ public class Player {
             else {
                 addRoute(p);
                 trainCards[buyingcolor] -= newlength-extralocomotives; //u buy the route
+                for(int i = 0; i < newlength-extralocomotives; i++){
+                    Game.discardPile.add(buyingcolor);
+                }
                 trainCards[8] -= extralocomotives;
                 trains -= newlength;
                 return true;
@@ -113,6 +116,9 @@ public class Player {
         else {
             addRoute(p);
             trainCards[buyingcolor] -= length-locomotivesused; //u buy the route
+            for(int i = 0; i < length-locomotivesused; i++){
+                Game.discardPile.add(buyingcolor);
+            }
             trainCards[8] -= locomotivesused;
             trains -= length;
             return true;
