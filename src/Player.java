@@ -29,13 +29,13 @@ public class Player {
     public void addTicket(Ticket a) {
         tickets.add(a);
     }
-    public boolean buyStation(int traincard1) { //if first station
-        if(trainCards[traincard1] > 0) {
-            trainCards[traincard1]--;
-            stations--;
-            return true; 
-        }
-        return false;
+//     public boolean buyStation(int traincard1) { //if first station
+//         if(trainCards[traincard1] > 0) {
+//             trainCards[traincard1]--;
+//             stations--;
+//             return true; 
+//         }
+//         return false;
         
     }
     public boolean buyStation(int traincard1, int traincard2) { //if seocnd
@@ -44,13 +44,13 @@ public class Player {
             if(trainCards[traincard2] > 0 && traincard2 == traincard1) {
                 trainCards[traincard2]--;
                 stations--;
-                return true; 
-            }
-            trainCards[traincard1]++;
-            return false;
+            return true; 
         }
+        trainCards[traincard1]++;
         return false;
     }
+    return false;
+}
     public boolean buyStation(int traincard1, int traincard2, int traincard3) { // if thir d
         if(trainCards[traincard1] > 0 ) { //idk waht this is
             trainCards[traincard1]--;
@@ -60,17 +60,18 @@ public class Player {
                 if(trainCards[traincard3] > 0 && traincard3 == traincard2) {
                     trainCards[traincard3]--; 
                     stations--;
-                    return true; 
+                return true; 
                 }
-                trainCards[traincard2]++;
-                trainCards[traincard1]++;
-                return false;
+            trainCards[traincard2]++;
+            trainCards[traincard1]++;
+            return false;
             }
             trainCards[traincard1]++;
             return false;
         }
         return false;
     }
+
     
     public boolean buyRoute(Route p, int locomotivesused, int buyingcolor) { //buying color is what color u tryna buy with if its a grey route
         //we will make sure buying color is same as route color if route has a color in the game class or wtv so they cant buy like a red route with a blue card
