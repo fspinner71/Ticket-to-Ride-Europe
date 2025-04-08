@@ -266,7 +266,9 @@ public class Game {
         }
     }
     public void allPoints(){
-        
+        for(int i = 0; i < 4; i++){
+            players[i].addPoints(countTickets(players[i]));
+        }
     }
 
     public void replaceCard(int index) { //method to replace face up card with face down card
@@ -278,18 +280,20 @@ public class Game {
     }
 
 
-                                                                                                                                                public int countTickets(Player a) { 
-int score = 0;
-                                                                                                                                          for(Ticket b : a.getTickets()) {
+    public int countTickets(Player a) { 
+        int score = 0;
+        for(Ticket b : a.getTickets()) {
 
 
 
 
 
         }
-                                                                                                                                                    return score;
+        return score;
     }
-
+    public int longestRoute(){
+        
+    }
     
 }
 
