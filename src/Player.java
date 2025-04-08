@@ -41,30 +41,30 @@ public class Player {
     public boolean buyStation(int traincard1, int traincard2) { //if seocnd
         if(trainCards[traincard1] > 0 ) {
             trainCards[traincard1]--;
-            if(trainCards[traincard2] > 0 ) {
+            if(trainCards[traincard2] > 0 && traincard2 == traincard1) {
                 trainCards[traincard2]--;
                 stations--;
-            return true; 
+                return true; 
+            }
+            trainCards[traincard1]++;
+            return false;
         }
-        trainCards[traincard1]++;
         return false;
     }
-    return false;
-}
     public boolean buyStation(int traincard1, int traincard2, int traincard3) { // if thir d
         if(trainCards[traincard1] > 0 ) { //idk waht this is
             trainCards[traincard1]--;
-            if(trainCards[traincard2] > 0 ) {
+            if(trainCards[traincard2] > 0 && traincard2 == traincard1) {
                 trainCards[traincard2]--; 
             
-                if(trainCards[traincard3] > 0 ) {
+                if(trainCards[traincard3] > 0 && traincard3 == traincard2) {
                     trainCards[traincard3]--; 
                     stations--;
-                return true; 
+                    return true; 
                 }
-            trainCards[traincard2]++;
-            trainCards[traincard1]++;
-            return false;
+                trainCards[traincard2]++;
+                trainCards[traincard1]++;
+                return false;
             }
             trainCards[traincard1]++;
             return false;
