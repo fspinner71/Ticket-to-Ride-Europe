@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public class Route {
 
     private City a, b;
@@ -9,6 +11,7 @@ public class Route {
     private boolean stationStart;
     private Player player;
     private Button[] buttons;
+    private Track[] tracks;
 
 
 
@@ -24,6 +27,8 @@ public class Route {
         stationOwner = null;
         player = null;
         stationStart = false;
+
+        tracks = new Track[length];
     }
     private void addPlayer(Player a) {
 
@@ -67,5 +72,28 @@ public class Route {
     public boolean isTunnel() {
         return tunnel;
     }
+    public void paint(Graphics g)
+    {
+        for(int i = 0; i < length; i++) {
+            if (tracks[i] != null) {
+                tracks[i].paint(g);
+            }
+        }
+    }
 
+    public void addTrack(Track t)
+    {
+        for(int i = 0; i < tracks.length; i++)
+        {
+            if(tracks[i] == null) {
+                tracks[i] = t;
+                break;
+            }
+        }
+    }
+    public void changeSize(int size) {
+        length = size;
+        Track[] newTracks = new Track[size];
+        tracks = newTracks;
+    }
 }

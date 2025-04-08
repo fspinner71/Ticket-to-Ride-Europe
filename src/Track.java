@@ -6,42 +6,58 @@ public class Track {
     private static final int WIDTH = 60;
     private static final int HEIGHT = 20;
     private static BufferedImage tracks[];
+    private static BufferedImage tunnelTracks[];
     private int color;
     private int x, y;
     private float rotation;
+    private boolean tunnel;
 
     static {
         tracks = new BufferedImage[9];
+        tunnelTracks = new BufferedImage[9];
         try {
-            tracks[Game.RED] = ImageIO.read(GamePanel.class.getResource("/Images/RedTrack.png")); 
-            tracks[Game.ORANGE] = ImageIO.read(GamePanel.class.getResource("/Images/OrangeTrack.png"));
-            tracks[Game.YELLOW] = ImageIO.read(GamePanel.class.getResource("/Images/YellowTrack.png")); 
-            tracks[Game.GREEN] = ImageIO.read(GamePanel.class.getResource("/Images/GreenTrack.png")); 
-            tracks[Game.BLUE] = ImageIO.read(GamePanel.class.getResource("/Images/BlueTrack.png")); 
-            tracks[Game.PINK] = ImageIO.read(GamePanel.class.getResource("/Images/PinkTrack.png")); 
-            tracks[Game.WHITE] = ImageIO.read(GamePanel.class.getResource("/Images/WhiteTrack.png")); 
-            tracks[Game.BLACK] = ImageIO.read(GamePanel.class.getResource("/Images/BlackTrack.png")); 
-            tracks[Game.ANY] = ImageIO.read(GamePanel.class.getResource("/Images/GrayTrack.png")); 
+            tracks[Game.RED] = ImageIO.read(Track.class.getResource("/Images/RedTrack.png")); 
+            tracks[Game.ORANGE] = ImageIO.read(Track.class.getResource("/Images/OrangeTrack.png"));
+            tracks[Game.YELLOW] = ImageIO.read(Track.class.getResource("/Images/YellowTrack.png")); 
+            tracks[Game.GREEN] = ImageIO.read(Track.class.getResource("/Images/GreenTrack.png")); 
+            tracks[Game.BLUE] = ImageIO.read(Track.class.getResource("/Images/BlueTrack.png")); 
+            tracks[Game.PINK] = ImageIO.read(Track.class.getResource("/Images/PinkTrack.png")); 
+            tracks[Game.WHITE] = ImageIO.read(Track.class.getResource("/Images/WhiteTrack.png")); 
+            tracks[Game.BLACK] = ImageIO.read(Track.class.getResource("/Images/BlackTrack.png")); 
+            tracks[Game.ANY] = ImageIO.read(Track.class.getResource("/Images/GrayTrack.png")); 
+
+            //tunnel track
+            tunnelTracks = new BufferedImage[9];
+            tunnelTracks[Game.BLUE] = ImageIO.read(Track.class.getResource("/Images/BlueTunnelTrack.png"));
+            tunnelTracks[Game.RED] = ImageIO.read(Track.class.getResource("/Images/RedTunnelTrack.png"));
+            tunnelTracks[Game.ORANGE] = ImageIO.read(Track.class.getResource("/Images/OrangeTunnelTrack.png"));
+            tunnelTracks[Game.YELLOW] = ImageIO.read(Track.class.getResource("/Images/YellowTunnelTrack.png"));
+            tunnelTracks[Game.GREEN] = ImageIO.read(Track.class.getResource("/Images/GreenTunnelTrack.png"));
+            tunnelTracks[Game.PINK] = ImageIO.read(Track.class.getResource("/Images/PinkTunnelTrack.png"));
+            tunnelTracks[Game.WHITE] = ImageIO.read(Track.class.getResource("/Images/WhiteTunnelTrack.png"));
+            tunnelTracks[Game.BLACK] = ImageIO.read(Track.class.getResource("/Images/BlackTunnelTrack.png"));
+            tunnelTracks[Game.ANY] = ImageIO.read(Track.class.getResource("/Images/GrayTunnelTrack.png"));
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
-    public Track(int color, int x, int y, float rotation) 
-    {
+    public Track(int color, int x, int y, float rotation, boolean tunnel) {
         this.color = color;
         this.x = x;
         this.y = y;
         this.rotation = rotation;
+        this.tunnel = tunnel;
     }
 
-    public void paint(Graphics2D g) 
+    public void paint(Graphics g) 
     {
-        AffineTransform backup = g.getTransform();
+        Graphics2D g2 = (Graphics2D) g;
+        AffineTransform backup = g2.getTransform();
         AffineTransform a = AffineTransform.getRotateInstance(rotation, x, y);
-        g.setTransform(a);
-        g.drawImage(tracks[color], x - WIDTH/2, y - HEIGHT/2, WIDTH, HEIGHT, null);
-        g.setTransform(backup);
+        g2.setTransform(a);
+        g2.drawImage(tracks[color], x - WIDTH/2, y - HEIGHT/2, WIDTH, HEIGHT, null);
+        g2.setTransform(backup);
     }
     public void setRotation(float rotation) {
         this.rotation = rotation;

@@ -1,18 +1,31 @@
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.*;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
-public class GamePanel extends JPanel implements MouseListener {
+public class GamePanel extends JPanel implements MouseListener,KeyListener {
 
     private static BufferedImage map, city, deck, ticket;
-    public static BufferedImage[] tracks, tunnelTracks, cards, buttons;
+    public static BufferedImage[] cards, buttons;
     public static BufferedImage bottomBar, leftBar, rightBar, upArrow, errorWindow, notebookPaper, textBoxLarge, textBoxSmall;     
     public static BufferedImage[] stations, owns;
     public static BufferedImage locomotiveTrack, locomotiveTunnelTrack; //extra stuff 
+    public static final int MAP_X = 305;
+    public static final int MAP_Y = -10;
     private Game game;
+
+    private City city1, city2;
+    private int currentSize;
+    private boolean tunnel;
+    private boolean flipped;
+    private int locomotives;
+    private int color;
+    private int step;
+
     static {
         try
         {
@@ -48,32 +61,6 @@ public class GamePanel extends JPanel implements MouseListener {
             cards[Game.WHITE] = ImageIO.read(GamePanel.class.getResource("/Images/WhiteCard.png"));
             cards[Game.BLACK] = ImageIO.read(GamePanel.class.getResource("/Images/BlackCard.png"));
             cards[Game.ANY] = ImageIO.read(GamePanel.class.getResource("/Images/Locomotive.png"));
-   
-
-            //tracks
-            tracks = new BufferedImage[9];
-            tracks[Game.BLUE] = ImageIO.read(GamePanel.class.getResource("/Images/BlueTrack.png"));
-            tracks[Game.RED]= ImageIO.read(GamePanel.class.getResource("/Images/RedTrack.png"));
-            tracks[Game.ORANGE] = ImageIO.read(GamePanel.class.getResource("/Images/OrangeTrack.png"));
-            tracks[Game.YELLOW] = ImageIO.read(GamePanel.class.getResource("/Images/YellowTrack.png"));
-            tracks[Game.GREEN] = ImageIO.read(GamePanel.class.getResource("/Images/GreenTrack.png"));
-            tracks[Game.PINK] = ImageIO.read(GamePanel.class.getResource("/Images/PinkTrack.png"));
-            tracks[Game.WHITE]= ImageIO.read(GamePanel.class.getResource("/Images/WhiteTrack.png"));
-            tracks[Game.BLACK] = ImageIO.read(GamePanel.class.getResource("/Images/BlackTrack.png"));
-            tracks[Game.ANY] = ImageIO.read(GamePanel.class.getResource("/Images/GrayTrack.png"));
-
-            //tunnel track
-            tunnelTracks = new BufferedImage[9];
-            tunnelTracks[Game.BLUE] = ImageIO.read(GamePanel.class.getResource("/Images/BlueTunnelTrack.png"));
-            tunnelTracks[Game.RED] = ImageIO.read(GamePanel.class.getResource("/Images/RedTunnelTrack.png"));
-            tunnelTracks[Game.ORANGE] = ImageIO.read(GamePanel.class.getResource("/Images/OrangeTunnelTrack.png"));
-            tunnelTracks[Game.YELLOW] = ImageIO.read(GamePanel.class.getResource("/Images/YellowTunnelTrack.png"));
-            tunnelTracks[Game.GREEN] = ImageIO.read(GamePanel.class.getResource("/Images/GreenTunnelTrack.png"));
-            tunnelTracks[Game.PINK] = ImageIO.read(GamePanel.class.getResource("/Images/PinkTunnelTrack.png"));
-            tunnelTracks[Game.WHITE] = ImageIO.read(GamePanel.class.getResource("/Images/WhiteTunnelTrack.png"));
-            tunnelTracks[Game.BLACK] = ImageIO.read(GamePanel.class.getResource("/Images/BlackTunnelTrack.png"));
-            tunnelTracks[Game.ANY] = ImageIO.read(GamePanel.class.getResource("/Images/GrayTunnelTrack.png"));
-
 
             //gui stuf f
             bottomBar = ImageIO.read(GamePanel.class.getResource("/Images/BottomBar.png"));
@@ -105,19 +92,115 @@ public class GamePanel extends JPanel implements MouseListener {
     {
         game = new Game();
         addMouseListener(this);
+        addKeyListener(this);
     }
+    @Override
     public void paint(Graphics g)
     {
-        
+        g.drawImage(map, MAP_X, MAP_Y, map.getWidth(), map.getHeight(), null);
+        g.drawImage(bottomBar, getWidth()/2 - bottomBar.getWidth()/2, getHeight() - bottomBar.getHeight(), bottomBar.getWidth(), bottomBar.getHeight(), null);
+        g.drawImage(leftBar, 0, 0, leftBar.getWidth(), leftBar.getHeight(),null);
+        g.drawImage(rightBar, getWidth() - rightBar.getWidth(), 0, rightBar.getWidth(), rightBar.getHeight(),null);
+
+        ArrayList<City> cities = game.getCities();
+        for(int i = 0; i < cities.size(); i++)
+        {
+            cities.get(i).paint(g);
+        }
     }
     public void mousePressed(MouseEvent e)
     {
-        
+        if(e.getButton() == MouseEvent.BUTTON1)
+        {
+            int x = e.getX();
+            int y = e.getY();
+            for(int i = 0; i < game.getCities().size(); i++)
+            {
+                City city = game.getCities().get(i);
+                if(city.getButton().isInside(x, y))
+                {
+                    if(step == 0) //select first city
+                    {
+                        city1 = city;
+                        step++;
+                    }
+                    else if(step == 1) //select second city
+                    {
+                        city2 = city;
+                        step++;
+                    }
+
+                    break;
+                }
+            }
+        }
         repaint();
+    }
+
+    public void keyPressed(KeyEvent e) {
+
+        if(e.getKeyCode() == KeyEvent.VK_ENTER)
+        {
+            step++;
+            if(step >= 7)
+            {
+                Route r = new Route(city1, city2, currentSize, tunnel, locomotives);
+                step = 0;
+            }
+            return;
+        }
+        if(step == 2)
+        {
+            Integer s = Integer.parseInt("" + e.getKeyChar());
+            if(s != null)
+            {
+                currentSize = s;
+            }
+        } else if(step == 3)
+        {
+            Integer s = Integer.parseInt("" + e.getKeyChar());
+            if(s != null)
+            {
+                color = s;
+            }
+        } else if(step == 4)
+        {
+            if(e.getKeyCode() == KeyEvent.VK_1)
+            {
+                tunnel = true;
+            } else if(e.getKeyCode() == KeyEvent.VK_2)
+            {
+                tunnel = false;
+            }
+        } else if(step == 5)
+        {
+            if(e.getKeyCode() == KeyEvent.VK_1)
+            {
+                flipped = true;
+            } else if(e.getKeyCode() == KeyEvent.VK_2)
+            {
+                tunnel = false;
+            }
+        } else if(step == 6)
+        {
+            Integer s = Integer.parseInt("" + e.getKeyChar());
+            if(s != null)
+            {
+                locomotives = s;
+            }
+        }
     }
     
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
     public void mouseClicked(MouseEvent e) {}
+
+    public void keyTyped(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {}
+    public void addNotify()
+    {
+        super.addNotify();
+        requestFocus();
+    }
 }

@@ -2,10 +2,12 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 import jdk.jshell.DeclarationSnippet;
+import java.util.Scanner;
+import java.util.ArrayList;
 public class Game {
  
     private Player players[] = new Player[4];
-    private City cities[];
+    private ArrayList<City> cities;
     private Route routes[];
     private int cards[];
     private Stack<Ticket> tickets = new Stack<Ticket>();
@@ -26,7 +28,26 @@ public class Game {
     public static ArrayList<Integer> discardPile;
 
     public Game(){
+        try
+        {
+            cities = new ArrayList<City>();
+            File citiesCSV = new File("src/csv/cities.csv"); //create file reader
+            Scanner scanner = new Scanner(citiesCSV);
+            String line = scanner.nextLine();
+            String[] info = line.split(","); //array of the stuff in csv file
+            for(int i = 0; i < info.length; i+=3)
+            {
+                String name = info[i]; //name of city
+                int x = Integer.parseInt(info[i+1]); //x coord of city
+                int y = Integer.parseInt(info[i+2]); //y coord of city
+                ArrayList<Route> routes = new ArrayList<Route>(); //arraylist of routes for the city
+                City temp = new City(name, routes, x, y); //create the city object
+                cities.add(temp); //add to the array of cities
+            }
 
+        } catch(Exception e) {
+            System.out.println(e);
+        }
 
         players[0] = new Player();
         players[1] = new Player();
@@ -134,6 +155,9 @@ public class Game {
 
 
 
+    }
+    public ArrayList<City> getCities() { //returns the array of cities
+        return cities;
     }
 
     public void buyRoute(Route p, int locomotivesused, int buyingcolor) { // except tunel
