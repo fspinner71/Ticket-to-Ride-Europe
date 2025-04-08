@@ -60,11 +60,11 @@ public class Player {
                 if(trainCards[traincard3] > 0 && traincard3 == traincard2) {
                     trainCards[traincard3]--; 
                     stations--;
-                return true; 
+                    return true; 
                 }
-            trainCards[traincard2]++;
-            trainCards[traincard1]++;
-            return false;
+                trainCards[traincard2]++;
+                trainCards[traincard1]++;
+                return false;
             }
             trainCards[traincard1]++;
             return false;
