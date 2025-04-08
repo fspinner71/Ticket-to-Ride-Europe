@@ -44,13 +44,13 @@ public class Player {
             if(trainCards[traincard2] > 0 ) {
                 trainCards[traincard2]--;
                 stations--;
-            return true; 
+                return true; 
+            }
+            trainCards[traincard1]++;
+            return false;
         }
-        trainCards[traincard1]++;
         return false;
     }
-    return false;
-}
     public boolean buyStation(int traincard1, int traincard2, int traincard3) { // if thir d
         if(trainCards[traincard1] > 0 ) { //idk waht this is
             trainCards[traincard1]--;
