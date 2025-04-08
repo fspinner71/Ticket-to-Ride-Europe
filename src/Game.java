@@ -10,6 +10,7 @@ public class Game {
     private int cards[];
     private Stack<Ticket> tickets = new Stack<Ticket>();
     private Stack<Ticket> bigtickets = new Stack<Ticket>();
+    
     public static ArrayList<Integer> deck;
     public static int turn = 0;
     public static int shouldEnd = 0;
@@ -129,12 +130,19 @@ public class Game {
         }
 
 
-    public void drawTicket()    {
+        public Ticket[] drawTicket()    { //returns array of 4 tickets 
 
-
-
-
-    }
+            Ticket[] a = new Ticket[4];
+            for(int c = 0 ;c < 4; c++) {
+                a[c] = tickets.pop();
+            }
+            return a;
+    
+        }
+    
+        public void replaceTicket(Ticket a) { // replaes a ticket 
+            tickets.push(a);
+        }
 
     public void buyRoute(Route p, int locomotivesused, int buyingcolor) { // except tunel
 
