@@ -12,6 +12,7 @@ public class Game {
     private int cards[];
     private Stack<Ticket> tickets = new Stack<Ticket>();
     private Stack<Ticket> bigtickets = new Stack<Ticket>();
+    
     public static ArrayList<Integer> deck;
     public static int turn = 0;
     public static int shouldEnd = 0;
@@ -150,12 +151,19 @@ public class Game {
         }
 
 
-    public void drawTicket()    {
+        public Ticket[] drawTicket()    { //returns array of 4 tickets 
 
-
-
-
-    }
+            Ticket[] a = new Ticket[4];
+            for(int c = 0 ;c < 4; c++) {
+                a[c] = tickets.pop();
+            }
+            return a;
+    
+        }
+    
+        public void replaceTicket(Ticket a) { // replaes a ticket 
+            tickets.push(a);
+        }
     public ArrayList<City> getCities() { //returns the array of cities
         return cities;
     }
@@ -282,7 +290,9 @@ public class Game {
         }
     }
     public void allPoints(){
-        
+        for(int i = 0; i < 4; i++){
+            players[i].addPoints(countTickets(players[i]));
+        }
     }
 
     public void replaceCard(int index) { //method to replace face up card with face down card
@@ -292,7 +302,25 @@ public class Game {
         }
 
     }
+
+
+    public int countTickets(Player a) { 
+        int score = 0;
+        for(Ticket b : a.getTickets()) {
+
+
+
+
+
+        }
+        return score;
+    }
+    public int longestRoute(){
+         
+    }
+    
 }
+
 
         
 
