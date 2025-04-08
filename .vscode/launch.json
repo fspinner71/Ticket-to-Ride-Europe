@@ -9,6 +9,20 @@
             "name": "Runner",
             "request": "launch",
             "mainClass": "Runner",
+            "projectName": "Ticket-to-Ride-Europe_941af8c2"
+        },
+        {
+            "type": "java",
+            "name": "Runner",
+            "request": "launch",
+            "mainClass": "Runner",
+            "projectName": "Ticket-to-Ride-Europe_a21d9962"
+        },
+        {
+            "type": "java",
+            "name": "Runner",
+            "request": "launch",
+            "mainClass": "Runner",
             "projectName": "Ticket-to-Ride-Europe_5670821"
         },
         {

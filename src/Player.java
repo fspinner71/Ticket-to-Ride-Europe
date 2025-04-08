@@ -75,10 +75,11 @@ public class Player {
     public boolean buyRoute(Route p, int locomotivesused, int buyingcolor) { //buying color is what color u tryna buy with if its a grey route
         //we will make sure buying color is same as route color if route has a color in the game class or wtv so they cant buy like a red route with a blue card
 
-        if(p.isTunnel()) { //if tunnel
-            
-        }
 
+
+        // buying tunnel is in game clas
+
+        
         if(p.getLocomotivesRequired() > 0) { //if it is a fery
        
             int length = p.getLength();
@@ -96,6 +97,9 @@ public class Player {
             else {
                 addRoute(p);
                 trainCards[buyingcolor] -= newlength-extralocomotives; //u buy the route
+                for(int i = 0; i < newlength-extralocomotives; i++){
+                    Game.discardPile.add(buyingcolor);
+                }
                 trainCards[8] -= extralocomotives;
                 trains -= newlength;
                 return true;
@@ -113,6 +117,9 @@ public class Player {
         else {
             addRoute(p);
             trainCards[buyingcolor] -= length-locomotivesused; //u buy the route
+            for(int i = 0; i < length-locomotivesused; i++){
+                Game.discardPile.add(buyingcolor);
+            }
             trainCards[8] -= locomotivesused;
             trains -= length;
             return true;
@@ -163,6 +170,8 @@ public class Player {
 
     }
 
-   
+   public int getNumLocomotives() {
+    return trainCards[Game.ANY];
+   }
 
 }
