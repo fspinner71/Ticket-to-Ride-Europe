@@ -276,7 +276,23 @@ public class Game {
         }
 
     }
+
+
+                                                                                                                                                public int countTickets(Player a) { 
+int score = 0;
+                                                                                                                                          for(Ticket b : a.getTickets()) {
+
+
+
+
+
+        }
+                                                                                                                                                    return score;
+    }
+
+    
 }
+
 
         
 
