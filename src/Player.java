@@ -36,8 +36,7 @@ public class Player {
 //             return true; 
 //         }
 //         return false;
-        
-    }
+//   }
     public boolean buyStation(int traincard1, int traincard2) { //if seocnd
         if(trainCards[traincard1] > 0 ) {
             trainCards[traincard1]--;
