@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 public class Game {
  
-    private Player players[] = new Player[4];
+    private Player players[];
     private ArrayList<City> cities;
     private Route routes[];
     private int cards[];
