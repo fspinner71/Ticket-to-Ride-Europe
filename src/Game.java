@@ -183,13 +183,45 @@ public class Game {
         else {
             boolean a = players[turn].buyRoute(p, locomotivesused, buyingcolor);
             if(a) { // if they buy the route mvoe the turn
-                turn++; 
-            turn = turn % 4;
+                endTurn();
 
 
             }
         }
         
+
+
+    }
+
+    public void buyStation(City a, int color) { //city the player wants to plae the station on
+        if(a.hasStation()) {
+            //error panel city alr has station
+            return;
+        }
+        
+        if(players[turn].buyStation(color)) { //if they can buy it with the color they chooese 
+            a.addStationOwner(players[turn]);
+            endTurn();
+
+        }
+        else {
+            //error panel not enough cards
+        }
+
+    }
+
+
+    public void endTurn() { //move turn and check if u need to end game 
+        if(players[turn].getNumTrains() <= 2 || shouldEnd>0) {  //if game needs ot end 
+            shouldEnd++; //????
+        }
+        if(shouldEnd == 4) { //everyone finsihed their one turn 
+            //END GAME 
+
+        }
+        turn++; 
+        turn = turn % 4;
+
 
 
     }
@@ -290,8 +322,9 @@ public class Game {
         }
     }
     public void allPoints(){
+        int totalpoints = 0;
         for(int i = 0; i < 4; i++){
-            players[i].addPoints(countTickets(players[i]));
+            //totalpoints += (countTickets(players[i]));
         }
     }
 
@@ -303,21 +336,13 @@ public class Game {
 
     }
 
-
-    public int countTickets(Player a) { 
-        int score = 0;
-        for(Ticket b : a.getTickets()) {
+    public void countTickets() {
 
 
 
-
-
-        }
-        return score;
     }
-    public int longestRoute(){
-         
-    }
+                                                                                                                                                
+   
     
 }
 
