@@ -37,35 +37,25 @@ public class Player {
 //         }
 //         return false;
 //   }
-    public boolean buyStation(int traincard1, int traincard2) { //if seocnd
-        if(trainCards[traincard1] > 0 ) {
-            trainCards[traincard1]--;
-            if(trainCards[traincard2] > 0 && traincard2 == traincard1) {
-                trainCards[traincard2]--;
-                stations--;
-            return true; 
-        }
-        trainCards[traincard1]++;
-        return false;
-    }
-    return false;
-}
-    public boolean buyStation(int traincard1, int traincard2, int traincard3) { // if thir d
-        if(trainCards[traincard1] > 0 ) { //idk waht this is
-            trainCards[traincard1]--;
-            if(trainCards[traincard2] > 0 && traincard2 == traincard1) {
-                trainCards[traincard2]--; 
+//     public boolean buyStation(int traincard1, int traincard2) { //if seocnd
+//         if(trainCards[traincard1] > 0 ) {
+//             trainCards[traincard1]--;
+//             if(trainCards[traincard2] > 0 && traincard2 == traincard1) {
+//                 trainCards[traincard2]--;
+//                 stations--;
+//             return true; 
+//         }
+//         trainCards[traincard1]++;
+//         return false;
+//     }
+//     return false;
+// }
+//     public boolean buyStation(int traincard1, int traincard2, int traincard3) { // if thir d
+//         if(trainCards[traincard1] > 0 ) //idk waht this is
+//             trainCards[traincard1]--;
+//         if(trainCards[traincard2] > 0 && traincard2 == traincard1) 
+//             trainCards[traincard2]--;
             
-<<<<<<< HEAD
-                if(trainCards[traincard3] > 0 && traincard3 == traincard2) {
-                    trainCards[traincard3]--; 
-                    stations--;
-                return true; 
-                }
-            trainCards[traincard2]++;
-            trainCards[traincard1]++;
-            return false;
-=======
 //                 if(trainCards[traincard3] > 0 && traincard3 == traincard2) {
 //                     trainCards[traincard3]--; 
 //                     stations--;
@@ -80,26 +70,24 @@ public class Player {
 //         }
 //         return false;
 //     }
-    public boolean buyStation(int traincard1) { // if thir d
+    public boolean buyStation(int traincard1) { 
         int numNeeded = 0;
-        if(stations == 3)
+        if(stations == 3)//if building first station
              numNeeded = 1;
-        else if(stations == 2)
+        else if(stations == 2)//if building second station
              numNeeded = 2;
-        else if(stations == 1)
+        else if(stations == 1)//if building third/last station
              numNeeded = 3;
-        if(trainCards[traincard1] >= numNeeded ) { //idk waht this is
+        if(trainCards[traincard1] >= numNeeded ) { //check if player has enough cards to build
             for(int i = 0; i < numNeeded; i++)
             {
                 trainCards[traincard1]--;
->>>>>>> parent of 8aef765 (buyStation comments)
             }
-            trainCards[traincard1]++;
-            return false;
+            stations--;
+            return true;
         }
         return false;
     }
-
     
     public boolean buyRoute(Route p, int locomotivesused, int buyingcolor) { //buying color is what color u tryna buy with if its a grey route
         //we will make sure buying color is same as route color if route has a color in the game class or wtv so they cant buy like a red route with a blue card
