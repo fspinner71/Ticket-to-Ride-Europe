@@ -49,7 +49,7 @@ public class Game {
         } catch(Exception e) {
             System.out.println(e);
         }
-
+        players = new Player[4];
         players[0] = new Player();
         players[1] = new Player();
         players[2] = new Player();
@@ -168,6 +168,12 @@ public class Game {
         return cities;
     }
 
+    public int[] getFaceUpCards() {
+        return cards;
+    }
+    public ArrayList<Integer> getDeck() {
+        return deck;
+    }
     public void buyRoute(Route p, int locomotivesused, int buyingcolor) { // except tunel
 
         if(locomotivesused < players[turn].getNumLocomotives()) { //if they dont even have enough locomotivs 

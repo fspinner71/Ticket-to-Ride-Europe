@@ -11,11 +11,13 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
 
     private static BufferedImage map, city, deck, ticket;
     public static BufferedImage[] cards, buttons;
+    private Button[] actions, gameCards;
     public static BufferedImage bottomBar, leftBar, rightBar, upArrow, errorWindow, notebookPaper, textBoxLarge, textBoxSmall;     
     public static BufferedImage[] stations, owns;
     public static BufferedImage locomotiveTrack, locomotiveTunnelTrack; //extra stuff 
     public static final int MAP_X = 305;
     public static final int MAP_Y = -10;
+    private int action; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
 
     private City city1, city2;
@@ -53,6 +55,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
 
             //cards
             cards = new BufferedImage[9];
+            cards[Game.RED] = ImageIO.read(GamePanel.class.getResource("/Images/RedCard.png"));
             cards[Game.BLUE] = ImageIO.read(GamePanel.class.getResource("/Images/BlueCard.png"));
             cards[Game.ORANGE] = ImageIO.read(GamePanel.class.getResource("/Images/OrangeCard.png"));
             cards[Game.YELLOW] = ImageIO.read(GamePanel.class.getResource("/Images/YellowCard.png"));
@@ -81,7 +84,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             buttons[Game.GREEN] = ImageIO.read(GamePanel.class.getResource("/Images/GreenButton.png"));
             buttons[Game.PINK] = ImageIO.read(GamePanel.class.getResource("/Images/PinkButton.png"));
             
-
+            deck = ImageIO.read(GamePanel.class.getResource("/Images/Deck.png")); 
         } catch (Exception e)
         {
             System.out.println("Failed to load GamePanel images");
@@ -91,6 +94,19 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     public GamePanel()
     {
         game = new Game();
+        actions = new Button[4];
+        gameCards = new Button[6]; //like when you draw cards wtv it has includes the face down card
+
+        gameCards[0] = new Button(1616, 120 , cards[0].getWidth()/4, cards[0].getHeight()/4, deck); //deck button
+        for(int c = 1; c < gameCards.length; c++) {
+            gameCards[c] = new Button(1616, 120 + c * 100, cards[0].getWidth()/4, cards[0].getHeight()/4, deck); //face up cards button image is default
+                }
+        actions[0] = new Button(1600, 300, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.BLUE]);
+        actions[1] = new Button(1600, 410, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.YELLOW]);
+        actions[2] = new Button(1600, 520, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.PINK]);
+        actions[3] = new Button(1600, 630, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.ORANGE]);
+       
+        
         addMouseListener(this);
         addKeyListener(this);
     }
@@ -102,6 +118,27 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         g.drawImage(leftBar, 0, 0, leftBar.getWidth(), leftBar.getHeight(),null);
         g.drawImage(rightBar, getWidth() - rightBar.getWidth(), 0, rightBar.getWidth(), rightBar.getHeight(),null);
 
+        if(action == 0) {
+        for(Button a : actions) { //paint actions if they havent picked yet  
+            a.paint(g);
+        }
+    }
+    if(action == 1) { //if draw card 
+        for(int c = 1; c < gameCards.length; c++) {
+            int[] faceup = game.getFaceUpCards();
+            System.out.println(faceup[c-1]);
+            gameCards[c].setImage(cards[faceup[c-1]]);
+        }
+        if(game.getDeck().isEmpty() == false) {
+          gameCards[0].paint(g);
+            System.out.println("deck painted");
+        }
+
+
+    }
+
+        
+
         ArrayList<City> cities = game.getCities();
         for(int i = 0; i < cities.size(); i++)
         {
@@ -110,6 +147,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     }
     public void mousePressed(MouseEvent e)
     {
+      
         if(e.getButton() == MouseEvent.BUTTON1)
         {
             int x = e.getX();
@@ -133,8 +171,22 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
                     break;
                 }
             }
+            if(action == 0) {
+          for(int c = 0 ;c <  actions.length; c++) {
+            if(actions[c].isInside(x, y)) {
+                action = c+1; //change turn wtv they click 
+                repaint();
+            }
+          }
+
         }
+
+        
+
         repaint();
+
+
+    }
     }
 
     public void keyPressed(KeyEvent e) {
