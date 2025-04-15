@@ -20,8 +20,9 @@ public class Player {
     }
     public void addRoute(Route r ) {
         routes.add(r);
-
     }
+
+    
     public void addTrainCard(int color) {
         trainCards[color]++;
     }
@@ -189,6 +190,18 @@ public class Player {
 
    public int getNumLocomotives() {
     return trainCards[Game.ANY];
+   }
+
+
+   public ArrayList<City> playerCities() {
+        ArrayList<City> cities = new ArrayList<City>();
+        for(Route r: routes)
+        {
+            cities.add(r.getA());
+            cities.add(r.getB());
+        }
+        return cities;
+
    }
 
 }
