@@ -10,6 +10,9 @@ public class City
     private int y;
     private Button button;
     private static BufferedImage image;
+    private Player stationOwner;
+    
+
     public static int SIZE = 25;
     static{
         try
@@ -26,6 +29,8 @@ public class City
         this.routes = routes;
         this.x = x;
         this.y = y;
+        stationOwner = null;
+      
         this.button = new Button(GamePanel.MAP_X + x - SIZE/2, GamePanel.MAP_Y + y - SIZE/2, SIZE, SIZE, image);
     }
     public String getName()
@@ -51,7 +56,18 @@ public class City
     {
         return y;
     }
-
+    public boolean hasStation() {
+        if(stationOwner != null) {
+            return true;
+        }
+        return false;
+    }
+    public Player getStationOwner() {
+        return stationOwner;
+    }
+    public void addStationOwner(Player p) {
+        stationOwner = p;
+    }
     public Button getButton() {
         return button;
     }
