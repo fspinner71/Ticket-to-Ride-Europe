@@ -16,7 +16,7 @@ public class Game {
     public static ArrayList<Integer> deck;
     public static int turn = 0;
     public static int shouldEnd = 0;
-    private boolean drawnOne;
+    public boolean drawnOne;
     public static final int RED = 0;
     public static final int BLUE = 1;
     public static final int YELLOW = 2;
@@ -71,12 +71,13 @@ public class Game {
             cards[c] = deck.get(0);
             deck.remove(0);
         }
-
+        drawnOne = false;
         makeTickets();
         distributeTickets();
 
     }
     public void drawCard(int index ){ //0-4 is the face up cards, 5 is the deck/facedown card
+        System.out.println("draw card");
         int card;
         if(index == 5) {
           if(deck.isEmpty() == false) {   card = deck.get(0); }
@@ -92,21 +93,20 @@ public class Game {
                 players[turn].addTrainCard(card);
                 deck.remove(0);
                 drawnOne = true;
-
+                System.out.println("draw deck");
             }
             else if(drawnOne  == true) { // u end the turn 
             players[turn].addTrainCard(card);
             deck.remove(0);
             drawnOne = false;
-            turn++; 
-            turn = turn % 4;
-        
+            endTurn();
           
 
 
         }
 
     }
+    
         else { 
 
             if(drawnOne == false) { //firs tturn
@@ -114,31 +114,32 @@ public class Game {
                 if(card == ANY) { //if locomotive 
                     players[turn].addTrainCard(card);
                     replaceCard(index);
-                    turn++; 
-                    turn = turn % 4;
+                    endTurn();
                 }
                 else { //colored card
+                    System.out.println("draw one first turn");
                     players[turn].addTrainCard(card);
                     replaceCard(index);
                     drawnOne = true;
-
+                    return;
                 }
 
 
             }   
 
         else if(drawnOne == true) { //if second turn 
+            System.out.println("second turn");
              card = cards[index];
                 if(card == ANY) { //if locomotive 
                     //do error
                     
                 }
                 else { //any other card and then u end the turnrnrnrnrnr
+                    System.out.println("draw one second  turn");
                     players[turn].addTrainCard(card);
                     replaceCard(index);
                     drawnOne = false;
-                    turn++; 
-                    turn = turn % 4;
+                    endTurn();
                     
                 }
 
@@ -218,6 +219,7 @@ public class Game {
 
 
     public void endTurn() { //move turn and check if u need to end game 
+        System.out.println("turn eneded");
         if(players[turn].getNumTrains() <= 2 || shouldEnd>0) {  //if game needs ot end 
             shouldEnd++; //????
         }

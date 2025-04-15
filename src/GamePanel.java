@@ -17,6 +17,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     public static BufferedImage locomotiveTrack, locomotiveTunnelTrack; //extra stuff 
     public static final int MAP_X = 305;
     public static final int MAP_Y = -10;
+    private Button back;
     private int action; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
 
@@ -95,18 +96,19 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     {
         game = new Game();
         actions = new Button[4];
-        gameCards = new Button[6]; //like when you draw cards wtv it has includes the face down card
+        gameCards = new Button[6]; //like when you draw cards wtv it has includes the face down card ;; 0 = facedown, 1-5 = cards
 
-        gameCards[0] = new Button(1616, 120 , cards[0].getWidth()/4, cards[0].getHeight()/4, deck); //deck button
+        gameCards[0] = new Button(1645, 115 , cards[0].getWidth()/5, cards[0].getHeight()/5, deck); //deck button
         for(int c = 1; c < gameCards.length; c++) {
-            gameCards[c] = new Button(1616, 120 + c * 100, cards[0].getWidth()/4, cards[0].getHeight()/4, deck); //face up cards button image is default
+            gameCards[c] = new Button(1645, 115 + c * 135, cards[0].getWidth()/5, cards[0].getHeight()/5, deck); //face up cards button image is default
                 }
         actions[0] = new Button(1600, 300, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.BLUE]);
         actions[1] = new Button(1600, 410, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.YELLOW]);
         actions[2] = new Button(1600, 520, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.PINK]);
         actions[3] = new Button(1600, 630, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.ORANGE]);
-       
+            back = new Button(1600, 925, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.RED]);
         
+                
         addMouseListener(this);
         addKeyListener(this);
     }
@@ -118,22 +120,28 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         g.drawImage(leftBar, 0, 0, leftBar.getWidth(), leftBar.getHeight(),null);
         g.drawImage(rightBar, getWidth() - rightBar.getWidth(), 0, rightBar.getWidth(), rightBar.getHeight(),null);
 
+        g.drawString(Integer.toString(game.turn), 100, 200);
+
+
+
         if(action == 0) {
         for(Button a : actions) { //paint actions if they havent picked yet  
             a.paint(g);
         }
     }
     if(action == 1) { //if draw card 
-        for(int c = 1; c < gameCards.length; c++) {
+        for(int c = 1; c < gameCards.length; c++) { //paint faceup
             int[] faceup = game.getFaceUpCards();
-            System.out.println(faceup[c-1]);
+         
             gameCards[c].setImage(cards[faceup[c-1]]);
+            gameCards[c].paint(g);
         }
-        if(game.getDeck().isEmpty() == false) {
+        if(game.getDeck().isEmpty() == false) { //paint deck
           gameCards[0].paint(g);
-            System.out.println("deck painted");
+           
         }
 
+        back.paint(g);
 
     }
 
@@ -180,7 +188,25 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
           }
 
         }
+        else if(action == 1) {
+            if(back.isInside(x, y) && game.drawnOne == false) { //if they click back button
+                action = 0;
+            }
 
+                for(int c = 1; c < gameCards.length; c++) { //click face up ikinda messed up so like ya 
+                    if(gameCards[c].isInside(x,y)) {
+                      
+                        game.drawCard(c-1);
+                        
+                    }
+                }
+                if(gameCards[0].isInside(x, y)) {
+                
+                    game.drawCard(5); //idk
+                    
+                }
+
+        }
         
 
         repaint();
