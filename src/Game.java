@@ -307,10 +307,15 @@ public class Game {
     public int countTickets(Player a) { 
         int score = 0;
         for(Ticket b : a.getTickets()) {
+            boolean possible = false;
+            if(a.playerCities().contains(b.getCities()[0]) && a.playerCities().contains(b.getCities()[1]))//player at least has both cities
+            {
+                possible = true;
+            }
+            while(possible == true)//adjacency list stuff
+            {
 
-
-
-
+            }
 
         }
         return score;
