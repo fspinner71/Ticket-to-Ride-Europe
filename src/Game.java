@@ -2,11 +2,9 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 import jdk.jshell.DeclarationSnippet;
-import java.util.Scanner;
-import java.util.ArrayList;
 public class Game {
  
-    private Player players[] = new Player[4];
+    private Player players[];
     private ArrayList<City> cities;
     private Route routes[];
     private int cards[];
@@ -16,7 +14,8 @@ public class Game {
     public static ArrayList<Integer> deck;
     public static int turn = 0;
     public static int shouldEnd = 0;
-    private boolean drawnOne;
+    public boolean drawnOne, errorPanel;
+    public int errorMessage;
     public static final int RED = 0;
     public static final int BLUE = 1;
     public static final int YELLOW = 2;
@@ -27,11 +26,12 @@ public class Game {
     public static final int BLACK = 7;
     public static final int ANY = 8;
     public static ArrayList<Integer> discardPile;
-
+    
     public Game(){
         try
         {
             cities = new ArrayList<City>();
+            
             File citiesCSV = new File("src/csv/cities.csv"); //create file reader
             Scanner scanner = new Scanner(citiesCSV);
             String line = scanner.nextLine();
@@ -49,7 +49,7 @@ public class Game {
         } catch(Exception e) {
             System.out.println(e);
         }
-
+        players = new Player[4];
         players[0] = new Player();
         players[1] = new Player();
         players[2] = new Player();
@@ -71,12 +71,15 @@ public class Game {
             cards[c] = deck.get(0);
             deck.remove(0);
         }
-
+        drawnOne = false;
+        discardPile = new ArrayList<Integer>();
         makeTickets();
         distributeTickets();
 
     }
     public void drawCard(int index ){ //0-4 is the face up cards, 5 is the deck/facedown card
+        
+        System.out.println("draw card");
         int card;
         if(index == 5) {
           if(deck.isEmpty() == false) {   card = deck.get(0); }
@@ -92,21 +95,22 @@ public class Game {
                 players[turn].addTrainCard(card);
                 deck.remove(0);
                 drawnOne = true;
-
+                System.out.println("draw deck");
             }
             else if(drawnOne  == true) { // u end the turn 
             players[turn].addTrainCard(card);
             deck.remove(0);
             drawnOne = false;
-            turn++; 
-            turn = turn % 4;
-        
+            errorPanel = false;
+            errorMessage = 0;
+            endTurn();
           
 
 
         }
 
     }
+    
         else { 
 
             if(drawnOne == false) { //firs tturn
@@ -114,31 +118,32 @@ public class Game {
                 if(card == ANY) { //if locomotive 
                     players[turn].addTrainCard(card);
                     replaceCard(index);
-                    turn++; 
-                    turn = turn % 4;
+                    endTurn();
                 }
                 else { //colored card
+                    System.out.println("draw one first turn");
                     players[turn].addTrainCard(card);
                     replaceCard(index);
                     drawnOne = true;
-
+          
                 }
 
 
             }   
 
         else if(drawnOne == true) { //if second turn 
+            System.out.println("second turn");
              card = cards[index];
                 if(card == ANY) { //if locomotive 
-                    //do error
+                    errorScreen(0);
                     
                 }
                 else { //any other card and then u end the turnrnrnrnrnr
+                    System.out.println("draw one second  turn");
                     players[turn].addTrainCard(card);
                     replaceCard(index);
                     drawnOne = false;
-                    turn++; 
-                    turn = turn % 4;
+                    endTurn();
                     
                 }
 
@@ -147,9 +152,39 @@ public class Game {
 
 
         }
-
+        
+                            int lococount = 0;
+        for(int c = 0; c<  cards.length; c++) {
+            if(cards[c] == Game.ANY) {
+                lococount++;
+            }
+        }
+        if(lococount >= 3) {
+            System.out.println("alalsdpasdfsdfsdfddd");
+            for(int c = 0; c < cards.length; c++ ) {
+                if(cards[c] == Game.ANY) {
+                    discardPile.add(cards[c]);
+                    replaceCard(c);
+                    errorScreen(0);
+                }
+            }
+            
         }
 
+        }
+        
+        public void errorScreen(int error) {
+
+            System.out.println("error panel pops up");
+        errorPanel = true;
+        errorMessage = error;
+        }
+        public void unerror() {
+
+            System.out.println("closes");
+            errorPanel = false;
+            errorMessage = 0;
+        }
 
         public Ticket[] drawTicket()    { //returns array of 4 tickets 
 
@@ -168,6 +203,12 @@ public class Game {
         return cities;
     }
 
+    public int[] getFaceUpCards() {
+        return cards;
+    }
+    public ArrayList<Integer> getDeck() {
+        return deck;
+    }
     public void buyRoute(Route p, int locomotivesused, int buyingcolor) { // except tunel
 
         if(locomotivesused < players[turn].getNumLocomotives()) { //if they dont even have enough locomotivs 
@@ -183,13 +224,46 @@ public class Game {
         else {
             boolean a = players[turn].buyRoute(p, locomotivesused, buyingcolor);
             if(a) { // if they buy the route mvoe the turn
-                turn++; 
-            turn = turn % 4;
+                endTurn();
 
 
             }
         }
         
+
+
+    }
+
+    public void buyStation(City a, int color) { //city the player wants to plae the station on
+        if(a.hasStation()) {
+            //error panel city alr has station
+            return;
+        }
+        
+        if(players[turn].buyStation(color)) { //if they can buy it with the color they chooese 
+            a.addStationOwner(players[turn]);
+            endTurn();
+
+        }
+        else {
+            //error panel not enough cards
+        }
+
+    }
+
+
+    public void endTurn() { //move turn and check if u need to end game 
+        System.out.println("turn eneded");
+        if(players[turn].getNumTrains() <= 2 || shouldEnd>0) {  //if game needs ot end 
+            shouldEnd++; //????
+        }
+        if(shouldEnd == 4) { //everyone finsihed their one turn 
+            //END GAME 
+
+        }
+        turn++; 
+        turn = turn % 4;
+
 
 
     }
@@ -290,8 +364,9 @@ public class Game {
         }
     }
     public void allPoints(){
+        int totalpoints = 0;
         for(int i = 0; i < 4; i++){
-            players[i].addPoints(countTickets(players[i]));
+            //totalpoints += (countTickets(players[i]));
         }
     }
 
@@ -307,10 +382,15 @@ public class Game {
     public int countTickets(Player a) { 
         int score = 0;
         for(Ticket b : a.getTickets()) {
+            boolean possible = false;
+            if(a.playerCities().contains(b.getCities()[0]) && a.playerCities().contains(b.getCities()[1]))//player at least has both cities
+            {
+                possible = true;
+            }
+            while(possible == true)//adjacency list stuff
+            {
 
-
-
-
+            }
 
         }
         return score;

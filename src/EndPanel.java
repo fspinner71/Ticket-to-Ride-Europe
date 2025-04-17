@@ -15,7 +15,7 @@ public class EndPanel extends JPanel implements MouseListener, KeyListener {
     private File cities;
     private FileWriter citiesWriter;
     private ArrayList<City> cityArray;
-    private TempCity currentCity;
+    private City currentCity;
     private String currentName;
     static {
         try
