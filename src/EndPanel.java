@@ -14,7 +14,7 @@ public class EndPanel extends JPanel implements MouseListener, KeyListener {
     private static BufferedImage map, city;
     private File cities;
     private FileWriter citiesWriter;
-    private ArrayList<TempCity> cityArray;
+    private ArrayList<City> cityArray;
     private TempCity currentCity;
     private String currentName;
     static {

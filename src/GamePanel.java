@@ -4,6 +4,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.*;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,6 +17,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     public static BufferedImage locomotiveTrack, locomotiveTunnelTrack; //extra stuff 
     public static final int MAP_X = 305;
     public static final int MAP_Y = -10;
+    private static Font font;
     private Game game;
 
     private City city1, city2;
@@ -25,8 +27,13 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     private int locomotives;
     private int color;
     private int step;
+    private Route currentRoute;
+    private PrintWriter writer;
+    private ArrayList<Route> routes;
 
     static {
+        font = new Font("Comic Sans MS", Font.BOLD, 24);
+
         try
         {
             //main game assets
@@ -93,6 +100,14 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         game = new Game();
         addMouseListener(this);
         addKeyListener(this);
+
+        try {
+            writer = new PrintWriter("routes.csv", "UTF-8");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        routes = new ArrayList<Route>();
     }
     @Override
     public void paint(Graphics g)
@@ -107,6 +122,39 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         {
             cities.get(i).paint(g);
         }
+
+        for(Route r : routes)
+        {
+            r.paint(g);
+        }
+
+        String text = "";
+        switch(step)
+        {
+        case 0:
+            text = "Pick city 1";
+            break;
+        case 1:
+            text = "Pick city 2";
+            break;
+        case 2:
+            text = "Pick length";
+            break;
+        case 3:
+            text = "Pick color\n0=red, 1=blue, 2=yellow, 3=green, 4=orange, 5=pink, 6=white, 7=black, 8=any";
+            break;
+        case 4:
+            text = "Pick tunnel\n 1 = true, 2 = false";
+            break;
+        case 5:
+            text = "Pick number of locomotives";
+            break;
+        case 6:
+            text = "Shift tunne;";
+            break;
+        }
+        g.setFont(font);
+        g.drawString(text, 30,900);
     }
     public void mousePressed(MouseEvent e)
     {
@@ -137,14 +185,83 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         repaint();
     }
 
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent e)
+    {
 
         if(e.getKeyCode() == KeyEvent.VK_ENTER)
         {
             step++;
-            if(step >= 7)
+            if(step == 6)
             {
-                Route r = new Route(city1, city2, currentSize, tunnel, locomotives);
+                currentRoute = new Route(city1, city2, currentSize, tunnel, locomotives);
+                routes.add(currentRoute);
+                int[][] trackCoords = new int[currentSize][3];
+                float totalLength = 0;
+                float length1 = 0, length2 = 0;
+                int height = 0;
+                float normalizedX = city2.getXCoord() - city1.getXCoord();
+                float normalizedY = city2.getYCoord() - city1.getYCoord();
+                float initialAngle = (float)Math.atan((float)normalizedY/(float)normalizedX);
+                float distance = (float)Math.sqrt(normalizedX * normalizedX + normalizedY * normalizedY);
+                normalizedX /= distance;
+                normalizedY /= distance; 
+
+                normalizedX = 1;
+                normalizedY = 1;
+                for(int i = 0; i < currentSize/2 + currentSize % 2; i++)
+                {
+                    float currentLength;
+                    float rot;
+                    if(i < currentSize/2)
+                    {
+                        currentLength = (float)Math.pow((2 * (float)(currentSize/2 - i))/(currentSize), 0.5) * (((float)currentSize * Track.WIDTH - distance)/2) - length1;
+                        System.out.println(Math.pow((2 * (float)(currentSize/2 - i))/(currentSize), 0.5));
+                        rot = (float)(-Math.acos((float)currentLength/Track.WIDTH));
+                        length1 += currentLength;
+                    } else {
+                        currentLength = 0;
+                        rot = 0;
+                        length1 += 0;
+                    }
+
+                    height += (int)((Track.WIDTH * Math.sin(rot)));
+                    totalLength = length1 + length2;
+
+                    int x = (int)(totalLength);
+                    int y = (int)(height);
+
+                    trackCoords[i][0] = x;
+                    trackCoords[i][1] = 300;
+                    trackCoords[i][2] = (int)Math.toDegrees(rot);
+
+                    height += (int)((currentSize * Math.sin(rot)));
+
+                }
+
+                for(int i = currentSize - 1; i > currentSize/2; i--)
+                {
+                    float currentLength = (float)Math.pow((2 * (float)(currentSize/2 - i + currentSize/2 + currentSize % 2))/(currentSize - 1), 0.5) * (((float)currentSize * Track.WIDTH - distance)/2) - length2;
+                    System.out.println((((float)currentSize * Track.WIDTH - distance)/2));
+                    float rot = (float)(Math.acos((float)currentLength/Track.WIDTH));
+                    length2 += currentLength;
+
+                    height += (int)((Track.WIDTH * Math.sin(rot)));
+                    totalLength = length1 + length2;
+
+                    int x = (int)(totalLength);
+                    int y = (int)(height);
+
+                    trackCoords[i][0] = x ;
+                    trackCoords[i][1] = 300;
+                    trackCoords[i][2] = (int)Math.toDegrees(rot);
+
+                    height += (int)((currentSize * Math.sin(rot)));
+                }
+                System.out.println(totalLength + " " + distance);
+                currentRoute.makeTracks(trackCoords);
+            } else if(step == 7)
+            {
+                writer.append(city1.getName() + "," + city2.getName() + "," + currentSize + "," + tunnel + "," + locomotives + ",");
                 step = 0;
             }
             return;
@@ -174,21 +291,38 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             }
         } else if(step == 5)
         {
-            if(e.getKeyCode() == KeyEvent.VK_1)
-            {
-                flipped = true;
-            } else if(e.getKeyCode() == KeyEvent.VK_2)
-            {
-                tunnel = false;
-            }
-        } else if(step == 6)
-        {
             Integer s = Integer.parseInt("" + e.getKeyChar());
             if(s != null)
             {
                 locomotives = s;
             }
+        }else if(step == 6)
+        {
+            switch(e.getKeyCode())
+            {
+            case KeyEvent.VK_RIGHT:
+                currentRoute.shiftHorizontal(1);
+                break;
+            case KeyEvent.VK_LEFT:
+            currentRoute.shiftHorizontal(-1);
+                break;
+            case KeyEvent.VK_UP:
+            currentRoute.shiftVertical(-1);
+                break;
+            case KeyEvent.VK_DOWN:
+                currentRoute.shiftVertical(1);
+                break;
+            }
+
+            if(e.getKeyCode() == KeyEvent.VK_1)
+            {
+                flipped = true;
+            } else if(e.getKeyCode() == KeyEvent.VK_2)
+            {
+                flipped = false;
+            }
         }
+        repaint();
     }
     
     public void mouseReleased(MouseEvent e) {}
