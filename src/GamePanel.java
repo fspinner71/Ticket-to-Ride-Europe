@@ -17,7 +17,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     public static BufferedImage locomotiveTrack, locomotiveTunnelTrack; //extra stuff 
     public static final int MAP_X = 305;
     public static final int MAP_Y = -10;
-    private Button back;
+    private Button back, okButton;
     private int action; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
 
@@ -107,14 +107,20 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         actions[2] = new Button(1600, 520, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.PINK]);
         actions[3] = new Button(1600, 630, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.ORANGE]);
             back = new Button(1600, 925, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.RED]);
-        
-                
+            okButton = new Button(775, 575, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.GREEN]);
+       
         addMouseListener(this);
         addKeyListener(this);
     }
     @Override
     public void paint(Graphics g)
     {
+       
+        if(game.errorPanel == true) {
+            g.drawImage(errorWindow, 725, 300, errorWindow.getWidth()/3, errorWindow.getHeight()/3, null);
+            okButton.paint(g);
+        }
+        else {
         g.drawImage(map, MAP_X, MAP_Y, map.getWidth(), map.getHeight(), null);
         g.drawImage(bottomBar, getWidth()/2 - bottomBar.getWidth()/2, getHeight() - bottomBar.getHeight(), bottomBar.getWidth(), bottomBar.getHeight(), null);
         g.drawImage(leftBar, 0, 0, leftBar.getWidth(), leftBar.getHeight(),null);
@@ -145,6 +151,8 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
 
     }
 
+    
+
         
 
         ArrayList<City> cities = game.getCities();
@@ -153,13 +161,32 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             cities.get(i).paint(g);
         }
     }
+
+    
+    
+    
+}
     public void mousePressed(MouseEvent e)
     {
       
+        
         if(e.getButton() == MouseEvent.BUTTON1)
         {
             int x = e.getX();
             int y = e.getY();
+
+            if(game.errorPanel == true) {
+                
+                if(okButton.isInside(x, y)) {
+                    game.unerror(); //stop error
+                }
+
+            }
+            else {// not error 
+
+            
+
+
             for(int i = 0; i < game.getCities().size(); i++)
             {
                 City city = game.getCities().get(i);
@@ -197,6 +224,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
                     if(gameCards[c].isInside(x,y)) {
                       
                         game.drawCard(c-1);
+                        repaint();
                         
                     }
                 }
@@ -209,10 +237,12 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         }
         
 
-        repaint();
+
 
 
     }
+    repaint();
+}
     }
 
     public void keyPressed(KeyEvent e) {

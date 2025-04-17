@@ -2,8 +2,6 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 import jdk.jshell.DeclarationSnippet;
-import java.util.Scanner;
-import java.util.ArrayList;
 public class Game {
  
     private Player players[];
@@ -16,7 +14,8 @@ public class Game {
     public static ArrayList<Integer> deck;
     public static int turn = 0;
     public static int shouldEnd = 0;
-    public boolean drawnOne;
+    public boolean drawnOne, errorPanel;
+    public int errorMessage;
     public static final int RED = 0;
     public static final int BLUE = 1;
     public static final int YELLOW = 2;
@@ -27,11 +26,12 @@ public class Game {
     public static final int BLACK = 7;
     public static final int ANY = 8;
     public static ArrayList<Integer> discardPile;
-
+    
     public Game(){
         try
         {
             cities = new ArrayList<City>();
+            
             File citiesCSV = new File("src/csv/cities.csv"); //create file reader
             Scanner scanner = new Scanner(citiesCSV);
             String line = scanner.nextLine();
@@ -72,11 +72,13 @@ public class Game {
             deck.remove(0);
         }
         drawnOne = false;
+        discardPile = new ArrayList<Integer>();
         makeTickets();
         distributeTickets();
 
     }
     public void drawCard(int index ){ //0-4 is the face up cards, 5 is the deck/facedown card
+        
         System.out.println("draw card");
         int card;
         if(index == 5) {
@@ -99,6 +101,8 @@ public class Game {
             players[turn].addTrainCard(card);
             deck.remove(0);
             drawnOne = false;
+            errorPanel = false;
+            errorMessage = 0;
             endTurn();
           
 
@@ -121,7 +125,7 @@ public class Game {
                     players[turn].addTrainCard(card);
                     replaceCard(index);
                     drawnOne = true;
-                    return;
+          
                 }
 
 
@@ -131,7 +135,7 @@ public class Game {
             System.out.println("second turn");
              card = cards[index];
                 if(card == ANY) { //if locomotive 
-                    //do error
+                    errorScreen(0);
                     
                 }
                 else { //any other card and then u end the turnrnrnrnrnr
@@ -148,9 +152,39 @@ public class Game {
 
 
         }
-
+        
+                            int lococount = 0;
+        for(int c = 0; c<  cards.length; c++) {
+            if(cards[c] == Game.ANY) {
+                lococount++;
+            }
+        }
+        if(lococount >= 3) {
+            System.out.println("alalsdpasdfsdfsdfddd");
+            for(int c = 0; c < cards.length; c++ ) {
+                if(cards[c] == Game.ANY) {
+                    discardPile.add(cards[c]);
+                    replaceCard(c);
+                    errorScreen(0);
+                }
+            }
+            
         }
 
+        }
+        
+        public void errorScreen(int error) {
+
+            System.out.println("error panel pops up");
+        errorPanel = true;
+        errorMessage = error;
+        }
+        public void unerror() {
+
+            System.out.println("closes");
+            errorPanel = false;
+            errorMessage = 0;
+        }
 
         public Ticket[] drawTicket()    { //returns array of 4 tickets 
 
