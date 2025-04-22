@@ -176,6 +176,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             cities.get(i).paint(g);
         }
     }
+}
     public void mousePressed(MouseEvent e)
     {
       
