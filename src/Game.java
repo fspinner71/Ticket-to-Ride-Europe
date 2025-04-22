@@ -14,8 +14,8 @@ public class Game {
     public static ArrayList<Integer> deck;
     public static int turn = 0;
     public static int shouldEnd = 0;
-    public boolean drawnOne, errorPanel;
-    public int errorMessage;
+    public boolean drawnOne, errorPanel, turnended;
+    public String errorMessage;
     public static final int RED = 0;
     public static final int BLUE = 1;
     public static final int YELLOW = 2;
@@ -25,6 +25,8 @@ public class Game {
     public static final int WHITE = 6;
     public static final int BLACK = 7;
     public static final int ANY = 8;
+
+    
     public static ArrayList<Integer> discardPile;
     
     public Game(){
@@ -72,6 +74,7 @@ public class Game {
             deck.remove(0);
         }
         drawnOne = false;
+        turnended = false;
         discardPile = new ArrayList<Integer>();
         makeTickets();
         distributeTickets();
@@ -102,7 +105,7 @@ public class Game {
             deck.remove(0);
             drawnOne = false;
             errorPanel = false;
-            errorMessage = 0;
+            errorMessage = "";
             endTurn();
           
 
@@ -135,7 +138,7 @@ public class Game {
             System.out.println("second turn");
              card = cards[index];
                 if(card == ANY) { //if locomotive 
-                    errorScreen(0);
+                    errorScreen("You can't draw a locomotive!");
                     
                 }
                 else { //any other card and then u end the turnrnrnrnrnr
@@ -165,7 +168,7 @@ public class Game {
                 if(cards[c] == Game.ANY) {
                     discardPile.add(cards[c]);
                     replaceCard(c);
-                    errorScreen(0);
+                    errorScreen("You can't draw a locomotive!");
                 }
             }
             
@@ -173,17 +176,18 @@ public class Game {
 
         }
         
-        public void errorScreen(int error) {
+        public void errorScreen(String error) {
 
             System.out.println("error panel pops up");
         errorPanel = true;
         errorMessage = error;
+
         }
         public void unerror() {
 
             System.out.println("closes");
             errorPanel = false;
-            errorMessage = 0;
+            errorMessage = "";
         }
 
         public Ticket[] drawTicket()    { //returns array of 4 tickets 
@@ -263,7 +267,7 @@ public class Game {
         }
         turn++; 
         turn = turn % 4;
-
+        turnended = true;
 
 
     }

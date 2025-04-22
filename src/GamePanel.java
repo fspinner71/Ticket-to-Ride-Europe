@@ -19,7 +19,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     public static final int MAP_X = 305;
     public static final int MAP_Y = -10;
     private static Font font;
-    private Button back, okButton;
+    private Button back, okButton, endTurnButton;
     private int action; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
 
@@ -114,8 +114,8 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         actions[2] = new Button(1600, 520, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.PINK]);
         actions[3] = new Button(1600, 630, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.ORANGE]);
             back = new Button(1600, 925, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.RED]);
-            okButton = new Button(775, 575, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.GREEN]);
-       
+            okButton = new Button(820, 620, buttons[0].getWidth()/3, buttons[0].getHeight()/3, buttons[Game.GREEN]);
+            endTurnButton = new Button(1600, 450, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.RED]);
         addMouseListener(this);
         addKeyListener(this);
 
@@ -130,10 +130,24 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     @Override
     public void paint(Graphics g)
     {
-       
+
+        if(game.turnended) { //if turn just ended u need to reset the screen yk
+            action = -1;
+           System.out.println("end of turn");
+        }
+
+       Graphics2D g2 = (Graphics2D)g;
+        g2.setFont(font);
         if(game.errorPanel == true) {
+           
             g.drawImage(errorWindow, 725, 300, errorWindow.getWidth()/3, errorWindow.getHeight()/3, null);
             okButton.paint(g);
+
+            if(game.errorMessage.equals("You can't draw a locomotive!")) {
+            g2.drawString(game.errorMessage, 759, 510);
+            g2.drawString("OK", 904, 661);
+            }
+           
         }
         else {
         g.drawImage(map, MAP_X, MAP_Y, map.getWidth(), map.getHeight(), null);
@@ -141,16 +155,21 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         g.drawImage(leftBar, 0, 0, leftBar.getWidth(), leftBar.getHeight(),null);
         g.drawImage(rightBar, getWidth() - rightBar.getWidth(), 0, rightBar.getWidth(), rightBar.getHeight(),null);
 
-        g.drawString(Integer.toString(game.turn), 100, 200);
+        g2.drawString(Integer.toString(game.turn), 100, 200);
 
 
+        if(action == -1) { //-1 is if the turn ended and itll juust show the end turn button
+            endTurnButton.paint(g);
+            g2.drawString("END TURN", 1682, 508);
 
-        if(action == 0) {
-        for(Button a : actions) { //paint actions if they havent picked yet  
+        }
+        if(action == 0) { //0 is like the action screen and the start of their turn
+        for(Button a : actions) { 
             a.paint(g);
         }
+        System.out.println("start of turn");
     }
-    if(action == 1) { //if draw card 
+    if(action == 1) { //1 is if they decide to draw cards
         for(int c = 1; c < gameCards.length; c++) { //paint faceup
             int[] faceup = game.getFaceUpCards();
          
@@ -176,6 +195,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             cities.get(i).paint(g);
         }
     }
+}
     public void mousePressed(MouseEvent e)
     {
       
@@ -216,6 +236,18 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
                     break;
                 }
             }
+
+            if(action == -1) {
+                if(endTurnButton.isInside(x, y)) {
+                    game.turnended = false;
+                    action = 0;
+                   System.out.println("they pressed the end turn button" + action);
+                   repaint();
+                   return;
+                }
+
+            }
+
             if(action == 0) {
           for(int c = 0 ;c <  actions.length; c++) {
             if(actions[c].isInside(x, y)) {
