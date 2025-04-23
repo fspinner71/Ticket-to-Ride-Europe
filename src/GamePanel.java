@@ -18,8 +18,8 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     public static BufferedImage locomotiveTrack, locomotiveTunnelTrack; //extra stuff 
     public static final int MAP_X = 305;
     public static final int MAP_Y = -10;
-    private static Font font;
-    private Button back, okButton, endTurnButton;
+    private static Font font, bigFont;
+    private Button back, okButton, endTurnButton, confirm;
     private int action; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
 
@@ -36,9 +36,8 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
 
     static {
         font = new Font("Comic Sans MS", Font.BOLD, 24);
-
-        try
-        {
+        bigFont = new Font("Comic Sans MS", Font.BOLD, 36);
+       try {
             //main game assets
             map = ImageIO.read(GamePanel.class.getResource("/Images/Map.png"));
             city = ImageIO.read(GamePanel.class.getResource("/Images/City.png"));
@@ -109,13 +108,14 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         for(int c = 1; c < gameCards.length; c++) {
             gameCards[c] = new Button(1645, 115 + c * 135, cards[0].getWidth()/5, cards[0].getHeight()/5, deck); //face up cards button image is default
                 }
-        actions[0] = new Button(1600, 300, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.BLUE]);
-        actions[1] = new Button(1600, 410, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.YELLOW]);
-        actions[2] = new Button(1600, 520, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.PINK]);
-        actions[3] = new Button(1600, 630, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.ORANGE]);
+        actions[0] = new Button(1600, 300-10, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.BLUE]);
+        actions[1] = new Button(1600, 410-10, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.YELLOW]);
+        actions[2] = new Button(1600, 520-10, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.PINK]);
+        actions[3] = new Button(1600, 630-10, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.ORANGE]);
             back = new Button(1600, 925, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.RED]);
             okButton = new Button(820, 620, buttons[0].getWidth()/3, buttons[0].getHeight()/3, buttons[Game.GREEN]);
             endTurnButton = new Button(1600, 450, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.RED]);
+            confirm = new Button(1600, 820,buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.GREEN]);
         addMouseListener(this);
         addKeyListener(this);
 
@@ -137,6 +137,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         }
 
        Graphics2D g2 = (Graphics2D)g;
+    
         g2.setFont(font);
         if(game.errorPanel == true) {
            
@@ -168,6 +169,12 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             a.paint(g);
         }
         System.out.println("start of turn");
+        g2.setFont(bigFont);
+        g2.drawString("DRAW", 1695, 354);
+        g2.drawString("ROUTE", 1688, 464);
+        g2.drawString("STATION", 1664, 573);
+        g2.drawString("TICKET", 1684, 684);
+        g2.setFont(font);
     }
     if(action == 1) { //1 is if they decide to draw cards
         for(int c = 1; c < gameCards.length; c++) { //paint faceup
@@ -182,7 +189,24 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         }
 
         back.paint(g);
+        g2.setFont(bigFont);
+        g2.drawString("BACK", 1705, 987);
+        g2.drawString("Draw", 1703, 59);
+        g2.drawString("Cards", 1698, 100);
+        g2.setFont(font);
+    }
+    if(action == 2) { //2 is if they decide to buy a route
+        
 
+        back.paint(g);
+        confirm.paint(g);
+        g2.setFont(bigFont);
+        g2.drawString("BACK", 1705, 987);
+        g2.drawString("CONFIRM", 1664, 883);
+        g2.drawString("Purchasing", 1657, 59);
+        g2.drawString("Route", 1700, 105);
+
+        g2.setFont(font);
     }
 
     
@@ -257,7 +281,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
           }
 
         }
-        else if(action == 1) {
+        else if(action == 1) { //if they decide to draw card
             if(back.isInside(x, y) && game.drawnOne == false) { //if they click back button
                 action = 0;
             }
@@ -277,6 +301,15 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
                 }
 
         }
+        else if(action == 2) { //f tjey decide to buy a route
+            if(back.isInside(x, y)) { //if they click back button
+                action = 0;
+            }
+
+        }
+
+
+        }
         
 
 
@@ -285,7 +318,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     }
     repaint();
 }
-    }
+    
 
     public void keyPressed(KeyEvent e)
     {

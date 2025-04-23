@@ -168,7 +168,7 @@ public class Game {
                 if(cards[c] == Game.ANY) {
                     discardPile.add(cards[c]);
                     replaceCard(c);
-                    errorScreen("You can't draw a locomotive!");
+                    errorScreen("there is more than 3 locomotives");
                 }
             }
             
