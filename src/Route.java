@@ -30,6 +30,42 @@ public class Route {
 
         tracks = new Track[length];
     }
+    public void makeTracks(int[][] coords)
+    {
+        if(coords.length != length) {
+            return;
+        }
+
+        for(int i = 0; i < length; i++)
+        {
+            int x = coords[i][0];
+            int y = coords[i][1];
+            float rotation = (float) Math.toRadians(coords[i][2]);
+            Track t = new Track(color, x, y, rotation, tunnel);
+            addTrack(t);
+        }
+    }
+
+    public void shiftHorizontal(int x)
+    {
+        for(int i = 0; i < length; i++)
+        {
+            if(tracks[i] != null)
+            {
+                tracks[i].setX(tracks[i].getX() + x);
+            }
+        }
+    }
+    public void shiftVertical(int y)
+    {
+        for(int i = 0; i < length; i++)
+        {
+            if(tracks[i] != null)
+            {
+                tracks[i].setY(tracks[i].getY() + y);
+            }
+        }
+    }
     private void addPlayer(Player a) {
 
         player = a;

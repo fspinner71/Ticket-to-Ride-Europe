@@ -4,6 +4,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.*;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,6 +18,8 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     public static BufferedImage locomotiveTrack, locomotiveTunnelTrack; //extra stuff 
     public static final int MAP_X = 305;
     public static final int MAP_Y = -10;
+    private static Font font;
+    private Button back, okButton, endTurnButton;
     private int action; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
 
@@ -27,8 +30,13 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     private int locomotives;
     private int color;
     private int step;
+    private Route currentRoute;
+    private PrintWriter writer;
+    private ArrayList<Route> routes;
 
     static {
+        font = new Font("Comic Sans MS", Font.BOLD, 24);
+
         try
         {
             //main game assets
@@ -95,47 +103,89 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     {
         game = new Game();
         actions = new Button[4];
-        gameCards = new Button[6]; //like when you draw cards wtv it has includes the face down card
+        gameCards = new Button[6]; //like when you draw cards wtv it has includes the face down card ;; 0 = facedown, 1-5 = cards
 
-        gameCards[0] = new Button(1616, 120 , cards[0].getWidth()/4, cards[0].getHeight()/4, deck); //deck button
+        gameCards[0] = new Button(1645, 115 , cards[0].getWidth()/5, cards[0].getHeight()/5, deck); //deck button
         for(int c = 1; c < gameCards.length; c++) {
-            gameCards[c] = new Button(1616, 120 + c * 100, cards[0].getWidth()/4, cards[0].getHeight()/4, deck); //face up cards button image is default
+            gameCards[c] = new Button(1645, 115 + c * 135, cards[0].getWidth()/5, cards[0].getHeight()/5, deck); //face up cards button image is default
                 }
         actions[0] = new Button(1600, 300, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.BLUE]);
         actions[1] = new Button(1600, 410, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.YELLOW]);
         actions[2] = new Button(1600, 520, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.PINK]);
         actions[3] = new Button(1600, 630, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.ORANGE]);
-       
-        
+            back = new Button(1600, 925, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.RED]);
+            okButton = new Button(820, 620, buttons[0].getWidth()/3, buttons[0].getHeight()/3, buttons[Game.GREEN]);
+            endTurnButton = new Button(1600, 450, buttons[0].getWidth()/2, buttons[0].getHeight()/2, buttons[Game.RED]);
         addMouseListener(this);
         addKeyListener(this);
+
+        try {
+            writer = new PrintWriter("routes.csv", "UTF-8");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        routes = new ArrayList<Route>();
     }
     @Override
     public void paint(Graphics g)
     {
+
+        if(game.turnended) { //if turn just ended u need to reset the screen yk
+            action = -1;
+           System.out.println("end of turn");
+        }
+
+       Graphics2D g2 = (Graphics2D)g;
+        g2.setFont(font);
+        if(game.errorPanel == true) {
+           
+            g.drawImage(errorWindow, 725, 300, errorWindow.getWidth()/3, errorWindow.getHeight()/3, null);
+            okButton.paint(g);
+
+            if(game.errorMessage.equals("You can't draw a locomotive!")) {
+            g2.drawString(game.errorMessage, 759, 510);
+            g2.drawString("OK", 904, 661);
+            }
+           
+        }
+        else {
         g.drawImage(map, MAP_X, MAP_Y, map.getWidth(), map.getHeight(), null);
         g.drawImage(bottomBar, getWidth()/2 - bottomBar.getWidth()/2, getHeight() - bottomBar.getHeight(), bottomBar.getWidth(), bottomBar.getHeight(), null);
         g.drawImage(leftBar, 0, 0, leftBar.getWidth(), leftBar.getHeight(),null);
         g.drawImage(rightBar, getWidth() - rightBar.getWidth(), 0, rightBar.getWidth(), rightBar.getHeight(),null);
 
-        if(action == 0) {
-        for(Button a : actions) { //paint actions if they havent picked yet  
+        g2.drawString(Integer.toString(game.turn), 100, 200);
+
+
+        if(action == -1) { //-1 is if the turn ended and itll juust show the end turn button
+            endTurnButton.paint(g);
+            g2.drawString("END TURN", 1682, 508);
+
+        }
+        if(action == 0) { //0 is like the action screen and the start of their turn
+        for(Button a : actions) { 
             a.paint(g);
         }
+        System.out.println("start of turn");
     }
-    if(action == 1) { //if draw card 
-        for(int c = 1; c < gameCards.length; c++) {
+    if(action == 1) { //1 is if they decide to draw cards
+        for(int c = 1; c < gameCards.length; c++) { //paint faceup
             int[] faceup = game.getFaceUpCards();
-            System.out.println(faceup[c-1]);
+         
             gameCards[c].setImage(cards[faceup[c-1]]);
+            gameCards[c].paint(g);
         }
-        if(game.getDeck().isEmpty() == false) {
+        if(game.getDeck().isEmpty() == false) { //paint deck
           gameCards[0].paint(g);
-            System.out.println("deck painted");
+           
         }
 
+        back.paint(g);
 
     }
+
+    
 
         
 
@@ -145,13 +195,28 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             cities.get(i).paint(g);
         }
     }
+}
     public void mousePressed(MouseEvent e)
     {
       
+        
         if(e.getButton() == MouseEvent.BUTTON1)
         {
             int x = e.getX();
             int y = e.getY();
+
+            if(game.errorPanel == true) {
+                
+                if(okButton.isInside(x, y)) {
+                    game.unerror(); //stop error
+                }
+
+            }
+            else {// not error 
+
+            
+
+
             for(int i = 0; i < game.getCities().size(); i++)
             {
                 City city = game.getCities().get(i);
@@ -171,6 +236,18 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
                     break;
                 }
             }
+
+            if(action == -1) {
+                if(endTurnButton.isInside(x, y)) {
+                    game.turnended = false;
+                    action = 0;
+                   System.out.println("they pressed the end turn button" + action);
+                   repaint();
+                   return;
+                }
+
+            }
+
             if(action == 0) {
           for(int c = 0 ;c <  actions.length; c++) {
             if(actions[c].isInside(x, y)) {
@@ -180,23 +257,113 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
           }
 
         }
+        else if(action == 1) {
+            if(back.isInside(x, y) && game.drawnOne == false) { //if they click back button
+                action = 0;
+            }
 
+                for(int c = 1; c < gameCards.length; c++) { //click face up ikinda messed up so like ya 
+                    if(gameCards[c].isInside(x,y)) {
+                      
+                        game.drawCard(c-1);
+                        repaint();
+                        
+                    }
+                }
+                if(gameCards[0].isInside(x, y)) {
+                
+                    game.drawCard(5); //idk
+                    
+                }
+
+        }
         
 
-        repaint();
+
 
 
     }
+    repaint();
+}
     }
 
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent e)
+    {
 
         if(e.getKeyCode() == KeyEvent.VK_ENTER)
         {
             step++;
-            if(step >= 7)
+            if(step == 6)
             {
-                Route r = new Route(city1, city2, currentSize, tunnel, locomotives);
+                currentRoute = new Route(city1, city2, currentSize, tunnel, locomotives);
+                routes.add(currentRoute);
+                int[][] trackCoords = new int[currentSize][3];
+                float totalLength = 0;
+                float length1 = 0, length2 = 0;
+                int height = 0;
+                float normalizedX = city2.getXCoord() - city1.getXCoord();
+                float normalizedY = city2.getYCoord() - city1.getYCoord();
+                float initialAngle = (float)Math.atan((float)normalizedY/(float)normalizedX);
+                float distance = (float)Math.sqrt(normalizedX * normalizedX + normalizedY * normalizedY);
+                normalizedX /= distance;
+                normalizedY /= distance; 
+
+                normalizedX = 1;
+                normalizedY = 1;
+                for(int i = 0; i < currentSize/2 + currentSize % 2; i++)
+                {
+                    float currentLength;
+                    float rot;
+                    if(i < currentSize/2)
+                    {
+                        currentLength = (float)Math.pow((2 * (float)(currentSize/2 - i))/(currentSize), 0.5) * (((float)currentSize * Track.WIDTH - distance)/2) - length1;
+                        System.out.println(Math.pow((2 * (float)(currentSize/2 - i))/(currentSize), 0.5));
+                        rot = (float)(-Math.acos((float)currentLength/Track.WIDTH));
+                        length1 += currentLength;
+                    } else {
+                        currentLength = 0;
+                        rot = 0;
+                        length1 += 0;
+                    }
+
+                    height += (int)((Track.WIDTH * Math.sin(rot)));
+                    totalLength = length1 + length2;
+
+                    int x = (int)(totalLength);
+                    int y = (int)(height);
+
+                    trackCoords[i][0] = x;
+                    trackCoords[i][1] = 300;
+                    trackCoords[i][2] = (int)Math.toDegrees(rot);
+
+                    height += (int)((currentSize * Math.sin(rot)));
+
+                }
+
+                for(int i = currentSize - 1; i > currentSize/2; i--)
+                {
+                    float currentLength = (float)Math.pow((2 * (float)(currentSize/2 - i + currentSize/2 + currentSize % 2))/(currentSize - 1), 0.5) * (((float)currentSize * Track.WIDTH - distance)/2) - length2;
+                    System.out.println((((float)currentSize * Track.WIDTH - distance)/2));
+                    float rot = (float)(Math.acos((float)currentLength/Track.WIDTH));
+                    length2 += currentLength;
+
+                    height += (int)((Track.WIDTH * Math.sin(rot)));
+                    totalLength = length1 + length2;
+
+                    int x = (int)(totalLength);
+                    int y = (int)(height);
+
+                    trackCoords[i][0] = x ;
+                    trackCoords[i][1] = 300;
+                    trackCoords[i][2] = (int)Math.toDegrees(rot);
+
+                    height += (int)((currentSize * Math.sin(rot)));
+                }
+                System.out.println(totalLength + " " + distance);
+                currentRoute.makeTracks(trackCoords);
+            } else if(step == 7)
+            {
+                writer.append(city1.getName() + "," + city2.getName() + "," + currentSize + "," + tunnel + "," + locomotives + ",");
                 step = 0;
             }
             return;
@@ -226,21 +393,38 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             }
         } else if(step == 5)
         {
-            if(e.getKeyCode() == KeyEvent.VK_1)
-            {
-                flipped = true;
-            } else if(e.getKeyCode() == KeyEvent.VK_2)
-            {
-                tunnel = false;
-            }
-        } else if(step == 6)
-        {
             Integer s = Integer.parseInt("" + e.getKeyChar());
             if(s != null)
             {
                 locomotives = s;
             }
+        }else if(step == 6)
+        {
+            switch(e.getKeyCode())
+            {
+            case KeyEvent.VK_RIGHT:
+                currentRoute.shiftHorizontal(1);
+                break;
+            case KeyEvent.VK_LEFT:
+            currentRoute.shiftHorizontal(-1);
+                break;
+            case KeyEvent.VK_UP:
+            currentRoute.shiftVertical(-1);
+                break;
+            case KeyEvent.VK_DOWN:
+                currentRoute.shiftVertical(1);
+                break;
+            }
+
+            if(e.getKeyCode() == KeyEvent.VK_1)
+            {
+                flipped = true;
+            } else if(e.getKeyCode() == KeyEvent.VK_2)
+            {
+                flipped = false;
+            }
         }
+        repaint();
     }
     
     public void mouseReleased(MouseEvent e) {}
