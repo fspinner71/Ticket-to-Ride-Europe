@@ -189,24 +189,24 @@ public class Player {
                 City other = r.getB();
                 if(other.equals(start))
                 {
-                    other = r.getA();
+                    other = r.getA(); //r.getB() is the start, so other would be set to r.getA()
                 }
                 if(other.equals(end))
                 {
-                    return true;
+                    return true; //route found
                 }
                 else
                 {
                     if(other.equals(prev))
                     {
-                        return false;
+                        return false; //it's the same route from previous recursion, just backwards
                     }
-                    findRoute(other, start, end);
+                    findRoute(other, start, end); //continue search with 'other' as start city
                 }
             }
             
         }
-        return false;
+        return false; //not found
     }
     
 }
