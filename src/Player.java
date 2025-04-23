@@ -7,6 +7,7 @@ public class Player {
     
     private ArrayList<Route> routes;
     private int stations;
+    private Map<City, ArrayList<Pair>> adjacencyList;
 
 
     public Player() {
@@ -15,11 +16,13 @@ public class Player {
         tickets = new ArrayList<>();
         routes = new ArrayList<>();
         stations = 3;
+        adjacencyList = new TreeMap<City, ArrayList<Pair>>();
 
 
     }
     public void addRoute(Route r ) {
         routes.add(r);
+        adjacencyList.get(r.getA()).add(new Pair(r.getA(), r)); //fix 
     }
 
     
@@ -175,4 +178,35 @@ public class Player {
 
    }
 
+
+    public boolean findRoute(City start, City prev, City end)
+    {
+        for(Pair pairs: adjacencyList.get(start))
+        {
+            Route r = pairs.getRoute();
+            if(r.getA().equals(start) || r.getB().equals(start)) //the route has the city
+            {
+                City other = r.getB();
+                if(other.equals(start))
+                {
+                    other = r.getA();
+                }
+                if(other.equals(end))
+                {
+                    return true;
+                }
+                else
+                {
+                    if(other.equals(prev))
+                    {
+                        return false;
+                    }
+                    findRoute(other, start, end);
+                }
+            }
+            
+        }
+        return false;
+    }
+    
 }
