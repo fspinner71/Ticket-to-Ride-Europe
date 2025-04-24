@@ -263,12 +263,12 @@ public class Game {
     public void buyRoute(Route p, int locomotivesused, int buyingcolor) { // except tunel
 
         if(locomotivesused < players[turn].getNumLocomotives()) { //if they dont even have enough locomotivs 
-            //error panel
+            errorScreen("Don't have enough locomotives!");
            
 
         }
         else if (p.getColor() != ANY && p.getColor() != buyingcolor) { //if route is not a grey route and the color doesnt match what they tryna buy wth yk
-            //error pael
+            errorScreen("Color doesn't match!");
         }
 
 
@@ -278,6 +278,9 @@ public class Game {
                 endTurn();
 
 
+            }
+            else {
+                errorScreen("couldnt buy this route");
             }
         }
         
@@ -420,8 +423,10 @@ public class Game {
             //totalpoints += (countTickets(players[i]));
         }
     }
-
-    public void replaceCard(int index) { //method to replace face up card with face down card
+    public Player[] getPlayers()
+ {
+    return players;
+ }    public void replaceCard(int index) { //method to replace face up card with face down card
         if(deck.isEmpty() == false) {
             cards[index] = deck.get(0);
             deck.remove(0);
