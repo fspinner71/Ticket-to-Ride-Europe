@@ -15,11 +15,12 @@ public class Route {
 
 
 
-    public Route(City a, City b, int length, boolean t, int loco) {
+    public Route(City a, City b, int length, boolean t, int loco, int color) {
         this.a = a;
         this.b = b;
 
         this.length = length;
+        this.color = color;
         tunnel = t;
         locomotivesRequired = loco;
 
@@ -38,14 +39,24 @@ public class Route {
 
         for(int i = 0; i < length; i++)
         {
+            boolean l = false;
+            if(i < locomotivesRequired)
+            {
+                l = true;
+            }
             int x = coords[i][0];
             int y = coords[i][1];
             float rotation = (float) Math.toRadians(coords[i][2]);
-            Track t = new Track(color, x, y, rotation, tunnel);
+            Track t = new Track(color, x, y, rotation, tunnel, l);
             addTrack(t);
         }
     }
-
+    public void moveTrack(int i, int moveX, int moveY, int rot)
+    {
+        tracks[i].setX(tracks[i].getX() + moveX);
+        tracks[i].setY(tracks[i].getY() + moveY);
+        tracks[i].rotate((float)Math.toRadians(rot));
+    }
     public void shiftHorizontal(int x)
     {
         for(int i = 0; i < length; i++)
@@ -131,5 +142,14 @@ public class Route {
         length = size;
         Track[] newTracks = new Track[size];
         tracks = newTracks;
+    }
+    public String toString()
+    {
+        String str = "";
+        for(Track t : tracks)
+        {
+            str += t.getX() + "," + t.getY() + "," + t.getRotation() + ",";
+        }
+        return str;
     }
 }

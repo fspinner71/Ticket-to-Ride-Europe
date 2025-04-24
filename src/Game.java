@@ -6,7 +6,7 @@ public class Game {
  
     private Player players[];
     private ArrayList<City> cities;
-    private Route routes[];
+    private ArrayList<Route> routes;
     private int cards[];
     private Stack<Ticket> tickets = new Stack<Ticket>();
     private Stack<Ticket> bigtickets = new Stack<Ticket>();
@@ -46,6 +46,49 @@ public class Game {
                 ArrayList<Route> routes = new ArrayList<Route>(); //arraylist of routes for the city
                 City temp = new City(name, routes, x, y); //create the city object
                 cities.add(temp); //add to the array of cities
+            }
+
+            routes = new ArrayList<Route>();
+            File routesCSV = new File("src/csv/routes.csv"); //create file reader
+            Scanner routeScanner = new Scanner(routesCSV);
+            String routeLine = routeScanner.nextLine();
+            String[] routeInfo = routeLine.split(","); //array of the stuff in csv file
+            for(int i = 0; i < routeInfo.length; i+=6)
+            {
+                for(int j = 0; j < 6; j++)
+                {
+                    System.out.println("i: i + " + j + ", " + routeInfo[i+j]);
+                }
+                String city1Name = routeInfo[i];
+                String city2Name = routeInfo[i+1];
+                City city1 = null, city2 = null;
+                int color = Integer.parseInt(routeInfo[i+2]);
+                boolean tunnel = Boolean.parseBoolean(routeInfo[i+3]);
+                int locomotives = Integer.parseInt(routeInfo[i+4]);
+                int length = Integer.parseInt(routeInfo[i+5]);
+                int[][] trackInfo = new int[length][3];
+                for(int j = 0; j < length; j++)
+                {
+                    trackInfo[j][0] = Integer.parseInt(routeInfo[i+6]);
+                    trackInfo[j][1] = Integer.parseInt(routeInfo[i+7]);
+                    trackInfo[j][2] = (int)Math.toDegrees(Float.parseFloat(routeInfo[i+8]));
+                    i += 3;
+                }
+
+                for(City c : cities)
+                {
+                    if(c.getName().equals(city1Name))
+                    {
+                        city1 = c;
+                    } else if(c.getName().equals(city2Name))
+                    {
+                        city2 = c;
+                    }
+                }
+
+                Route r = new Route(city1, city2, length, tunnel, locomotives, color);
+                r.makeTracks(trackInfo);
+                routes.add(r);
             }
 
         } catch(Exception e) {
@@ -205,6 +248,10 @@ public class Game {
         }
     public ArrayList<City> getCities() { //returns the array of cities
         return cities;
+    }
+    public ArrayList<Route> getRoutes()
+    {
+        return routes;
     }
 
     public int[] getFaceUpCards() {
@@ -399,10 +446,6 @@ public class Game {
         }
         return score;
     }
-    public int longestRoute(){
-         
-    }
-    
 }
 
 

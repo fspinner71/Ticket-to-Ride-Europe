@@ -3,18 +3,19 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
 public class Track {
-    public static final int WIDTH = 75;
-    public static final int HEIGHT = 20;
+    public static final int WIDTH = 42;
+    public static final int HEIGHT = 15;
     private static BufferedImage tracks[];
     private static BufferedImage tunnelTracks[];
     private int color;
     private int x, y;
     private float rotation;
     private boolean tunnel;
+    private boolean locomotive;
 
     static {
-        tracks = new BufferedImage[9];
-        tunnelTracks = new BufferedImage[9];
+        tracks = new BufferedImage[10];
+        tunnelTracks = new BufferedImage[10];
         try {
             tracks[Game.RED] = ImageIO.read(Track.class.getResource("/Images/RedTrack.png")); 
             tracks[Game.ORANGE] = ImageIO.read(Track.class.getResource("/Images/OrangeTrack.png"));
@@ -25,6 +26,7 @@ public class Track {
             tracks[Game.WHITE] = ImageIO.read(Track.class.getResource("/Images/WhiteTrack.png")); 
             tracks[Game.BLACK] = ImageIO.read(Track.class.getResource("/Images/BlackTrack.png")); 
             tracks[Game.ANY] = ImageIO.read(Track.class.getResource("/Images/GrayTrack.png")); 
+            tracks[9] = ImageIO.read(Track.class.getResource("/Images/LocomotiveTrack.png")); 
 
             //tunnel track
             tunnelTracks = new BufferedImage[9];
@@ -37,17 +39,22 @@ public class Track {
             tunnelTracks[Game.WHITE] = ImageIO.read(Track.class.getResource("/Images/WhiteTunnelTrack.png"));
             tunnelTracks[Game.BLACK] = ImageIO.read(Track.class.getResource("/Images/BlackTunnelTrack.png"));
             tunnelTracks[Game.ANY] = ImageIO.read(Track.class.getResource("/Images/GrayTunnelTrack.png"));
+            tunnelTracks[9] = ImageIO.read(Track.class.getResource("/Images/LocomotiveTunnelTrack.png"));
+
+
+            
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
-    public Track(int color, int x, int y, float rotation, boolean tunnel) {
+    public Track(int color, int x, int y, float rotation, boolean tunnel, boolean locomotive) {
         this.color = color;
         this.x = x;
         this.y = y;
         this.rotation = rotation;
         this.tunnel = tunnel;
+        this.locomotive = locomotive;
     }
 
     public void paint(Graphics g) 
@@ -56,7 +63,25 @@ public class Track {
         AffineTransform backup = g2.getTransform();
         AffineTransform a = AffineTransform.getRotateInstance(rotation, x, y);
         g2.setTransform(a);
-        g2.drawImage(tracks[color], x - WIDTH/2, y - HEIGHT/2, WIDTH, HEIGHT, null);
+        if(tunnel)
+        {
+            if(locomotive)
+            {
+                g2.drawImage(tunnelTracks[9], x - WIDTH/2, y - HEIGHT/2, WIDTH, HEIGHT, null);
+
+            } else {
+                g2.drawImage(tunnelTracks[color], x - WIDTH/2, y - HEIGHT/2, WIDTH, HEIGHT, null);
+            }
+        } else {
+            if(locomotive)
+            {
+                g2.drawImage(tracks[9], x - WIDTH/2, y - HEIGHT/2, WIDTH, HEIGHT, null);
+
+            } else {
+                g2.drawImage(tracks[color], x - WIDTH/2, y - HEIGHT/2, WIDTH, HEIGHT, null);
+
+            }
+        }
         g2.setTransform(backup);
     }
     public void setRotation(float rotation) {
