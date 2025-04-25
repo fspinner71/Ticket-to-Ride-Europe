@@ -21,7 +21,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     private static Font font, bigFont;
 
     private Button back, okButton, endTurnButton, confirm, arrowup, arrowdown, arrowup2, arrowdown2;
-    private int action, numberoflocomotivestheywanttouse; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
+    private int action, numberoflocomotivestheywanttouse, routebuyingcolor; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
 
     private City city1, city2;
@@ -34,8 +34,9 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     private Route currentRoute;
     private PrintWriter writer;
     private ArrayList<Route> routes;
+    private Route currentlyBuying;
     private int selectedTrack;
-
+    private String[] arrayforchoosingroutecolor;
     static {
         font = new Font("Comic Sans MS", Font.BOLD, 24);
         bigFont = new Font("Comic Sans MS", Font.BOLD, 36);
@@ -135,7 +136,10 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         routes = new ArrayList<Route>();
         action = 0;
         numberoflocomotivestheywanttouse= 0;
-
+        routebuyingcolor = 0;
+         String[] temp = {"Red", "Blue", "Yellow", "Green", "Orange", "Pink", "White", "Black" };
+         arrayforchoosingroutecolor = temp;
+        currentlyBuying = null;
     }
     @Override
     public void paint(Graphics g)
@@ -176,6 +180,9 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             a.paint(g);
         }
         numberoflocomotivestheywanttouse = 0;
+        routebuyingcolor = 0;
+        currentlyBuying = null;
+
         System.out.println("start of turn");
         g2.setFont(bigFont);
         g2.drawString("DRAW", 1695, 354);
@@ -217,7 +224,17 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         g2.drawString("CONFIRM", 1664, 883);
         g2.drawString("Purchasing", 1657, 59);
         g2.drawString("Route", 1700, 105);
+        g2.drawString("Select", 1690, 380);
+        g2.drawString("number of", 1660, 415);
+        g2.drawString("locomotives and", 1615, 450);
+        g2.drawString("buying color", 1645, 485);
         g2.drawString(String.valueOf(numberoflocomotivestheywanttouse), 1740, 748);
+        g2.drawString(arrayforchoosingroutecolor[routebuyingcolor], 1700, 585);
+        g2.drawString("to", 1730, 240);
+            if(currentlyBuying != null) {
+                g2.drawString(currentlyBuying.getA().getName(), 1730, 200);
+                g2.drawString(currentlyBuying.getB().getName(), 1730, 300);
+            }
         g2.setFont(font);
     }
 
@@ -371,12 +388,45 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             if(arrowdown2.isInside(x, y) && numberoflocomotivestheywanttouse > 0) {
                 numberoflocomotivestheywanttouse--;
             }
+            if(arrowdown.isInside(x, y)) {
+                if(routebuyingcolor == 0) {
+                    routebuyingcolor = 7;
+                }
+                else {
+                    routebuyingcolor--;
+                }
+                
+            }
+            if(arrowup.isInside(x, y)) {
+                if(routebuyingcolor == 7) {
+                    routebuyingcolor = 0;
+                }
+                else {
+                    routebuyingcolor++;
+                }
+                
+            }
 
-        }
-        if(confirm.isInside(x, y)) { //biu route
+
+            for(int c =0; c< game.getRoutes().size(); c++) {
+                for(Button a: game.getRoutes().get(c).getButtons()) {
+                    if(a.isInside(x, y)) {
+                        currentlyBuying = game.getRoutes().get(c);
+                        break;
+                    }
+                } {
+
+                }
+            }
             
         }
-
+        if(confirm.isInside(x, y)) { //biu route
+            game.buyRoute(currentlyBuying, numberoflocomotivestheywanttouse, routebuyingcolor);
+        }
+        if(game.turnended) { //if turn just ended u need to reset the screen yk
+            action = -1;
+           System.out.println("end of turn");
+        }
 
         
         }

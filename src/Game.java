@@ -280,7 +280,7 @@ public class Game {
 
             }
             else {
-                errorScreen("couldnt buy this route");
+                errorScreen("too broke");
             }
         }
         
