@@ -57,26 +57,6 @@ public class Route {
         tracks[i].setY(tracks[i].getY() + moveY);
         tracks[i].rotate((float)Math.toRadians(rot));
     }
-    public void shiftHorizontal(int x)
-    {
-        for(int i = 0; i < length; i++)
-        {
-            if(tracks[i] != null)
-            {
-                tracks[i].setX(tracks[i].getX() + x);
-            }
-        }
-    }
-    public void shiftVertical(int y)
-    {
-        for(int i = 0; i < length; i++)
-        {
-            if(tracks[i] != null)
-            {
-                tracks[i].setY(tracks[i].getY() + y);
-            }
-        }
-    }
     private void addPlayer(Player a) {
 
         player = a;
@@ -121,9 +101,18 @@ public class Route {
     }
     public void paint(Graphics g)
     {
+        Graphics2D g2 = (Graphics2D)g;
+        g2.setStroke(new BasicStroke(5));
+        g2.setColor(Color.BLACK);
+        g2.drawLine(a.getXCoord() + GamePanel.MAP_X, a.getYCoord() + GamePanel.MAP_Y, tracks[0].getX(), tracks[0].getY());
+        g2.drawLine(b.getXCoord() + GamePanel.MAP_X, b.getYCoord() + GamePanel.MAP_Y, tracks[length-1].getX(), tracks[length-1].getY());
+        for(int i = 0; i < length - 1; i++)
+        {
+            g2.drawLine(tracks[i].getX(), tracks[i].getY(), tracks[i+1].getX(), tracks[i+1].getY());
+        }
         for(int i = 0; i < length; i++) {
             if (tracks[i] != null) {
-                tracks[i].paint(g);
+                tracks[i].paint(g2);
             }
         }
     }

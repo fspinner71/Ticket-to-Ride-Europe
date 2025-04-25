@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.*;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,6 +21,9 @@ public class GamePanel extends JPanel implements MouseListener {
     private Button back, okButton, endTurnButton, confirm, arrowup, arrowdown, arrowup2, arrowdown2;
     private int action, numberoflocomotivestheywanttouse; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
+
+    private City selected;
+    private PrintWriter writer;
 
     static {
         font = new Font("Comic Sans MS", Font.BOLD, 24);
@@ -112,7 +116,6 @@ public class GamePanel extends JPanel implements MouseListener {
             arrowdown2 = new Button(1700, 760,upArrow.getWidth()/4, upArrow.getHeight()/4, downArrow);
         action = 0;
         numberoflocomotivestheywanttouse= 0;
-
     }
     @Override
     public void paint(Graphics g)
@@ -197,16 +200,14 @@ public class GamePanel extends JPanel implements MouseListener {
         g2.drawString(String.valueOf(numberoflocomotivestheywanttouse), 1740, 748);
         g2.setFont(font);
     }
-
+    for(Route r : game.getRoutes())
+    {
+        r.paint(g);
+    }
         ArrayList<City> cities = game.getCities();
         for(int i = 0; i < cities.size(); i++)
         {
             cities.get(i).paint(g);
-        }
-
-        for(Route r : game.getRoutes())
-        {
-            r.paint(g);
         }
     }
     }
@@ -289,9 +290,11 @@ public class GamePanel extends JPanel implements MouseListener {
     }
         repaint();
     }
-    
+
+
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
     public void mouseClicked(MouseEvent e) {}
+
 }
