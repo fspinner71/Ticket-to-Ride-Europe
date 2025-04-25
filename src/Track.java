@@ -3,7 +3,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
 public class Track {
-    public static final int WIDTH = 75;
+    public static final int WIDTH = 60;
     public static final int HEIGHT = 20;
     private static BufferedImage tracks[];
     private static BufferedImage tunnelTracks[];
