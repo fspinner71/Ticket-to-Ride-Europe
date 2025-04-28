@@ -167,8 +167,37 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         g.drawImage(bottomBar, getWidth()/2 - bottomBar.getWidth()/2, getHeight() - bottomBar.getHeight(), bottomBar.getWidth(), bottomBar.getHeight(), null);
         g.drawImage(leftBar, 0, 0, leftBar.getWidth(), leftBar.getHeight(),null);
         g.drawImage(rightBar, getWidth() - rightBar.getWidth(), 0, rightBar.getWidth(), rightBar.getHeight(),null);
-        
+        g.drawImage(textBoxLarge, (bottomBar.getWidth())*5/9 + leftBar.getWidth(), getHeight() - bottomBar.getHeight() + 100, 130, 150, null);
+        g.drawImage(textBoxLarge, (bottomBar.getWidth())*6/9 + leftBar.getWidth(), getHeight() - bottomBar.getHeight() + 100, 130, 150, null);
+        g.drawImage(textBoxLarge, (bottomBar.getWidth())*7/9 + leftBar.getWidth(), getHeight() - bottomBar.getHeight() + 100, 130, 150, null);
+        g2.drawString("Stations", bottomBar.getWidth()*5/9 + leftBar.getWidth() + 10, getHeight() - bottomBar.getHeight() + 85);
+        g2.drawString("Points", bottomBar.getWidth()*6/9 + leftBar.getWidth() + 15, getHeight() - bottomBar.getHeight() + 85);
+        g2.drawString("Cars", bottomBar.getWidth()*7/9 + leftBar.getWidth() + 20, getHeight() - bottomBar.getHeight() + 85);
         g2.drawString(Integer.toString(game.turn), 100, 200);
+        //draw player x
+        g2.setFont(bigFont);
+            String currentplayer = "Player " + game.turn;
+        g2.drawString(currentplayer, 325, 822);
+        g2.setFont(font);
+            //
+
+        //draw current player's cards
+        int totalnum = game.getPlayers()[game.turn].getNumTrainCards();
+        int imagegap = 0;
+        if(totalnum !=  0) {
+             imagegap = 400/totalnum;
+        }
+        if(totalnum < 10) {
+            imagegap = 20;
+        }
+        int tempimagegapthing = 0;
+        for(int c = 0; c < game.getPlayers()[game.turn].getTrainCards().length; c++) {
+            for(int i = 0; i  < game.getPlayers()[game.turn].getTrainCards()[c]; i++) { //325 900
+                g.drawImage(rotatecounterclockwise(cards[c]), 325 + tempimagegapthing * imagegap, 830, rotatecounterclockwise(cards[c]).getWidth()/5, rotatecounterclockwise(cards[c]).getHeight()/5, null);
+                tempimagegapthing++;
+            }
+        }
+
 
             if(action == -1) { //-1 is if the turn ended and itll juust show the end turn button
             endTurnButton.paint(g);
@@ -551,7 +580,21 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             repaint();
         }
     }
-    
+    public  static BufferedImage rotatecounterclockwise(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        BufferedImage rotatedImage = new BufferedImage(height, width, image.getType());
+        Graphics2D g = rotatedImage.createGraphics();
+
+        g.translate(0, width);
+        g.rotate(-Math.PI / 2); // Rotate 90 degrees counterclockwise
+
+        g.drawImage(image, 0, 0, null);
+        g.dispose();
+
+        return rotatedImage;
+    }
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
