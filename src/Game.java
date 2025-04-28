@@ -4,7 +4,7 @@ import java.util.*;
 import jdk.jshell.DeclarationSnippet;
 public class Game {
  
-    private Player players[];
+    public static Player players[];
     private ArrayList<City> cities;
     private ArrayList<Route> routes;
     private int cards[];
