@@ -167,7 +167,12 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         g.drawImage(bottomBar, getWidth()/2 - bottomBar.getWidth()/2, getHeight() - bottomBar.getHeight(), bottomBar.getWidth(), bottomBar.getHeight(), null);
         g.drawImage(leftBar, 0, 0, leftBar.getWidth(), leftBar.getHeight(),null);
         g.drawImage(rightBar, getWidth() - rightBar.getWidth(), 0, rightBar.getWidth(), rightBar.getHeight(),null);
-        
+        g.drawImage(textBoxLarge, (bottomBar.getWidth())*5/9 + leftBar.getWidth(), getHeight() - bottomBar.getHeight() + 100, 130, 150, null);
+        g.drawImage(textBoxLarge, (bottomBar.getWidth())*6/9 + leftBar.getWidth(), getHeight() - bottomBar.getHeight() + 100, 130, 150, null);
+        g.drawImage(textBoxLarge, (bottomBar.getWidth())*7/9 + leftBar.getWidth(), getHeight() - bottomBar.getHeight() + 100, 130, 150, null);
+        g2.drawString("Stations", bottomBar.getWidth()*5/9 + leftBar.getWidth() + 10, getHeight() - bottomBar.getHeight() + 85);
+        g2.drawString("Points", bottomBar.getWidth()*6/9 + leftBar.getWidth() + 15, getHeight() - bottomBar.getHeight() + 85);
+        g2.drawString("Cars", bottomBar.getWidth()*7/9 + leftBar.getWidth() + 20, getHeight() - bottomBar.getHeight() + 85);
         g2.drawString(Integer.toString(game.turn), 100, 200);
 
             if(action == -1) { //-1 is if the turn ended and itll juust show the end turn button
