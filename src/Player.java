@@ -127,6 +127,13 @@ public class Player {
     public int[] getTrainCards() {
         return trainCards;
     }
+    public int getNumTrainCards() {
+        int count = 0;
+        for(int c = 0; c< trainCards.length; c++) {
+            count+= trainCards[c];
+        }
+        return count;
+    }
     public ArrayList<Ticket> getTickets() {
         return tickets;
     }

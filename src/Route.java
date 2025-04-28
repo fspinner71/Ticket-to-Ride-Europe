@@ -30,7 +30,12 @@ public class Route {
         stationStart = false;
 
         tracks = new Track[length];
+
+
+
+        
     }
+    
     public void makeTracks(int[][] coords)
     {
         if(coords.length != length) {
