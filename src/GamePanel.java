@@ -187,7 +187,9 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         if(totalnum !=  0) {
              imagegap = 400/totalnum;
         }
-        
+        if(totalnum < 10) {
+            imagegap = 20;
+        }
         int tempimagegapthing = 0;
         for(int c = 0; c < game.getPlayers()[game.turn].getTrainCards().length; c++) {
             for(int i = 0; i  < game.getPlayers()[game.turn].getTrainCards()[c]; i++) { //325 900
