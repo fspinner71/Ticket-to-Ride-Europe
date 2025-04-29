@@ -141,6 +141,8 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
          arrayforchoosingroutecolor = temp;
         currentlyBuying = null;
         theywannaplacestationon = null;
+
+        
     }
     @Override
     public void paint(Graphics g)
@@ -152,17 +154,24 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         Graphics2D g2 = (Graphics2D)g;
         g2.setFont(font);
         g2.setFont(font);
+        g.drawImage(errorWindow, 725, 300, errorWindow.getWidth()/3, errorWindow.getHeight()/3, null);
+            okButton.paint(g);
+            
+            //28 
+            
         if(game.errorPanel == true) {
            
             g.drawImage(errorWindow, 725, 300, errorWindow.getWidth()/3, errorWindow.getHeight()/3, null);
             okButton.paint(g);
-
-            if(game.errorMessage.equals("You can't draw a locomotive!")) {
-            g2.drawString(game.errorMessage, 759, 510);
+            System.out.println(game.errorMessage);
+          
+            g2.drawString(game.errorMessage, 759 - (game.errorMessage.length() - 28) * 6, 510);
             g2.drawString("OK", 904, 661);
-            }
+            
            
+            
         }
+        
         else {
         g.drawImage(map, MAP_X, MAP_Y, map.getWidth(), map.getHeight(), null);
         g.drawImage(bottomBar, getWidth()/2 - bottomBar.getWidth()/2, getHeight() - bottomBar.getHeight(), bottomBar.getWidth(), bottomBar.getHeight(), null);
@@ -178,11 +187,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         g2.drawString("" + game.players[game.turn].getPoints(), bottomBar.getWidth()*6/9 + leftBar.getWidth() + 50, getHeight() - bottomBar.getHeight() + 180);
         g2.drawString("" + game.players[game.turn].getNumTrains(), bottomBar.getWidth()*7/9 + leftBar.getWidth() + 50, getHeight() - bottomBar.getHeight() + 180);
         g2.drawString(Integer.toString(game.turn), 100, 200);
-        for(City a : game.getCities()) {
-            if(a.hasStation()) {
-                g.drawImage(stations[0], a.getXCoord()+100, a.getYCoord()-100, stations[0].getWidth()/30, stations[0].getHeight()/30, null);
-            }
-        }
+        
         //draw player x
         g2.setFont(bigFont);
             String currentplayer = "Player " + (game.turn+1);
@@ -327,7 +332,11 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         {
             r.paint(g);
         }
-
+        for(City a : game.getCities()) {
+            if(a.hasStation()) {
+                g.drawImage(stations[0], GamePanel.MAP_X + a.getXCoord() - 25/2 - 7, GamePanel.MAP_Y + a.getYCoord() - 25/2 - 12, stations[0].getWidth()/50, stations[0].getHeight()/50, null);
+            }
+        }
         String text = "";
         g.setFont(font);
         g.drawString(text, 30,900);
@@ -367,6 +376,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
           for(int c = 0 ;c <  actions.length; c++) {
             if(actions[c].isInside(x, y)) {
                 action = c+1; //change turn wtv they click 
+                
                 repaint();
             }
           }
@@ -436,7 +446,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
                 game.buyRoute(currentlyBuying, numberoflocomotivestheywanttouse, routebuyingcolor);
             }
         }
-        if(action == 3) { //buy station
+       else if(action == 3) { //buy station
 
             if(arrowdown.isInside(x, y)) {
                 if(routebuyingcolor == 0) {
