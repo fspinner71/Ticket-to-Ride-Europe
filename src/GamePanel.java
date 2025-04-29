@@ -23,7 +23,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     private Button back, okButton, endTurnButton, confirm, arrowup, arrowdown, arrowup2, arrowdown2;
     private int action, numberoflocomotivestheywanttouse, routebuyingcolor; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
-
+    private City theywannaplacestationon;
     private City city1, city2;
     private int currentSize;
     private boolean tunnel;
@@ -140,6 +140,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
          String[] temp = {"Red", "Blue", "Yellow", "Green", "Orange", "Pink", "White", "Black" };
          arrayforchoosingroutecolor = temp;
         currentlyBuying = null;
+        theywannaplacestationon = null;
     }
     @Override
     public void paint(Graphics g)
@@ -176,7 +177,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         g2.drawString(Integer.toString(game.turn), 100, 200);
         //draw player x
         g2.setFont(bigFont);
-            String currentplayer = "Player " + game.turn;
+            String currentplayer = "Player " + game.turn++;
         g2.drawString(currentplayer, 325, 822);
         g2.setFont(font);
             //
@@ -188,7 +189,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
              imagegap = 400/totalnum;
         }
         if(totalnum < 10) {
-            imagegap = 20;
+            imagegap = 40;
         }
         int tempimagegapthing = 0;
         for(int c = 0; c < game.getPlayers()[game.turn].getTrainCards().length; c++) {
@@ -211,7 +212,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         numberoflocomotivestheywanttouse = 0;
         routebuyingcolor = 0;
         currentlyBuying = null;
-
+        theywannaplacestationon = null;
         System.out.println("start of turn");
         g2.setFont(bigFont);
         g2.drawString("DRAW", 1695, 354);
@@ -265,6 +266,17 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
                 g2.drawString(currentlyBuying.getB().getName(), 1730, 300);
             }
         g2.setFont(font);
+    }
+
+    if(action == 3) { //they wnana buy a station
+        back.paint(g);
+            confirm.paint(g);
+            g2.setFont(bigFont);
+            g2.drawString("BACK", 1705, 987);
+            g2.drawString("CONFIRM", 1664, 883);
+        if(theywannaplacestationon != null) {
+            g2.drawString("", 1736, 425);
+        }
     }
 
         ArrayList<City> cities = game.getCities();
@@ -447,11 +459,26 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
 
                 }
             }
-            
+            if(confirm.isInside(x, y) && currentlyBuying != null) { //biu route
+                game.buyRoute(currentlyBuying, numberoflocomotivestheywanttouse, routebuyingcolor);
+            }
         }
-        if(confirm.isInside(x, y)) { //biu route
-            game.buyRoute(currentlyBuying, numberoflocomotivestheywanttouse, routebuyingcolor);
+        if(action == 3) { //buy station
+            if(back.isInside(x, y)) { //if they click back button
+                action = 0;
+            }
+            if(confirm.isInside(x, y) && currentlyBuying != null) { //biu route
+             //   game.getPlayers()[game.turn].buyStation();
+            }
+            for(City a : game.getCities()) {
+                if(a.getButton().isInside(x, y)) {
+                    theywannaplacestationon = a;
+                }
+            }
+
+
         }
+       
         if(game.turnended) { //if turn just ended u need to reset the screen yk
             action = -1;
            System.out.println("end of turn");
