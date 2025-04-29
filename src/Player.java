@@ -242,5 +242,31 @@ public class Player {
         }
         return false; //not found
     }
+
+    public int getCountOf(int color)
+    {
+        int count = 0;
+        for(int trainCardColor: getTrainCards())
+        {
+            if(trainCardColor == color)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void remove(int color)
+    {
+        for(int i = 0; i < trainCards.length; i++) 
+        {
+            int trainCard = trainCards[i];
+            if(trainCard == color)
+            {
+                trainCards[i] = -1;
+            }
+        }
+    }
+
     
 }

@@ -321,9 +321,9 @@ public class Game {
 
 
     }
-/* idk how we should do 
     public boolean buyTunnel(Route p, int locomotivesused, int buyingcolor) { //returns true if u succesfully buy it reutnr false if at least one card matches 
         int[] threecards = new int[3];
+        int nummatching = 0;
             for(int c  = 0; c < 3; c++) { //get the 3 drawn cards from the deck, if deck is empty and u cant draw it then it becomes -1;
                 if(deck.isEmpty() == false) {
                 threecards[c] = deck.get(0);
@@ -332,20 +332,29 @@ public class Game {
                     threecards[c] = -1;
                 }
             }
-            int nummatching = 0;
             for(int c = 0; c < threecards[c]; c++){ 
                 if(threecards[c] == buyingcolor) {
                     nummatching++; // how many cards match
                 }
-
-            
             }
-            if(nummatching > 0) {
-                return false;
+            if(nummatching <= 0) {
+                return true;
             }
+           else
+           { 
+                if(players[turn].getCountOf(buyingcolor) >= nummatching)
+                {
+                    for(int i = 0; i < nummatching; i++)
+                    {
+                        players[turn].remove();
+                    }
+                    return true;
+                }
+                return false;               
+           }
     }
     
-*/
+
 
     public void distributeTickets(){ 
 
