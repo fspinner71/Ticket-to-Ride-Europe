@@ -305,30 +305,6 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         }
 
         String text = "";
-        switch(step)
-        {
-        case 0:
-            text = "Pick city 1";
-            break;
-        case 1:
-            text = "Pick city 2";
-            break;
-        case 2:
-            text = "Pick length";
-            break;
-        case 3:
-            text = "Pick color: 0=red, 1=blue, 2=yellow, 3=green, 4=orange, 5=pink, 6=white, 7=black, 8=any";
-            break;
-        case 4:
-            text = "Pick tunnel\n 1 = true, 2 = false";
-            break;
-        case 5:
-            text = "Pick number of locomotives";
-            break;
-        case 6:
-            text = "Shift tunnel;";
-            break;
-        }
         g.setFont(font);
         g.drawString(text, 30,900);
     }
