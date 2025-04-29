@@ -176,10 +176,11 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         g2.drawString("" + game.players[game.turn].getNumStations(), bottomBar.getWidth()*5/9 + leftBar.getWidth() + 10, getHeight() - bottomBar.getHeight() + 85);
         g2.drawString("Points", bottomBar.getWidth()*6/9 + leftBar.getWidth() + 15, getHeight() - bottomBar.getHeight() + 85);
         g2.drawString("Cars", bottomBar.getWidth()*7/9 + leftBar.getWidth() + 20, getHeight() - bottomBar.getHeight() + 85);
+
         g2.drawString(Integer.toString(game.turn), 100, 200);
         //draw player x
         g2.setFont(bigFont);
-            String currentplayer = "Player " + game.turn;
+            String currentplayer = "Player " + (game.turn + 1);
         g2.drawString(currentplayer, 325, 822);
         g2.setFont(font);
             //
