@@ -218,14 +218,6 @@ public class GamePanel extends JPanel implements MouseListener {
             int x = e.getX();
             int y = e.getY();
 
-            for(Route r : game.getRoutes())
-            {
-                if(r.isInside(x, y))
-                {
-                    System.out.println(r.getA() + " " + r.getB());
-                }
-            }
-
             if(game.errorPanel == true) {
                 
                 if(okButton.isInside(x, y)) {
