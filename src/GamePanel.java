@@ -288,6 +288,10 @@ public class GamePanel extends JPanel implements MouseListener {
         }
     }
 
+    for(Route r : game.getRoutes())
+        {
+            r.paint(g);
+        }
         ArrayList<City> cities = game.getCities();
         for(int i = 0; i < cities.size(); i++)
         {
