@@ -23,7 +23,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     private Button back, okButton, endTurnButton, confirm, arrowup, arrowdown, arrowup2, arrowdown2;
     private int action, numberoflocomotivestheywanttouse, routebuyingcolor; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
-
+    private City theywannaplacestationon;
     private City city1, city2;
     private int currentSize;
     private boolean tunnel;
@@ -140,6 +140,9 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
          String[] temp = {"Red", "Blue", "Yellow", "Green", "Orange", "Pink", "White", "Black" };
          arrayforchoosingroutecolor = temp;
         currentlyBuying = null;
+        theywannaplacestationon = null;
+
+        
     }
     @Override
     public void paint(Graphics g)
@@ -151,17 +154,24 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         Graphics2D g2 = (Graphics2D)g;
         g2.setFont(font);
         g2.setFont(font);
+        g.drawImage(errorWindow, 725, 300, errorWindow.getWidth()/3, errorWindow.getHeight()/3, null);
+            okButton.paint(g);
+            
+            //28 
+            
         if(game.errorPanel == true) {
            
             g.drawImage(errorWindow, 725, 300, errorWindow.getWidth()/3, errorWindow.getHeight()/3, null);
             okButton.paint(g);
-
-            if(game.errorMessage.equals("You can't draw a locomotive!")) {
-            g2.drawString(game.errorMessage, 759, 510);
+            System.out.println(game.errorMessage);
+          
+            g2.drawString(game.errorMessage, 759 - (game.errorMessage.length() - 28) * 6, 510);
             g2.drawString("OK", 904, 661);
-            }
+            
            
+            
         }
+        
         else {
         g.drawImage(map, MAP_X, MAP_Y, map.getWidth(), map.getHeight(), null);
         g.drawImage(bottomBar, getWidth()/2 - bottomBar.getWidth()/2, getHeight() - bottomBar.getHeight(), bottomBar.getWidth(), bottomBar.getHeight(), null);
@@ -173,14 +183,26 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         g2.drawString("Stations", bottomBar.getWidth()*5/9 + leftBar.getWidth() + 10, getHeight() - bottomBar.getHeight() + 85);
         g2.drawString("Points", bottomBar.getWidth()*6/9 + leftBar.getWidth() + 15, getHeight() - bottomBar.getHeight() + 85);
         g2.drawString("Cars", bottomBar.getWidth()*7/9 + leftBar.getWidth() + 20, getHeight() - bottomBar.getHeight() + 85);
+        g2.drawString("" + game.players[game.turn].getNumStations(), bottomBar.getWidth()*5/9 + leftBar.getWidth() + 50, getHeight() - bottomBar.getHeight() + 180);
+        g2.drawString("" + game.players[game.turn].getPoints(), bottomBar.getWidth()*6/9 + leftBar.getWidth() + 50, getHeight() - bottomBar.getHeight() + 180);
+        g2.drawString("" + game.players[game.turn].getNumTrains(), bottomBar.getWidth()*7/9 + leftBar.getWidth() + 50, getHeight() - bottomBar.getHeight() + 180);
         g2.drawString(Integer.toString(game.turn), 100, 200);
+        
         //draw player x
         g2.setFont(bigFont);
-            String currentplayer = "Player " + game.turn;
+            String currentplayer = "Player " + (game.turn+1);
         g2.drawString(currentplayer, 325, 822);
         g2.setFont(font);
             //
-
+        for(int i = 0; i < game.players.length; i++){
+            currentplayer = "Player " + (i++);
+            g2.setFont(bigFont);
+            g2.drawString(currentplayer, 20, i*leftBar.getHeight());
+            g2.setFont(font);
+            g.drawImage(textBoxSmall, 20, i*leftBar.getHeight() + 100, 130, 90, null);
+            //g.drawImage(textBoxSmall, (leftBar.getWidth()) + 15, i*leftBar.getHeight(), 130, 90, null);
+            //g.drawImage(textBoxSmall, (leftBar.getWidth()) + 15, i*leftBar.getHeight(), 130, 90, null);
+        }
         //draw current player's cards
         int totalnum = game.getPlayers()[game.turn].getNumTrainCards();
         int imagegap = 0;
@@ -188,7 +210,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
              imagegap = 400/totalnum;
         }
         if(totalnum < 10) {
-            imagegap = 20;
+            imagegap = 40;
         }
         int tempimagegapthing = 0;
         for(int c = 0; c < game.getPlayers()[game.turn].getTrainCards().length; c++) {
@@ -211,7 +233,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         numberoflocomotivestheywanttouse = 0;
         routebuyingcolor = 0;
         currentlyBuying = null;
-
+        theywannaplacestationon = null;
         System.out.println("start of turn");
         g2.setFont(bigFont);
         g2.drawString("DRAW", 1695, 354);
@@ -267,6 +289,24 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         g2.setFont(font);
     }
 
+    if(action == 3) { //they wnana buy a station
+        back.paint(g);
+            confirm.paint(g);
+            arrowup.paint(g);
+            arrowdown.paint(g);
+
+            g2.setFont(bigFont);
+            g2.drawString("BACK", 1705, 987);
+            g2.drawString("CONFIRM", 1664, 883);
+            g2.drawString("Placing", 1694, 52);
+            g2.drawString(arrayforchoosingroutecolor[routebuyingcolor], 1700, 585);
+        g2.drawString("Station", 1690, 97);
+        if(theywannaplacestationon != null) {
+            g2.setFont(font);
+            g2.drawString(theywannaplacestationon.getName(), 1600, 474);
+        }
+    }
+
         ArrayList<City> cities = game.getCities();
         for(int i = 0; i < cities.size(); i++)
         {
@@ -300,32 +340,12 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         {
             r.paint(g);
         }
-
-        String text = "";
-        switch(step)
-        {
-        case 0:
-            text = "Pick city 1";
-            break;
-        case 1:
-            text = "Pick city 2";
-            break;
-        case 2:
-            text = "Pick length";
-            break;
-        case 3:
-            text = "Pick color: 0=red, 1=blue, 2=yellow, 3=green, 4=orange, 5=pink, 6=white, 7=black, 8=any";
-            break;
-        case 4:
-            text = "Pick tunnel\n 1 = true, 2 = false";
-            break;
-        case 5:
-            text = "Pick number of locomotives";
-            break;
-        case 6:
-            text = "Shift tunnel;";
-            break;
+        for(City a : game.getCities()) {
+            if(a.hasStation()) {
+                g.drawImage(stations[0], GamePanel.MAP_X + a.getXCoord() - 25/2 - 7, GamePanel.MAP_Y + a.getYCoord() - 25/2 - 12, stations[0].getWidth()/50, stations[0].getHeight()/50, null);
+            }
         }
+        String text = "";
         g.setFont(font);
         g.drawString(text, 30,900);
     }
@@ -346,25 +366,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             }
             else {// not error 
 
-            for(int i = 0; i < game.getCities().size(); i++)
-            {
-                City city = game.getCities().get(i);
-                if(city.getButton().isInside(x, y))
-                {
-                    if(step == 0) //select first city
-                    {
-                        city1 = city;
-                        step++;
-                    }
-                    else if(step == 1) //select second city
-                    {
-                        city2 = city;
-                        step++;
-                    }
-
-                    break;
-                }
-            }
+           
 
             if(action == -1) {
                 if(endTurnButton.isInside(x, y)) {
@@ -382,6 +384,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
           for(int c = 0 ;c <  actions.length; c++) {
             if(actions[c].isInside(x, y)) {
                 action = c+1; //change turn wtv they click 
+                
                 repaint();
             }
           }
@@ -447,11 +450,50 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
 
                 }
             }
-            
+            if(confirm.isInside(x, y) && currentlyBuying != null) { //biu route
+                game.buyRoute(currentlyBuying, numberoflocomotivestheywanttouse, routebuyingcolor);
+            }
         }
-        if(confirm.isInside(x, y)) { //biu route
-            game.buyRoute(currentlyBuying, numberoflocomotivestheywanttouse, routebuyingcolor);
+       else if(action == 3) { //buy station
+
+            if(arrowdown.isInside(x, y)) {
+                if(routebuyingcolor == 0) {
+                    routebuyingcolor = 7;
+                }
+                else {
+                    routebuyingcolor--;
+                }
+                
+            }
+            if(arrowup.isInside(x, y)) {
+                if(routebuyingcolor == 7) {
+                    routebuyingcolor = 0;
+                }
+                else {
+                    routebuyingcolor++;
+                }
+                
+            }
+
+
+            System.out.println("statioataotiaotan");
+            if(back.isInside(x, y)) { //if they click back button
+                action = 0;
+            }
+            if(confirm.isInside(x, y) && theywannaplacestationon != null) { //biu route
+                game.buyStation(theywannaplacestationon, routebuyingcolor);
+                System.out.println("they clicked confirm on buy station");
+            }
+            for(City a : game.getCities()) {
+                if(a.getButton().isInside(x, y)) {
+                    theywannaplacestationon = a;
+                    System.out.println("thaushdfusdfhusdfhusdfsdf");
+                }
+            }
+
+
         }
+       
         if(game.turnended) { //if turn just ended u need to reset the screen yk
             action = -1;
            System.out.println("end of turn");

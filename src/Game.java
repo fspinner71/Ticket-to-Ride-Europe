@@ -4,7 +4,7 @@ import java.util.*;
 import jdk.jshell.DeclarationSnippet;
 public class Game {
  
-    private Player players[];
+    public Player players[];
     private ArrayList<City> cities;
     private ArrayList<Route> routes;
     private int cards[];
@@ -121,7 +121,7 @@ public class Game {
         discardPile = new ArrayList<Integer>();
         makeTickets();
         distributeTickets();
-
+        players[0].addTrainCard(0);
     }
     public void drawCard(int index ){ //0-4 is the face up cards, 5 is the deck/facedown card
         
@@ -290,7 +290,7 @@ public class Game {
 
     public void buyStation(City a, int color) { //city the player wants to plae the station on
         if(a.hasStation()) {
-            //error panel city alr has station
+            errorScreen("already has a station");
             return;
         }
         
@@ -300,7 +300,7 @@ public class Game {
 
         }
         else {
-            //error panel not enough cards
+            errorScreen("dont have enoguh cards or smtj isdfosdfodsf");
         }
 
     }
