@@ -136,7 +136,6 @@ public class GamePanel extends JPanel implements MouseListener {
         }
         Graphics2D g2 = (Graphics2D)g;
         g2.setFont(font);
-        g2.setFont(font);
         g.drawImage(errorWindow, 725, 300, errorWindow.getWidth()/3, errorWindow.getHeight()/3, null);
             okButton.paint(g);
             
@@ -169,7 +168,6 @@ public class GamePanel extends JPanel implements MouseListener {
         g2.drawString("" + game.players[game.turn].getNumStations(), bottomBar.getWidth()*5/9 + leftBar.getWidth() + 50, getHeight() - bottomBar.getHeight() + 180);
         g2.drawString("" + game.players[game.turn].getPoints(), bottomBar.getWidth()*6/9 + leftBar.getWidth() + 50, getHeight() - bottomBar.getHeight() + 180);
         g2.drawString("" + game.players[game.turn].getNumTrains(), bottomBar.getWidth()*7/9 + leftBar.getWidth() + 50, getHeight() - bottomBar.getHeight() + 180);
-        g2.drawString(Integer.toString(game.turn), 100, 200);
         
         //draw player x
         g2.setFont(bigFont);
@@ -178,11 +176,11 @@ public class GamePanel extends JPanel implements MouseListener {
         g2.setFont(font);
             //
         for(int i = 0; i < game.players.length; i++){
-            currentplayer = "Player " + (i++);
+            currentplayer = "Player " + (i + 1);
             g2.setFont(bigFont);
-            g2.drawString(currentplayer, 20, i*leftBar.getHeight());
+            g2.drawString(currentplayer, 20, i*Frame.HEIGHT/4 + 30);
             g2.setFont(font);
-            g.drawImage(textBoxSmall, 20, i*leftBar.getHeight() + 100, 130, 90, null);
+            g.drawImage(textBoxSmall, 15, i*Frame.HEIGHT/4 + 70, 170, 50, null);
             //g.drawImage(textBoxSmall, (leftBar.getWidth()) + 15, i*leftBar.getHeight(), 130, 90, null);
             //g.drawImage(textBoxSmall, (leftBar.getWidth()) + 15, i*leftBar.getHeight(), 130, 90, null);
         }
@@ -213,6 +211,36 @@ public class GamePanel extends JPanel implements MouseListener {
         for(Button a : actions) { 
             a.paint(g);
         }
+
+        Player[] players = game.getPlayers();
+        for(int i = 0; i < players.length; i++)
+        {
+            Player p = players[i];
+            g.setFont(bigFont);
+            g.setColor(Color.BLACK);
+            g.drawString("Player " + (i + 1),5, 35 + 260 * i);
+            g.setFont(font);
+            g.drawImage(textBoxSmall, 15, 70 + 260*i, 125, 50, null);
+            g.drawString("Cards", 45, 70 + 260*i);
+            g.drawString("" + p.getTrainCards().length, 70, 105 + 260*i);
+
+            g.drawImage(textBoxSmall, 150, 70 + 260*i, 125, 50, null);
+            g.drawString("Stations", 170, 70 + 260*i);
+            g.drawString("" + p.getNumStations(), 205, 105 + 260*i);
+
+            g.drawImage(textBoxSmall, 15, 140 + 260*i, 125, 50, null);
+            g.drawString("Tickets", 35, 140 + 260*i);
+            g.drawString("" + p.getTickets().size(), 70, 175 + 260*i);
+
+            g.drawImage(textBoxSmall, 150, 140 + 260*i, 125, 50, null);
+            g.drawString("Cars", 185, 140 + 260*i);
+            g.drawString("" + p.getNumTrains(), 195, 175 + 260*i);
+
+            g.drawImage(textBoxSmall, 85, 210 + 260*i, 125, 50, null);
+            g.drawString("Score", 110, 210 + 260*i);
+            g.drawString("" + p.getPoints(), 125, 245 + 260*i);
+        }
+
         numberoflocomotivestheywanttouse = 0;
         routebuyingcolor = 0;
         currentlyBuying = null;
