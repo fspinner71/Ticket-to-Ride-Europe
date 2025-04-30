@@ -248,6 +248,13 @@ public class Player {
         return trainCards[color];
     }
 
+    public void buyTunnel(Route r, int numloco, int numcolor)
+    {
+        addRoute(r);
+        locom
+        buyRoute(r, numloco, numcolor);
+    }
+
 
 
    

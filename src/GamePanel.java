@@ -37,6 +37,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     private Route currentlyBuying;
     private int selectedTrack;
     private String[] arrayforchoosingroutecolor;
+    private boolean buyingTunnel;
     static {
         font = new Font("Comic Sans MS", Font.BOLD, 24);
         bigFont = new Font("Comic Sans MS", Font.BOLD, 36);
@@ -141,7 +142,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
          arrayforchoosingroutecolor = temp;
         currentlyBuying = null;
         theywannaplacestationon = null;
-
+        buyingTunnel = false;
         
     }
     @Override
@@ -271,20 +272,31 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             arrowdown.paint(g);
             arrowup2.paint(g);
             arrowdown2.paint(g);
-        g2.drawString("BACK", 1705, 987);
-        g2.drawString("CONFIRM", 1664, 883);
-        g2.drawString("Purchasing", 1657, 59);
-        g2.drawString("Route", 1700, 105);
-        g2.drawString("Select", 1690, 380);
-        g2.drawString("number of", 1660, 415);
-        g2.drawString("locomotives and", 1615, 450);
-        g2.drawString("buying color", 1645, 485);
-        g2.drawString(String.valueOf(numberoflocomotivestheywanttouse), 1740, 748);
-        g2.drawString(arrayforchoosingroutecolor[routebuyingcolor], 1700, 585);
-        g2.drawString("to", 1730, 240);
+            if(buyingTunnel)
+            {
+                g2.drawString("Tunnel", 1700, 105);
+            }
+            g2.drawString("BACK", 1705, 987);
+            g2.drawString("CONFIRM", 1664, 883);
+            g2.drawString("Purchasing", 1657, 59);
+            if(!buyingTunnel)
+            {
+                g2.drawString("Route", 1700, 105);
+            }
+            g2.drawString("Select", 1690, 380);
+            g2.drawString("number of", 1660, 415);
+            g2.drawString("locomotives and", 1615, 450);
+            g2.drawString("buying color", 1645, 485);
+            g2.drawString(String.valueOf(numberoflocomotivestheywanttouse), 1740, 748);
+            g2.drawString(arrayforchoosingroutecolor[routebuyingcolor], 1700, 585);
+            g2.drawString("to", 1730, 240);
             if(currentlyBuying != null) {
                 g2.drawString(currentlyBuying.getA().getName(), 1730, 200);
                 g2.drawString(currentlyBuying.getB().getName(), 1730, 300);
+            }
+            if(buyingTunnel)
+            {
+                game.buyTunnel(currentlyBuying, numberoflocomotivestheywanttouse, routebuyingcolor);
             }
         g2.setFont(font);
     }
@@ -452,6 +464,11 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             }
             if(confirm.isInside(x, y) && currentlyBuying != null) { //biu route
                 game.buyRoute(currentlyBuying, numberoflocomotivestheywanttouse, routebuyingcolor);
+                if(currentlyBuying.isTunnel())
+                {
+                    buyingTunnel = true;
+                    repaint();
+                }
             }
         }
        else if(action == 3) { //buy station

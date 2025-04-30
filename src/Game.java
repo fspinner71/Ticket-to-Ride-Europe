@@ -321,7 +321,19 @@ public class Game {
 
 
     }
-    public boolean buyTunnel(Route p, int locomotivesused, int buyingcolor) { //returns true if u succesfully buy it reutnr false if at least one card matches 
+    public boolean buyTunnel(Route p, int locomotivesused, int buyingcolor) { //buys the tunnel
+        if(locomotivesused > players[turn].getNumLocomotives())
+        {
+            errorMessage = "No more locomotives!";
+            errorPanel = true;
+            return false;
+        }
+        if(buyingcolor > players[turn].numOfColor(buyingcolor))
+        {
+            errorMessage = "No more cards!";
+            errorPanel = true;
+            return false;
+        }
         int[] threecards = new int[3];
         int nummatching = 0;
             for(int c  = 0; c < 3; c++) { //get the 3 drawn cards from the deck, if deck is empty and u cant draw it then it becomes -1;
@@ -337,19 +349,18 @@ public class Game {
                     nummatching++; // how many cards match
                 }
             }
-            if(nummatching <= 0) {
+            if(locomotivesused + buyingcolor > nummatching)
+            {
+                errorMessage = "Too Much!";
+                errorPanel = true;
+            }
+            else if(locomotivesused + buyingcolor == nummatching)
+            {
+                players[turn].buyTunnel(p, locomotivesused, buyingcolor);
                 return true;
             }
-           else
-           { 
-                if(players[turn].numOfColor(buyingcolor) + players[turn].getNumLocomotives() >= nummatching)
-                {
-                    buyTunnel = true;
-                    return true;
-
-                }
-                return false;               
-           }
+            return false;               
+           
     }
     
 
