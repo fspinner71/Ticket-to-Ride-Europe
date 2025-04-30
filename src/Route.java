@@ -110,6 +110,11 @@ public class Route {
         {
             g2.drawLine(tracks[i].getX(), tracks[i].getY(), tracks[i+1].getX(), tracks[i+1].getY());
         }
+        for(int i = 0; i < length; i++) {
+            if (tracks[i] != null) {
+                tracks[i].paint(g2);
+            }
+        }
     }
 
     public void addTrack(Track t)
