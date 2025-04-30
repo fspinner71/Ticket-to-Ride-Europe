@@ -178,9 +178,14 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         g2.drawString("" + game.players[game.turn].getPoints(), bottomBar.getWidth()*6/9 + leftBar.getWidth() + 50, getHeight() - bottomBar.getHeight() + 180);
         g2.drawString("" + game.players[game.turn].getNumTrains(), bottomBar.getWidth()*7/9 + leftBar.getWidth() + 50, getHeight() - bottomBar.getHeight() + 180);
         g2.drawString(Integer.toString(game.turn), 100, 200);
+        for(City a : game.getCities()) {
+            if(a.hasStation()) {
+                g.drawImage(stations[0], a.getXCoord()+100, a.getYCoord()-100, stations[0].getWidth()/30, stations[0].getHeight()/30, null);
+            }
+        }
         //draw player x
         g2.setFont(bigFont);
-            String currentplayer = "Player " + (game.turn++);
+            String currentplayer = "Player " + (game.turn+1);
         g2.drawString(currentplayer, 325, 822);
         g2.setFont(font);
             //
@@ -282,11 +287,18 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     if(action == 3) { //they wnana buy a station
         back.paint(g);
             confirm.paint(g);
+            arrowup.paint(g);
+            arrowdown.paint(g);
+
             g2.setFont(bigFont);
             g2.drawString("BACK", 1705, 987);
             g2.drawString("CONFIRM", 1664, 883);
+            g2.drawString("Placing", 1694, 52);
+            g2.drawString(arrayforchoosingroutecolor[routebuyingcolor], 1700, 585);
+        g2.drawString("Station", 1690, 97);
         if(theywannaplacestationon != null) {
-            g2.drawString("", 1736, 425);
+            g2.setFont(font);
+            g2.drawString(theywannaplacestationon.getName(), 1600, 474);
         }
     }
 
@@ -345,25 +357,7 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             }
             else {// not error 
 
-            for(int i = 0; i < game.getCities().size(); i++)
-            {
-                City city = game.getCities().get(i);
-                if(city.getButton().isInside(x, y))
-                {
-                    if(step == 0) //select first city
-                    {
-                        city1 = city;
-                        step++;
-                    }
-                    else if(step == 1) //select second city
-                    {
-                        city2 = city;
-                        step++;
-                    }
-
-                    break;
-                }
-            }
+           
 
             if(action == -1) {
                 if(endTurnButton.isInside(x, y)) {
@@ -451,15 +445,39 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             }
         }
         if(action == 3) { //buy station
+
+            if(arrowdown.isInside(x, y)) {
+                if(routebuyingcolor == 0) {
+                    routebuyingcolor = 7;
+                }
+                else {
+                    routebuyingcolor--;
+                }
+                
+            }
+            if(arrowup.isInside(x, y)) {
+                if(routebuyingcolor == 7) {
+                    routebuyingcolor = 0;
+                }
+                else {
+                    routebuyingcolor++;
+                }
+                
+            }
+
+
+            System.out.println("statioataotiaotan");
             if(back.isInside(x, y)) { //if they click back button
                 action = 0;
             }
-            if(confirm.isInside(x, y) && currentlyBuying != null) { //biu route
-             //   game.getPlayers()[game.turn].buyStation();
+            if(confirm.isInside(x, y) && theywannaplacestationon != null) { //biu route
+                game.buyStation(theywannaplacestationon, routebuyingcolor);
+                System.out.println("they clicked confirm on buy station");
             }
             for(City a : game.getCities()) {
                 if(a.getButton().isInside(x, y)) {
                     theywannaplacestationon = a;
+                    System.out.println("thaushdfusdfhusdfhusdfsdf");
                 }
             }
 
