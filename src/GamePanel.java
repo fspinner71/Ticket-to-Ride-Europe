@@ -1,6 +1,4 @@
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.*;
@@ -8,7 +6,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-public class GamePanel extends JPanel implements MouseListener,KeyListener {
+public class GamePanel extends JPanel implements MouseListener {
 
     private static BufferedImage map, city, deck, ticket;
     public static BufferedImage[] cards, buttons;
@@ -23,17 +21,10 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     private Button back, okButton, endTurnButton, confirm, arrowup, arrowdown, arrowup2, arrowdown2;
     private int action, numberoflocomotivestheywanttouse, routebuyingcolor; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
-    private City theywannaplacestationon;
-    private City city1, city2;
-    private int currentSize;
-    private boolean tunnel;
-    private boolean flipped;
-    private int locomotives;
-    private int color;
-    private int step;
-    private Route currentRoute;
+    private City selected;
     private PrintWriter writer;
-    private ArrayList<Route> routes;
+
+    private City theywannaplacestationon;
     private Route currentlyBuying;
     private int selectedTrack;
     private String[] arrayforchoosingroutecolor;
@@ -107,7 +98,6 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     {
         game = new Game();
         addMouseListener(this);
-        addKeyListener(this);
         actions = new Button[4];
         gameCards = new Button[6]; //like when you draw cards wtv it has includes the face down card ;; 0 = facedown, 1-5 = cards
 
@@ -127,13 +117,6 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             arrowdown = new Button(1700, 600,upArrow.getWidth()/4, upArrow.getHeight()/4, downArrow);
             arrowup2 = new Button(1700, 660,upArrow.getWidth()/4, upArrow.getHeight()/4, upArrow); 
             arrowdown2 = new Button(1700, 760,upArrow.getWidth()/4, upArrow.getHeight()/4, downArrow);
-        try {
-            writer = new PrintWriter("routes.csv", "UTF-8");
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        routes = new ArrayList<Route>();
         action = 0;
         numberoflocomotivestheywanttouse= 0;
         routebuyingcolor = 0;
@@ -141,8 +124,6 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
          arrayforchoosingroutecolor = temp;
         currentlyBuying = null;
         theywannaplacestationon = null;
-
-        
     }
     @Override
     public void paint(Graphics g)
@@ -311,43 +292,12 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
         for(int i = 0; i < cities.size(); i++)
         {
             cities.get(i).paint(g);
-            if(city1 != null)
-            {
-                if(cities.get(i).getName() == city1.getName())
-                {
-                    g.setColor(Color.RED);
-                    g.setFont(font);
-                    g.drawString("X", cities.get(i).getXCoord() + MAP_X, cities.get(i).getYCoord() + MAP_Y);
-                }
-            }
-
-            if(city2 != null)
-            {
-                if(cities.get(i).getName() == city2.getName())
-                {
-                    g.setColor(Color.RED);
-                    g.setFont(font);
-                    g.drawString("X", cities.get(i).getXCoord() + MAP_X, cities.get(i).getYCoord() + MAP_Y);
-                }
-            }
-        }
-
-        for(Route r : game.getRoutes())
-        {
-            r.paint(g);
-        }
-        for(Route r : routes)
-        {
-            r.paint(g);
         }
         for(City a : game.getCities()) {
             if(a.hasStation()) {
                 g.drawImage(stations[0], GamePanel.MAP_X + a.getXCoord() - 25/2 - 7, GamePanel.MAP_Y + a.getYCoord() - 25/2 - 12, stations[0].getWidth()/50, stations[0].getHeight()/50, null);
             }
         }
-        String text = "";
-        g.setFont(font);
-        g.drawString(text, 30,900);
     }
     }
     public void mousePressed(MouseEvent e)
@@ -365,9 +315,6 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
 
             }
             else {// not error 
-
-           
-
             if(action == -1) {
                 if(endTurnButton.isInside(x, y)) {
                     game.turnended = false;
@@ -504,124 +451,6 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     }
         repaint();
     }
-
-    public void keyPressed(KeyEvent e)
-    {
-        if(e.getKeyCode() == e.VK_ESCAPE)
-        {
-            try {
-                
-                writer.close();
-            } catch (Exception er) {
-                System.out.println(er);
-            }
-        }
-
-        if(e.getKeyCode() == KeyEvent.VK_ENTER)
-        {
-            step++;
-            if(step == 6)
-            {
-                currentRoute = new Route(city1, city2, currentSize, tunnel, locomotives, color);
-                routes.add(currentRoute);
-                int[][] trackCoords = new int[currentSize][3];
-
-                int Xc = city2.getXCoord() - city1.getXCoord();
-                int Yc = city2.getYCoord() - city1.getYCoord();
-
-
-                for(int i = 0; i < currentSize; i++)
-                {
-                    trackCoords[i][0] = city1.getXCoord() + MAP_X;
-                    trackCoords[i][1] = city1.getYCoord() + MAP_Y;
-                    trackCoords[i][2] = (int)Math.toDegrees(Math.atan((float)Yc/(float)Xc));
-                }
-                
-                currentRoute.makeTracks(trackCoords);
-            } else if(step == 7)
-            {
-                try 
-                {
-                    writer.append(city1.getName() + "," + city2.getName() + "," + color + "," + tunnel + "," + locomotives + "," + currentSize + "," + currentRoute.toString());
-                } catch(Exception er)
-                {
-                    System.out.println(er);
-                }
-                step = 0;
-                selectedTrack = 0;
-            }
-            repaint();
-            return;
-        }
-        if(step == 2)
-        {
-            Integer s = Integer.parseInt("" + e.getKeyChar());
-            if(s != null)
-            {
-                currentSize = s;
-            }
-        } else if(step == 3)
-        {
-            Integer s = Integer.parseInt("" + e.getKeyChar());
-            if(s != null)
-            {
-                color = s;
-            }
-        } else if(step == 4)
-        {
-            if(e.getKeyCode() == KeyEvent.VK_1)
-            {
-                tunnel = true;
-            } else if(e.getKeyCode() == KeyEvent.VK_2)
-            {
-                tunnel = false;
-            }
-        } else if(step == 5)
-        {
-            Integer s = Integer.parseInt("" + e.getKeyChar());
-            if(s != null)
-            {
-                locomotives = s;
-            }
-        }else if(step == 6)
-        {
-            int amt = 1;
-            if(e.isShiftDown())
-            {
-                amt *= 10;
-            }
-            switch(e.getKeyCode())
-            {
-            case KeyEvent.VK_RIGHT:
-                currentRoute.moveTrack(selectedTrack, amt, 0, 0);
-                break;
-            case KeyEvent.VK_LEFT:
-                currentRoute.moveTrack(selectedTrack, -amt, 0, 0);
-                break;
-            case KeyEvent.VK_UP:
-                currentRoute.moveTrack(selectedTrack, 0, -amt, 0);
-                break;
-            case KeyEvent.VK_DOWN:
-                currentRoute.moveTrack(selectedTrack, 0, amt, 0);
-                break;
-            case KeyEvent.VK_E:
-                currentRoute.moveTrack(selectedTrack, 0, 0, -amt);
-                break;
-            case KeyEvent.VK_Q:
-                currentRoute.moveTrack(selectedTrack, 0, 0, amt);
-                break;
-            }
-
-            if(e.getKeyCode() == KeyEvent.VK_1)
-            {
-                selectedTrack -= 1;
-            } else if(e.getKeyCode() == KeyEvent.VK_2)
-            {
-                selectedTrack += 1;
-            }
-            repaint();
-        }
-    }
     public  static BufferedImage rotatecounterclockwise(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -642,11 +471,4 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
     public void mouseExited(MouseEvent e) {}
     public void mouseClicked(MouseEvent e) {}
 
-    public void keyTyped(KeyEvent e) {}
-    public void keyReleased(KeyEvent e) {}
-    public void addNotify()
-    {
-        super.addNotify();
-        requestFocus();
-    }
 }
