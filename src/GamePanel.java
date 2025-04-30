@@ -19,12 +19,15 @@ public class GamePanel extends JPanel implements MouseListener {
     private static Font font, bigFont;
 
     private Button back, okButton, endTurnButton, confirm, arrowup, arrowdown, arrowup2, arrowdown2;
-    private int action, numberoflocomotivestheywanttouse; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
+    private int action, numberoflocomotivestheywanttouse, routebuyingcolor; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
-
     private City selected;
     private PrintWriter writer;
 
+    private City theywannaplacestationon;
+    private Route currentlyBuying;
+    private int selectedTrack;
+    private String[] arrayforchoosingroutecolor;
     static {
         font = new Font("Comic Sans MS", Font.BOLD, 24);
         bigFont = new Font("Comic Sans MS", Font.BOLD, 36);
@@ -116,6 +119,11 @@ public class GamePanel extends JPanel implements MouseListener {
             arrowdown2 = new Button(1700, 760,upArrow.getWidth()/4, upArrow.getHeight()/4, downArrow);
         action = 0;
         numberoflocomotivestheywanttouse= 0;
+        routebuyingcolor = 0;
+         String[] temp = {"Red", "Blue", "Yellow", "Green", "Orange", "Pink", "White", "Black" };
+         arrayforchoosingroutecolor = temp;
+        currentlyBuying = null;
+        theywannaplacestationon = null;
     }
     @Override
     public void paint(Graphics g)
@@ -127,24 +135,72 @@ public class GamePanel extends JPanel implements MouseListener {
         Graphics2D g2 = (Graphics2D)g;
         g2.setFont(font);
         g2.setFont(font);
+        g.drawImage(errorWindow, 725, 300, errorWindow.getWidth()/3, errorWindow.getHeight()/3, null);
+            okButton.paint(g);
+            
+            //28 
+            
         if(game.errorPanel == true) {
            
             g.drawImage(errorWindow, 725, 300, errorWindow.getWidth()/3, errorWindow.getHeight()/3, null);
             okButton.paint(g);
-
-            if(game.errorMessage.equals("You can't draw a locomotive!")) {
-            g2.drawString(game.errorMessage, 759, 510);
+            System.out.println(game.errorMessage);
+          
+            g2.drawString(game.errorMessage, 759 - (game.errorMessage.length() - 28) * 6, 510);
             g2.drawString("OK", 904, 661);
-            }
+            
            
+            
         }
+        
         else {
         g.drawImage(map, MAP_X, MAP_Y, map.getWidth(), map.getHeight(), null);
         g.drawImage(bottomBar, getWidth()/2 - bottomBar.getWidth()/2, getHeight() - bottomBar.getHeight(), bottomBar.getWidth(), bottomBar.getHeight(), null);
         g.drawImage(leftBar, 0, 0, leftBar.getWidth(), leftBar.getHeight(),null);
         g.drawImage(rightBar, getWidth() - rightBar.getWidth(), 0, rightBar.getWidth(), rightBar.getHeight(),null);
-        
+        g.drawImage(textBoxLarge, (bottomBar.getWidth())*5/9 + leftBar.getWidth(), getHeight() - bottomBar.getHeight() + 100, 130, 150, null);
+        g.drawImage(textBoxLarge, (bottomBar.getWidth())*6/9 + leftBar.getWidth(), getHeight() - bottomBar.getHeight() + 100, 130, 150, null);
+        g.drawImage(textBoxLarge, (bottomBar.getWidth())*7/9 + leftBar.getWidth(), getHeight() - bottomBar.getHeight() + 100, 130, 150, null);
+        g2.drawString("Stations", bottomBar.getWidth()*5/9 + leftBar.getWidth() + 10, getHeight() - bottomBar.getHeight() + 85);
+        g2.drawString("Points", bottomBar.getWidth()*6/9 + leftBar.getWidth() + 15, getHeight() - bottomBar.getHeight() + 85);
+        g2.drawString("Cars", bottomBar.getWidth()*7/9 + leftBar.getWidth() + 20, getHeight() - bottomBar.getHeight() + 85);
+        g2.drawString("" + game.players[game.turn].getNumStations(), bottomBar.getWidth()*5/9 + leftBar.getWidth() + 50, getHeight() - bottomBar.getHeight() + 180);
+        g2.drawString("" + game.players[game.turn].getPoints(), bottomBar.getWidth()*6/9 + leftBar.getWidth() + 50, getHeight() - bottomBar.getHeight() + 180);
+        g2.drawString("" + game.players[game.turn].getNumTrains(), bottomBar.getWidth()*7/9 + leftBar.getWidth() + 50, getHeight() - bottomBar.getHeight() + 180);
         g2.drawString(Integer.toString(game.turn), 100, 200);
+        
+        //draw player x
+        g2.setFont(bigFont);
+            String currentplayer = "Player " + (game.turn+1);
+        g2.drawString(currentplayer, 325, 822);
+        g2.setFont(font);
+            //
+        for(int i = 0; i < game.players.length; i++){
+            currentplayer = "Player " + (i++);
+            g2.setFont(bigFont);
+            g2.drawString(currentplayer, 20, i*leftBar.getHeight());
+            g2.setFont(font);
+            g.drawImage(textBoxSmall, 20, i*leftBar.getHeight() + 100, 130, 90, null);
+            //g.drawImage(textBoxSmall, (leftBar.getWidth()) + 15, i*leftBar.getHeight(), 130, 90, null);
+            //g.drawImage(textBoxSmall, (leftBar.getWidth()) + 15, i*leftBar.getHeight(), 130, 90, null);
+        }
+        //draw current player's cards
+        int totalnum = game.getPlayers()[game.turn].getNumTrainCards();
+        int imagegap = 0;
+        if(totalnum !=  0) {
+             imagegap = 400/totalnum;
+        }
+        if(totalnum < 10) {
+            imagegap = 40;
+        }
+        int tempimagegapthing = 0;
+        for(int c = 0; c < game.getPlayers()[game.turn].getTrainCards().length; c++) {
+            for(int i = 0; i  < game.getPlayers()[game.turn].getTrainCards()[c]; i++) { //325 900
+                g.drawImage(rotatecounterclockwise(cards[c]), 325 + tempimagegapthing * imagegap, 830, rotatecounterclockwise(cards[c]).getWidth()/5, rotatecounterclockwise(cards[c]).getHeight()/5, null);
+                tempimagegapthing++;
+            }
+        }
+
 
             if(action == -1) { //-1 is if the turn ended and itll juust show the end turn button
             endTurnButton.paint(g);
@@ -156,6 +212,9 @@ public class GamePanel extends JPanel implements MouseListener {
             a.paint(g);
         }
         numberoflocomotivestheywanttouse = 0;
+        routebuyingcolor = 0;
+        currentlyBuying = null;
+        theywannaplacestationon = null;
         System.out.println("start of turn");
         g2.setFont(bigFont);
         g2.drawString("DRAW", 1695, 354);
@@ -197,17 +256,47 @@ public class GamePanel extends JPanel implements MouseListener {
         g2.drawString("CONFIRM", 1664, 883);
         g2.drawString("Purchasing", 1657, 59);
         g2.drawString("Route", 1700, 105);
+        g2.drawString("Select", 1690, 380);
+        g2.drawString("number of", 1660, 415);
+        g2.drawString("locomotives and", 1615, 450);
+        g2.drawString("buying color", 1645, 485);
         g2.drawString(String.valueOf(numberoflocomotivestheywanttouse), 1740, 748);
+        g2.drawString(arrayforchoosingroutecolor[routebuyingcolor], 1700, 585);
+        g2.drawString("to", 1730, 240);
+            if(currentlyBuying != null) {
+                g2.drawString(currentlyBuying.getA().getName(), 1730, 200);
+                g2.drawString(currentlyBuying.getB().getName(), 1730, 300);
+            }
         g2.setFont(font);
     }
-    for(Route r : game.getRoutes())
-    {
-        r.paint(g);
+
+    if(action == 3) { //they wnana buy a station
+        back.paint(g);
+            confirm.paint(g);
+            arrowup.paint(g);
+            arrowdown.paint(g);
+
+            g2.setFont(bigFont);
+            g2.drawString("BACK", 1705, 987);
+            g2.drawString("CONFIRM", 1664, 883);
+            g2.drawString("Placing", 1694, 52);
+            g2.drawString(arrayforchoosingroutecolor[routebuyingcolor] , 1718 - (arrayforchoosingroutecolor[routebuyingcolor].length() -3) * 7, 585);
+        g2.drawString("Station", 1690, 97);
+        if(theywannaplacestationon != null) {
+            g2.setFont(font);
+            g2.drawString(theywannaplacestationon.getName(), 1688 - (theywannaplacestationon.getName().length() -7) * 8, 474);
+        }
     }
+
         ArrayList<City> cities = game.getCities();
         for(int i = 0; i < cities.size(); i++)
         {
             cities.get(i).paint(g);
+        }
+        for(City a : game.getCities()) {
+            if(a.hasStation()) {
+                g.drawImage(stations[0], GamePanel.MAP_X + a.getXCoord() - 25/2 - 7, GamePanel.MAP_Y + a.getYCoord() - 25/2 - 12, stations[0].getWidth()/50, stations[0].getHeight()/50, null);
+            }
         }
     }
     }
@@ -226,7 +315,6 @@ public class GamePanel extends JPanel implements MouseListener {
 
             }
             else {// not error 
-
             if(action == -1) {
                 if(endTurnButton.isInside(x, y)) {
                     game.turnended = false;
@@ -243,6 +331,7 @@ public class GamePanel extends JPanel implements MouseListener {
           for(int c = 0 ;c <  actions.length; c++) {
             if(actions[c].isInside(x, y)) {
                 action = c+1; //change turn wtv they click 
+                
                 repaint();
             }
           }
@@ -278,20 +367,105 @@ public class GamePanel extends JPanel implements MouseListener {
             if(arrowdown2.isInside(x, y) && numberoflocomotivestheywanttouse > 0) {
                 numberoflocomotivestheywanttouse--;
             }
+            if(arrowdown.isInside(x, y)) {
+                if(routebuyingcolor == 0) {
+                    routebuyingcolor = 7;
+                }
+                else {
+                    routebuyingcolor--;
+                }
+                
+            }
+            if(arrowup.isInside(x, y)) {
+                if(routebuyingcolor == 7) {
+                    routebuyingcolor = 0;
+                }
+                else {
+                    routebuyingcolor++;
+                }
+                
+            }
+
+
+            for(int c =0; c< game.getRoutes().size(); c++) {
+                for(Button a: game.getRoutes().get(c).getButtons()) {
+                    if(a.isInside(x, y)) {
+                        currentlyBuying = game.getRoutes().get(c);
+                        break;
+                    }
+                } {
+
+                }
+            }
+            if(confirm.isInside(x, y) && currentlyBuying != null) { //biu route
+                game.buyRoute(currentlyBuying, numberoflocomotivestheywanttouse, routebuyingcolor);
+            }
+        }
+       else if(action == 3) { //buy station
+
+            if(arrowdown.isInside(x, y)) {
+                if(routebuyingcolor == 0) {
+                    routebuyingcolor = 7;
+                }
+                else {
+                    routebuyingcolor--;
+                }
+                
+            }
+            if(arrowup.isInside(x, y)) {
+                if(routebuyingcolor == 7) {
+                    routebuyingcolor = 0;
+                }
+                else {
+                    routebuyingcolor++;
+                }
+                
+            }
+
+
+            System.out.println("statioataotiaotan");
+            if(back.isInside(x, y)) { //if they click back button
+                action = 0;
+            }
+            if(confirm.isInside(x, y) && theywannaplacestationon != null) { //biu route
+                game.buyStation(theywannaplacestationon, routebuyingcolor);
+                System.out.println("they clicked confirm on buy station");
+            }
+            for(City a : game.getCities()) {
+                if(a.getButton().isInside(x, y)) {
+                    theywannaplacestationon = a;
+                    System.out.println("thaushdfusdfhusdfhusdfsdf");
+                }
+            }
+
 
         }
-        if(confirm.isInside(x, y)) { //biu route
-            
+       
+        if(game.turnended) { //if turn just ended u need to reset the screen yk
+            action = -1;
+           System.out.println("end of turn");
         }
-
 
         
         }
     }
         repaint();
     }
+    public  static BufferedImage rotatecounterclockwise(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
 
+        BufferedImage rotatedImage = new BufferedImage(height, width, image.getType());
+        Graphics2D g = rotatedImage.createGraphics();
 
+        g.translate(0, width);
+        g.rotate(-Math.PI / 2); // Rotate 90 degrees counterclockwise
+
+        g.drawImage(image, 0, 0, null);
+        g.dispose();
+
+        return rotatedImage;
+    }
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}

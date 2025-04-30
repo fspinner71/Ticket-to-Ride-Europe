@@ -4,7 +4,7 @@ import java.util.*;
 import jdk.jshell.DeclarationSnippet;
 public class Game {
  
-    private Player players[];
+    public Player players[];
     private ArrayList<City> cities;
     private ArrayList<Route> routes;
     private int cards[];
@@ -28,7 +28,7 @@ public class Game {
 
     
     public static ArrayList<Integer> discardPile;
-    
+    public boolean buyTunnel = false;
     public Game(){
         try
         {
@@ -119,7 +119,7 @@ public class Game {
         discardPile = new ArrayList<Integer>();
         makeTickets();
         distributeTickets();
-
+        players[0].addTrainCard(0);
     }
     public void drawCard(int index ){ //0-4 is the face up cards, 5 is the deck/facedown card
         
@@ -278,7 +278,7 @@ public class Game {
 
             }
             else {
-                errorScreen("couldnt buy this route");
+                errorScreen("too broke");
             }
         }
         
@@ -288,7 +288,7 @@ public class Game {
 
     public void buyStation(City a, int color) { //city the player wants to plae the station on
         if(a.hasStation()) {
-            //error panel city alr has station
+            errorScreen("already has a station");
             return;
         }
         
@@ -298,7 +298,7 @@ public class Game {
 
         }
         else {
-            //error panel not enough cards
+            errorScreen("dont have enoguh cards or smtj isdfosdfodsf");
         }
 
     }
@@ -319,9 +319,9 @@ public class Game {
 
 
     }
-/* idk how we should do 
     public boolean buyTunnel(Route p, int locomotivesused, int buyingcolor) { //returns true if u succesfully buy it reutnr false if at least one card matches 
         int[] threecards = new int[3];
+        int nummatching = 0;
             for(int c  = 0; c < 3; c++) { //get the 3 drawn cards from the deck, if deck is empty and u cant draw it then it becomes -1;
                 if(deck.isEmpty() == false) {
                 threecards[c] = deck.get(0);
@@ -330,20 +330,27 @@ public class Game {
                     threecards[c] = -1;
                 }
             }
-            int nummatching = 0;
             for(int c = 0; c < threecards[c]; c++){ 
                 if(threecards[c] == buyingcolor) {
                     nummatching++; // how many cards match
                 }
+            }
+            if(nummatching <= 0) {
+                return true;
+            }
+           else
+           { 
+                if(players[turn].numOfColor(buyingcolor) + players[turn].getNumLocomotives() >= nummatching)
+                {
+                    buyTunnel = true;
+                    return true;
 
-            
-            }
-            if(nummatching > 0) {
-                return false;
-            }
+                }
+                return false;               
+           }
     }
     
-*/
+
 
     public void distributeTickets(){ 
 
@@ -383,7 +390,6 @@ public class Game {
 
                     points = Integer.parseInt(info[2]); //convert to int
                 
-                
                 Ticket temp = new Ticket(info[0], info[1], points);
                 tickets.push(temp); // add normal tickets
                 
@@ -415,12 +421,7 @@ public class Game {
           
         }
     }
-    public void allPoints(){
-        int totalpoints = 0;
-        for(int i = 0; i < 4; i++){
-            //totalpoints += (countTickets(players[i]));
-        }
-    }
+    
     public Player[] getPlayers()
  {
     return players;
@@ -432,23 +433,7 @@ public class Game {
 
     }
 
-
-    public int countTickets(Player a) { 
-        int score = 0;
-        for(Ticket b : a.getTickets()) {
-            boolean possible = false;
-            if(a.playerCities().contains(b.getCities()[0]) && a.playerCities().contains(b.getCities()[1]))//player at least has both cities
-            {
-                possible = true;
-            }
-            while(possible == true)//adjacency list stuff
-            {
-
-            }
-
-        }
-        return score;
-    }
+    //point counting stuff moved to player class
 }
 
 

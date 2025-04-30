@@ -30,7 +30,12 @@ public class Route {
         stationStart = false;
 
         tracks = new Track[length];
+
+
+
+        
     }
+    
     public void makeTracks(int[][] coords)
     {
         if(coords.length != length) {
@@ -48,8 +53,10 @@ public class Route {
             int y = coords[i][1];
             float rotation = (float) Math.toRadians(coords[i][2]);
             Track t = new Track(color, x, y, rotation, tunnel, l);
+            
             addTrack(t);
         }
+
     }
     public void moveTrack(int i, int moveX, int moveY, int rot)
     {
@@ -197,5 +204,8 @@ public class Route {
             }
         }
         return false;
+
+    public Button[] getButtons() {
+        return buttons;
     }
 }

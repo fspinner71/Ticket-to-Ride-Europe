@@ -9,6 +9,8 @@ public class Player {
     private int stations;
     private Map<City, ArrayList<Pair>> adjacencyList;
 
+    private int points;
+
 
     public Player() {
         trains = 45;
@@ -17,7 +19,7 @@ public class Player {
         routes = new ArrayList<>();
         stations = 3;
         adjacencyList = new TreeMap<City, ArrayList<Pair>>();
-
+        points = 0;
 
     }
     public void addRoute(Route r ) {
@@ -127,6 +129,13 @@ public class Player {
     public int[] getTrainCards() {
         return trainCards;
     }
+    public int getNumTrainCards() {
+        int count = 0;
+        for(int c = 0; c< trainCards.length; c++) {
+            count+= trainCards[c];
+        }
+        return count;
+    }
     public ArrayList<Ticket> getTickets() {
         return tickets;
     }
@@ -155,7 +164,19 @@ public class Player {
                 count+= 21;
             }
         }
+        count += addTicketPoints(); //add points gotten from completing tickets
         return count;
+    }
+    public int addTicketPoints()
+    {
+        int ticketPoints = 0;
+        for(Ticket ticket : getTickets()) {
+            if(findRoute(ticket.getCities()[0], null, ticket.getCities()[1]))
+            {
+                ticketPoints += ticket.getPoints();
+            }
+        }
+        return ticketPoints;
     }
     public ArrayList<Route> getRoutes() {
         return routes;
@@ -178,35 +199,58 @@ public class Player {
 
    }
 
+   //returns true if player has completed the ticket
+    public boolean findRoute(String s, City p, String e) //s is 'starting' city, p is previous city, e is 'ending' city; change ticket to hold city vars and not string??
+    { 
+        City start = null;
+        City end = null;
 
-    public boolean findRoute(City start, City prev, City end)
-    {
-        for(Pair pairs: adjacencyList.get(start))
+        for(City city: playerCities())
         {
-            Route r = pairs.getRoute();
-            if(r.getA().equals(start) || r.getB().equals(start)) //the route has the city
+            if(city.getName().equals(s))
             {
-                City other = r.getB();
-                if(other.equals(start))
-                {
-                    other = r.getA(); //r.getB() is the start, so other would be set to r.getA()
-                }
-                if(other.equals(end))
-                {
-                    return true; //route found
-                }
-                else
-                {
-                    if(other.equals(prev))
-                    {
-                        return false; //it's the same route from previous recursion, just backwards
-                    }
-                    findRoute(other, start, end); //continue search with 'other' as start city
-                }
+                start = city;
             }
+            else if(city.getName().equals(e))
+            {
+                end = city;
+            }
+        }
+        if(start != null && end != null)
+        {
+            for(Pair pairs: adjacencyList.get(start))
+            {
+                Route r = pairs.getRoute();
+                if(r.getA().equals(start) || r.getB().equals(start)) //the route has the city
+                {
+                    City other = r.getB();
+                    if(other.equals(start))
+                    {
+                        other = r.getA(); //r.getB() is the start, so other would be set to r.getA()
+                    }
+                    if(other.equals(end))
+                    {
+                        return true; //route found
+                    }
+                    else if(!other.equals(p))//it's the same route from previous recursion, just backwards
+                        {
+                            findRoute(other.getName(), start, end.getName()); //continue search with 'other' as start city                        }                   
+                        }
+                }
             
+            }
         }
         return false; //not found
     }
+
+    public int numOfColor(int color)
+    {
+        return trainCards[color];
+    }
+
+
+
+   
+
     
 }
