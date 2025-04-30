@@ -24,7 +24,7 @@ public class Player {
     }
     public void addRoute(Route r ) {
         routes.add(r);
-        adjacencyList.get(r.getA()).add(new Pair(r.getA(), r)); //fix 
+        //adjacencyList.get(r.getA()).add(new Pair(r.getA(), r)); //fix 
     }
 
     

@@ -23,6 +23,7 @@ public class GamePanel extends JPanel implements MouseListener {
     private Game game;
     private City selected;
     private PrintWriter writer;
+    private boolean buyingTunnel;
 
     private City theywannaplacestationon;
     private Route currentlyBuying;
@@ -124,6 +125,7 @@ public class GamePanel extends JPanel implements MouseListener {
          arrayforchoosingroutecolor = temp;
         currentlyBuying = null;
         theywannaplacestationon = null;
+        buyingTunnel = false; 
     }
     @Override
     public void paint(Graphics g)
@@ -215,6 +217,7 @@ public class GamePanel extends JPanel implements MouseListener {
         routebuyingcolor = 0;
         currentlyBuying = null;
         theywannaplacestationon = null;
+        buyingTunnel = false;
         System.out.println("start of turn");
         g2.setFont(bigFont);
         g2.drawString("DRAW", 1695, 354);
@@ -264,8 +267,16 @@ public class GamePanel extends JPanel implements MouseListener {
         g2.drawString(arrayforchoosingroutecolor[routebuyingcolor], 1715 - (arrayforchoosingroutecolor[routebuyingcolor].length() -3) * 6, 585);
         g2.drawString("to", 1730, 240);
             if(currentlyBuying != null) {
-                g2.drawString(currentlyBuying.getA().getName(), 1730, 200);
-                g2.drawString(currentlyBuying.getB().getName(), 1730, 300);
+                g2.drawString(currentlyBuying.getA().getName(), 1600, 200);
+                g2.drawString(currentlyBuying.getB().getName(), 1600, 300);
+            }
+
+            if(buyingTunnel) {
+                int[] threecards = game.getThreeCards();
+                for(int c = 0; c < 3; c++) {
+                    g.drawImage(cards[threecards[c]], 300 + c*400, 300, cards[0].getWidth()/4, cards[0].getHeight()/4, null);
+            
+                }
             }
         g2.setFont(font);
     }
@@ -392,17 +403,22 @@ public class GamePanel extends JPanel implements MouseListener {
 
 
             for(int c =0; c< game.getRoutes().size(); c++) {
-                for(Button a: game.getRoutes().get(c).getButtons()) {
-                    if(a.isInside(x, y)) {
+               
+                    if(game.getRoutes().get(c).isInside(x, y)) {
                         currentlyBuying = game.getRoutes().get(c);
                         break;
                     }
-                } {
-
-                }
+             
+                
             }
             if(confirm.isInside(x, y) && currentlyBuying != null) { //biu route
+                if(currentlyBuying.isTunnel()) {
+                     buyingTunnel = true;
+                }
+                else {
                 game.buyRoute(currentlyBuying, numberoflocomotivestheywanttouse, routebuyingcolor);
+                }
+
             }
         }
        else if(action == 3) { //buy station
