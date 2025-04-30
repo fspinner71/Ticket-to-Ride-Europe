@@ -4,7 +4,7 @@ import java.util.*;
 import jdk.jshell.DeclarationSnippet;
 public class Game {
  
-    public static Player players[];
+    public Player players[];
     private ArrayList<City> cities;
     private ArrayList<Route> routes;
     private int cards[];
@@ -28,7 +28,7 @@ public class Game {
 
     
     public static ArrayList<Integer> discardPile;
-    
+    public boolean buyTunnel = false;
     public Game(){
         try
         {
@@ -342,13 +342,11 @@ public class Game {
             }
            else
            { 
-                if(players[turn].getCountOf(buyingcolor) >= nummatching)
+                if(players[turn].numOfColor(buyingcolor) + players[turn].getNumLocomotives() >= nummatching)
                 {
-                    for(int i = 0; i < nummatching; i++)
-                    {
-                        players[turn].remove();
-                    }
+                    buyTunnel = true;
                     return true;
+
                 }
                 return false;               
            }
