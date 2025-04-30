@@ -11,7 +11,7 @@ public class City
     private int nameX = 0;
     private int nameY = 0;
     private Button button;
-    private static BufferedImage image;
+    public static BufferedImage image;
     private Player stationOwner;
     private static Font font;
     
