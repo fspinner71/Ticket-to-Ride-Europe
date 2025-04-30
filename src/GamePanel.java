@@ -291,11 +291,11 @@ public class GamePanel extends JPanel implements MouseListener,KeyListener {
             g2.drawString("BACK", 1705, 987);
             g2.drawString("CONFIRM", 1664, 883);
             g2.drawString("Placing", 1694, 52);
-            g2.drawString(arrayforchoosingroutecolor[routebuyingcolor], 1700, 585);
+            g2.drawString(arrayforchoosingroutecolor[routebuyingcolor] , 1718 - (arrayforchoosingroutecolor[routebuyingcolor].length() -3) * 7, 585);
         g2.drawString("Station", 1690, 97);
         if(theywannaplacestationon != null) {
             g2.setFont(font);
-            g2.drawString(theywannaplacestationon.getName(), 1600, 474);
+            g2.drawString(theywannaplacestationon.getName(), 1688 - (theywannaplacestationon.getName().length() -7) * 8, 474);
         }
     }
 
