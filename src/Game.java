@@ -28,7 +28,7 @@ public class Game {
 
     
     public static ArrayList<Integer> discardPile;
-    
+    public boolean buyTunnel = false;
     public Game(){
         try
         {
@@ -38,13 +38,15 @@ public class Game {
             Scanner scanner = new Scanner(citiesCSV);
             String line = scanner.nextLine();
             String[] info = line.split(","); //array of the stuff in csv file
-            for(int i = 0; i < info.length; i+=3)
+            for(int i = 0; i < info.length; i+=5)
             {
                 String name = info[i]; //name of city
                 int x = Integer.parseInt(info[i+1]); //x coord of city
                 int y = Integer.parseInt(info[i+2]); //y coord of city
+                int nameX = Integer.parseInt(info[i+3]);
+                int nameY = Integer.parseInt(info[i+4]);
                 ArrayList<Route> routes = new ArrayList<Route>(); //arraylist of routes for the city
-                City temp = new City(name, routes, x, y); //create the city object
+                City temp = new City(name, routes, x, y, nameX, nameY); //create the city object
                 cities.add(temp); //add to the array of cities
             }
 
@@ -55,10 +57,6 @@ public class Game {
             String[] routeInfo = routeLine.split(","); //array of the stuff in csv file
             for(int i = 0; i < routeInfo.length; i+=6)
             {
-                for(int j = 0; j < 6; j++)
-                {
-                    System.out.println("i: i + " + j + ", " + routeInfo[i+j]);
-                }
                 String city1Name = routeInfo[i];
                 String city2Name = routeInfo[i+1];
                 City city1 = null, city2 = null;
@@ -342,13 +340,11 @@ public class Game {
             }
            else
            { 
-                if(players[turn].getCountOf(buyingcolor) >= nummatching)
+                if(players[turn].numOfColor(buyingcolor) + players[turn].getNumLocomotives() >= nummatching)
                 {
-                    for(int i = 0; i < nummatching; i++)
-                    {
-                        players[turn].remove();
-                    }
+                    buyTunnel = true;
                     return true;
+
                 }
                 return false;               
            }
