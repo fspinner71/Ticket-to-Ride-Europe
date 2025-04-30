@@ -121,7 +121,7 @@ public class Game {
         discardPile = new ArrayList<Integer>();
         makeTickets();
         distributeTickets();
-
+        players[0].addTrainCard(0);
     }
     public void drawCard(int index ){ //0-4 is the face up cards, 5 is the deck/facedown card
         
