@@ -120,7 +120,7 @@ public class GamePanel extends JPanel implements MouseListener {
         action = 0;
         numberoflocomotivestheywanttouse= 0;
         routebuyingcolor = 0;
-         String[] temp = {"Red", "Blue", "Yellow", "Green", "Orange", "Pink", "White", "Black" };
+         String[] temp = {"Red", "Blue", "Yellow", "Green", "Orange", "Pink", "White", "Black", "Locomotive"};
          arrayforchoosingroutecolor = temp;
         currentlyBuying = null;
         theywannaplacestationon = null;
@@ -261,7 +261,7 @@ public class GamePanel extends JPanel implements MouseListener {
         g2.drawString("locomotives and", 1615, 450);
         g2.drawString("buying color", 1645, 485);
         g2.drawString(String.valueOf(numberoflocomotivestheywanttouse), 1740, 748);
-        g2.drawString(arrayforchoosingroutecolor[routebuyingcolor], 1700, 585);
+        g2.drawString(arrayforchoosingroutecolor[routebuyingcolor], 1715 - (arrayforchoosingroutecolor[routebuyingcolor].length() -3) * 6, 585);
         g2.drawString("to", 1730, 240);
             if(currentlyBuying != null) {
                 g2.drawString(currentlyBuying.getA().getName(), 1730, 200);
@@ -280,7 +280,7 @@ public class GamePanel extends JPanel implements MouseListener {
             g2.drawString("BACK", 1705, 987);
             g2.drawString("CONFIRM", 1664, 883);
             g2.drawString("Placing", 1694, 52);
-            g2.drawString(arrayforchoosingroutecolor[routebuyingcolor] , 1718 - (arrayforchoosingroutecolor[routebuyingcolor].length() -3) * 7, 585);
+            g2.drawString(arrayforchoosingroutecolor[routebuyingcolor] , 1675 - (arrayforchoosingroutecolor[routebuyingcolor].length() -5) * 8, 585);
         g2.drawString("Station", 1690, 97);
         if(theywannaplacestationon != null) {
             g2.setFont(font);
@@ -409,7 +409,7 @@ public class GamePanel extends JPanel implements MouseListener {
 
             if(arrowdown.isInside(x, y)) {
                 if(routebuyingcolor == 0) {
-                    routebuyingcolor = 7;
+                    routebuyingcolor = 8;
                 }
                 else {
                     routebuyingcolor--;
@@ -417,7 +417,7 @@ public class GamePanel extends JPanel implements MouseListener {
                 
             }
             if(arrowup.isInside(x, y)) {
-                if(routebuyingcolor == 7) {
+                if(routebuyingcolor == 8) {
                     routebuyingcolor = 0;
                 }
                 else {
