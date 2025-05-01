@@ -305,7 +305,7 @@ public class Game {
 
         }
         else {
-            errorScreen("dont have enoguh cards or smtj isdfosdfodsf");
+            errorScreen("dont have enough cards or smt");
         }
 
     }
