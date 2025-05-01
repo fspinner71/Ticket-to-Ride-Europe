@@ -8,13 +8,17 @@ public class City
     private ArrayList<Route> routes;
     private int x;
     private int y;
+    private int nameX = 0;
+    private int nameY = 0;
     private Button button;
-    private static BufferedImage image;
+    public static BufferedImage image;
     private Player stationOwner;
+    private static Font font;
     
 
     public static int SIZE = 25;
     static{
+        font = new Font("Comic Sans MS", Font.BOLD, 14);
         try
         {
             image = ImageIO.read(City.class.getResource("/Images/City.png"));
@@ -23,13 +27,15 @@ public class City
         }
     }
 
-    public City(String name, ArrayList<Route> routes, int x, int y)
+    public City(String name, ArrayList<Route> routes, int x, int y, int nameX, int nameY)
     {
         this.name = name;
         this.routes = routes;
         this.x = x;
         this.y = y;
         stationOwner = null;
+        this.nameX = nameX;
+        this.nameY = nameY;
       
         this.button = new Button(GamePanel.MAP_X + x - SIZE/2, GamePanel.MAP_Y + y - SIZE/2, SIZE, SIZE, image);
     }
@@ -74,5 +80,12 @@ public class City
     public void paint(Graphics g)
     {
         button.paint(g);
+        g.setFont(font);
+        g.setColor(Color.GRAY);
+        g.drawString(name, nameX + GamePanel.MAP_X, nameY + GamePanel.MAP_Y);
+    }
+    public String toString()
+    {
+        return name + "," + x + "," + y + "," + nameX + "," + nameY + ",";
     }
 }
