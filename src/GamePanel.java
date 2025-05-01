@@ -220,17 +220,7 @@ public class GamePanel extends JPanel implements MouseListener {
         g2.drawString(currentplayer, 325, 822);
         g2.setFont(font);
         
-            //
-       /*  for(int i = 0; i < game.players.length; i++){
-            currentplayer = "Player " + (i + 1);
-            g2.setFont(bigFont);
-            g2.drawString(currentplayer, 20, i*Frame.HEIGHT/4 + 30);
-            g2.setFont(font);
-            g.drawImage(textBoxSmall, 15, i*Frame.HEIGHT/4 + 70, 170, 50, null);
-            //g.drawImage(textBoxSmall, (leftBar.getWidth()) + 15, i*leftBar.getHeight(), 130, 90, null);
-            //g.drawImage(textBoxSmall, (leftBar.getWidth()) + 15, i*leftBar.getHeight(), 130, 90, null);
-        } */
-        //draw current player's cards
+
         int totalnum = game.getPlayers()[game.turn].getNumTrainCards();
         int imagegap = 0;
         if(totalnum !=  0) {
@@ -246,7 +236,17 @@ public class GamePanel extends JPanel implements MouseListener {
                 tempimagegapthing++;
             }
         }
+        if(game.gameEnded) { //game ended so u pick the station routes  idk 
 
+            g.drawImage(errorWindow, 725, 300, errorWindow.getWidth()/3, errorWindow.getHeight()/3, null);
+            okButton.paint(g);
+            
+          
+            g2.drawString("player 1 pick ", 759 - (game.errorMessage.length() - 28) * 6, 510);
+            g2.drawString("OK", 904, 661);
+
+            return;
+        }
 
             if(action == -1) { //-1 is if the turn ended and itll juust show the end turn button
             endTurnButton.paint(g);

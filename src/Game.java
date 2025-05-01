@@ -14,7 +14,7 @@ public class Game {
     public static ArrayList<Integer> deck;
     public static int turn = 0;
     public static int shouldEnd = 0;
-    public boolean drawnOne, errorPanel, turnended;
+    public boolean drawnOne, errorPanel, turnended, gameEnded;
     public String errorMessage;
     public static final int RED = 0;
     public static final int BLUE = 1;
@@ -117,6 +117,7 @@ public class Game {
         drawnOne = false;
         turnended = false;
         discardPile = new ArrayList<Integer>();
+        gameEnded = false;
         makeTickets();
         distributeTickets();
         players[0].addTrainCard(0);
@@ -124,10 +125,13 @@ public class Game {
         players[0].addTrainCard(0);
         players[0].addTrainCard(0);
         players[0].addTrainCard(0);
-        
+        players[0].addTrainCard(ANY);
+        players[0].addTrainCard(ANY);
         players[0].addTrainCard(0);
+        players[0].setTrainCount();
 
     }
+    
     public void drawCard(int index ){ //0-4 is the face up cards, 5 is the deck/facedown card
         
         System.out.println("draw card");
@@ -317,12 +321,18 @@ public class Game {
             shouldEnd++; //????
         }
         if(shouldEnd == 4) { //everyone finsihed their one turn 
-            //END GAME 
+            endGame();
 
         }
         turn++; 
         turn = turn % 4;
         turnended = true;
+
+
+    }
+    public void endGame() { //game ends then u pick the routes 
+        
+        gameEnded = true;
 
 
     }

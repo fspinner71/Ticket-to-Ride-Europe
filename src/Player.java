@@ -38,7 +38,10 @@ public class Player {
     public void addTicket(Ticket a) {
         tickets.add(a);
     }
+    public void setTrainCount() { //for testing
+        trains = 5;
 
+    }
     public boolean buyStation(int traincard1) { // if thir d
         int numNeeded = 0;
         if(stations == 0) {
