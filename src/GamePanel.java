@@ -178,10 +178,10 @@ public class GamePanel extends JPanel implements MouseListener {
         for(int i = 0; i < game.players.length; i++){
             currentplayer = "Player " + (i + 1);
             g2.setFont(bigFont);
-            g2.drawString(currentplayer, 20, i*Frame.HEIGHT/4 + 30);
+            g2.drawString(currentplayer, 20, i*Frame.HEIGHT/4 + 25);
             g2.setFont(font);
-            g.drawImage(textBoxSmall, 15, i*Frame.HEIGHT/4 + 70, 170, 50, null);
-            //g.drawImage(textBoxSmall, (leftBar.getWidth()) + 15, i*leftBar.getHeight(), 130, 90, null);
+            g.drawImage(textBoxSmall, 15, i*Frame.HEIGHT/4 + 60, 160, 50, null);
+            g.drawImage(textBoxSmall, 15, i*Frame.HEIGHT/4 + 130, 160, 50, null);
             //g.drawImage(textBoxSmall, (leftBar.getWidth()) + 15, i*leftBar.getHeight(), 130, 90, null);
         }
         //draw current player's cards
