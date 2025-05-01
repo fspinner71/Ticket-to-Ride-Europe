@@ -261,6 +261,7 @@ public class GamePanel extends JPanel implements MouseListener {
         currentlyBuying = null;
         theywannaplacestationon = null;
         buyingTunnel = false;
+        buyingTunnel = false;
         System.out.println("start of turn");
         g2.setFont(bigFont);
         g2.drawString("DRAW", 1695, 354);
