@@ -120,6 +120,13 @@ public class Game {
         makeTickets();
         distributeTickets();
         players[0].addTrainCard(0);
+        players[0].addTrainCard(0);
+        players[0].addTrainCard(0);
+        players[0].addTrainCard(0);
+        players[0].addTrainCard(0);
+        
+        players[0].addTrainCard(0);
+
     }
     public void drawCard(int index ){ //0-4 is the face up cards, 5 is the deck/facedown card
         
@@ -319,7 +326,7 @@ public class Game {
 
 
     }
-    public boolean buyTunnel(Route p, int locomotivesused, int buyingcolor) { //returns true if u succesfully buy it reutnr false if at least one card matches 
+   /*  public boolean buyTunnel(Route p, int locomotivesused, int buyingcolor) { //returns true if u succesfully buy it reutnr false if at least one card matches 
         int[] threecards = new int[3];
         int nummatching = 0;
             for(int c  = 0; c < 3; c++) { //get the 3 drawn cards from the deck, if deck is empty and u cant draw it then it becomes -1;
@@ -335,7 +342,8 @@ public class Game {
                     nummatching++; // how many cards match
                 }
             }
-            if(nummatching <= 0) {
+            
+           if(nummatching <= 0) {
                 return true;
             }
            else
@@ -348,8 +356,33 @@ public class Game {
                 }
                 return false;               
            }
-    }
+}
+           */
     
+    public int[] getThreeCards() { 
+
+        int[] threecards = new int[3];
+      
+            for(int c  = 0; c < 3; c++) { //get the 3 drawn cards from the deck, if deck is empty and u cant draw it then it becomes -1;
+                if(deck.isEmpty() == false) {
+                threecards[c] = deck.get(c);
+              
+                
+                }
+                else {
+                    threecards[c] = -1;
+                }
+            }
+           return threecards;
+          
+            
+         
+    }   
+    public void discardtop3() { //for tunnel
+        discardPile.add(deck.remove(0));
+        discardPile.add(deck.remove(0));
+        discardPile.add(deck.remove(0));
+    }
 
 
     public void distributeTickets(){ 

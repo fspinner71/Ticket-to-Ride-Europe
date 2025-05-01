@@ -184,22 +184,10 @@ public class Route {
 
             Dx = (int)((float)(-Track.WIDTH/2) * Math.cos(t.getRotation()) - (float)(Track.HEIGHT/2) * Math.sin(t.getRotation())) + t.getX();
             Dy = (int)((float)(Track.HEIGHT/2) * Math.cos(t.getRotation()) + (float)(-Track.WIDTH/2) * Math.sin(t.getRotation())) + t.getY();
-            // double apd, dpc, cpb, pba;
-            // //A = abs(0.5 * (x1(y2-y3) + x2(y3-y1) + x3(y1-y2)));
-            // apd = Math.abs(0.5 * (Ax * (Py - Dy) + Px * (Dy - Ay) + Dx * (Ay - Py)));
-            // dpc = Math.abs(0.5 * (Dx * (Py - Cy) + Px * (Cy - Dy) + Dx * (Cy - Py)));
-            // cpb = Math.abs(0.5 * (Cx * (Py - By) + Px * (By - Cy) + Cx * (By - Py)));
-            // pba = Math.abs(0.5 * (Px * (By - Ay) + Bx * (Ay - Py) + Px * (Ay - By)));
-
-            // if(apd + dpc + cpb + pba <= Track.HEIGHT * Track.WIDTH)
-            // {
-            //     return true;
-            // }
 
 
             if(PointInTriangle(Px, Py, Ax, Ay, Bx, By, Cx, Cy) || PointInTriangle(Px, Py, Ax, Ay, Dx, Dy, Cx, Cy))
             {
-                System.out.println(i);
                 return true;
             }
         }
