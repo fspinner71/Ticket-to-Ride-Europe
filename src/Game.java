@@ -365,7 +365,9 @@ public class Game {
       
             for(int c  = 0; c < 3; c++) { //get the 3 drawn cards from the deck, if deck is empty and u cant draw it then it becomes -1;
                 if(deck.isEmpty() == false) {
-                threecards[c] = deck.remove(0);
+                threecards[c] = deck.get(c);
+              
+                
                 }
                 else {
                     threecards[c] = -1;
@@ -375,6 +377,11 @@ public class Game {
           
             
          
+    }   
+    public void discardtop3() { //for tunnel
+        discardPile.add(deck.remove(0));
+        discardPile.add(deck.remove(0));
+        discardPile.add(deck.remove(0));
     }
 
 
