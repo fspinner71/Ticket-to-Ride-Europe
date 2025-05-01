@@ -251,6 +251,15 @@ public class Player {
         return trainCards[color];
     }
 
+    public boolean buyTunnel(Route r, int color, int extraCardsNeeded, int loco)
+    {
+        if(loco + numOfColor(color) == extraCardsNeeded + r.getLength())
+        {
+            buyRoute(r, loco, color);
+            return true;
+        }
+        return false;
+    }
 
 
    

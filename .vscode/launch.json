@@ -9,6 +9,13 @@
             "name": "Runner",
             "request": "launch",
             "mainClass": "Runner",
+            "projectName": "Ticket-to-Ride-Europe_28c16a09"
+        },
+        {
+            "type": "java",
+            "name": "Runner",
+            "request": "launch",
+            "mainClass": "Runner",
             "projectName": "Ticket-to-Ride-Europe_83e1b7ac"
         },
         {

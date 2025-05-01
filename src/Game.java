@@ -12,7 +12,7 @@ public class Game {
     private Stack<Ticket> bigtickets = new Stack<Ticket>();
     
     public static ArrayList<Integer> deck;
-    public static int turn = 0;
+    public  int turn = 0;
     public static int shouldEnd = 0;
     public boolean drawnOne, errorPanel, turnended;
     public String errorMessage;
@@ -118,14 +118,14 @@ public class Game {
         turnended = false;
         discardPile = new ArrayList<Integer>();
         makeTickets();
-        distributeTickets();
-        players[0].addTrainCard(0);
-        players[0].addTrainCard(0);
-        players[0].addTrainCard(0);
-        players[0].addTrainCard(0);
-        players[0].addTrainCard(0);
+         distributeTickets();
+        // players[0].addTrainCard(0);
+        // players[0].addTrainCard(0);
+        // players[0].addTrainCard(0);
+        // players[0].addTrainCard(0);
+        // players[0].addTrainCard(0);
         
-        players[0].addTrainCard(0);
+        // players[0].addTrainCard(0);
 
     }
     public void drawCard(int index ){ //0-4 is the face up cards, 5 is the deck/facedown card
@@ -320,11 +320,27 @@ public class Game {
             //END GAME 
 
         }
-        turn++; 
-        turn = turn % 4;
+        // turn++; 
+        // turn = turn % 4;
         turnended = true;
 
 
+    }
+
+    public boolean buyTunnel(Route r, int color, int extraCards, int locos)
+    {
+        if(players[turn].buyTunnel(r, color, extraCards, locos))
+        {
+            endTurn();
+            return true;
+        }
+        else
+        {
+            errorScreen("Can't buy tunnel");
+            endTurn();
+        }
+        return false;
+        
     }
    /*  public boolean buyTunnel(Route p, int locomotivesused, int buyingcolor) { //returns true if u succesfully buy it reutnr false if at least one card matches 
         int[] threecards = new int[3];
