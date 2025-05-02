@@ -33,11 +33,6 @@ public class GamePanel extends JPanel implements MouseListener {
     private int selectedTrack;
     private String[] arrayforchoosingroutecolor;
 
-
-
-
-    private Ticket t;
-
     private int[] threecards;
 
     static {
@@ -109,9 +104,6 @@ public class GamePanel extends JPanel implements MouseListener {
 
     public GamePanel() {
         game = new Game();
-        t = new Ticket(game.getCities().get(0), game.getCities().get(17), 20);
-        t.setX(500);
-        t.setY(200);
         addMouseListener(this);
         actions = new Button[4];
         gameCards = new Button[6]; //like when you draw cards wtv it has includes the face down card ;; 0 = facedown, 1-5 = cards
@@ -369,15 +361,13 @@ public class GamePanel extends JPanel implements MouseListener {
     
     }
 
-    public static void drawCenteredString(Graphics g, String text, Rectangle rect, Font font) {
+    public static void drawCenteredString(Graphics g, String text, int posX, int posY, int width, int height) {
         // Get the FontMetrics
         FontMetrics metrics = g.getFontMetrics(font);
         // Determine the X coordinate for the text
-        int x = rect.x + (rect.width - metrics.stringWidth(text)) / 2;
+        int x = posX + (width - metrics.stringWidth(text)) / 2;
         // Determine the Y coordinate for the text (note we add the ascent, as in java 2d 0 is top of the screen)
-        int y = rect.y + ((rect.height - metrics.getHeight()) / 2) + metrics.getAscent();
-        // Set the font
-        g.setFont(font);
+        int y = posY + ((height - metrics.getHeight()) / 2) + metrics.getAscent();
         // Draw the String
         g.drawString(text, x, y);
     }

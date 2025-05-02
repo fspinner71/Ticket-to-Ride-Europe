@@ -4,8 +4,8 @@ import java.awt.image.*;
 import javax.imageio.ImageIO;
 
 public class Ticket {
-    public static final int WIDTH = 300;
-    public static final int HEIGHT = 200;
+    public static final int WIDTH = 250;
+    public static final int HEIGHT = 165;
     private static BufferedImage image;
     private static Font font;
 
@@ -86,6 +86,9 @@ public class Ticket {
         g.setFont(font);
         g.setColor(Color.RED);
 
-        //GamePanel.drawCenteredString(g2, cities[0].getName(),)
+        GamePanel.drawCenteredString(g2, cities[0].getName(), x, y, WIDTH, startY);
+        GamePanel.drawCenteredString(g2, cities[1].getName(), x, y + mapHeight + startY, WIDTH, startY);
+        GamePanel.drawCenteredString(g2, "" + points, x, y, startX, HEIGHT);
+        GamePanel.drawCenteredString(g2, "" + points, x + startX + mapWidth, y, startX, HEIGHT);
     }
 }
