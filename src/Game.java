@@ -13,7 +13,6 @@ public class Game {
    
     public static ArrayList<Integer> deck;
     public  int turn = 0;
-    public  int turn = 0;
     public static int shouldEnd = 0;
     public boolean drawnOne, errorPanel, turnended;
     public String errorMessage;
@@ -292,10 +291,10 @@ public class Game {
     public ArrayList<Integer> getDeck() {
         return deck;
     }
-    public void buyRoute(Route p, int locomotivesused, int buyingcolor) { // except tunel
+    public void buyRoute(Route p, int locomotivesused, int buyingcolor, int extra) { // except tunel
 
 
-        if(locomotivesused < players[turn].getNumLocomotives()) { //if they dont even have enough locomotivs
+        if(locomotivesused > players[turn].getNumLocomotives()) { //if they dont even have enough locomotivs
             errorScreen("Don't have enough locomotives!");
            
 
@@ -309,7 +308,7 @@ public class Game {
 
 
         else {
-            boolean a = players[turn].buyRoute(p, locomotivesused, buyingcolor);
+            boolean a = players[turn].buyRoute(p, locomotivesused, buyingcolor, extra);
             if(a) { // if they buy the route mvoe the turn
                 endTurn();
 
@@ -371,9 +370,9 @@ public class Game {
     }
 
 
-    public boolean buyTunnel(Route r, int color, int extraCards, int locos)
+    public boolean buyTunnel(Route r, int color, int extraCards, int loco)
     {
-        if(players[turn].buyTunnel(r, color, extraCards, locos))
+        if(players[turn].buyRoute(r, color, extraCards, loco))
         {
             endTurn();
             return true;
@@ -535,7 +534,11 @@ public class Game {
 
 
     }
-
+    public void discardtop3() { //for tunnel
+        discardPile.add(deck.remove(0));
+        discardPile.add(deck.remove(0));
+        discardPile.add(deck.remove(0));
+    }
 
     //point counting stuff moved to player class
 }
