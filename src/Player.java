@@ -3,15 +3,18 @@ import java.util.*;
 
 public class Player {
 
+
     private int trains;
     private int[] trainCards;
     private ArrayList<Ticket> tickets;
-
+    
     private ArrayList<Route> routes;
     private int stations;
     private Map<City, ArrayList<Pair>> adjacencyList;
 
+
     private int points;
+
 
     public Player() {
         trains = 45;
@@ -22,24 +25,27 @@ public class Player {
         adjacencyList = new TreeMap<City, ArrayList<Pair>>();
         points = 0;
 
+
     }
 
     public void addRoute(Route r) {
         routes.add(r);
-        adjacencyList.get(r.getA()).add(new Pair(r.getA(), r)); //fix 
+        //adjacencyList.get(r.getA()).add(new Pair(r.getA(), r)); //fix
     }
 
     public int getScore() {
         return 1;
     }
-
+    
     public void addTrainCard(int color) {
         trainCards[color]++;
     }
 
+
     public void addTicket(Ticket a) {
         tickets.add(a);
     }
+
 
     public boolean buyStation(int traincard1) { // if thir d
         int numNeeded = 0;
@@ -65,21 +71,27 @@ public class Player {
         }
         return false;
     }
-
+    
     public boolean buyRoute(Route p, int locomotivesused, int buyingcolor) { //buying color is what color u tryna buy with if its a grey route
         //we will make sure buying color is same as route color if route has a color in the game class or wtv so they cant buy like a red route with a blue card
 
-        // buying tunnel is in game clas
-        if (p.getLocomotivesRequired() > 0) { //if it is a fery
 
+
+        // buying tunnel is in game clas
+
+        
+        if(p.getLocomotivesRequired() > 0) { //if it is a fery
+       
             int length = p.getLength();
             int num = p.getLocomotivesRequired();
             if (trainCards[8] < p.getLocomotivesRequired()) {
                 return false; // u dont have enough lcoomotive s
             }
 
+
             int extralocomotives = locomotivesused - num; //the extra num of locomtoives the player used so like the not required ones if they decide to use more
             int newlength = length - num; // new length
+
 
             if (trainCards[buyingcolor] + extralocomotives < newlength) {
                 return false; //u cant buy
@@ -98,10 +110,12 @@ public class Player {
                 return true;
             }
 
+
         }//end of if ferry
         //if regular route
 
         int length = p.getLength();
+
 
         if (trainCards[buyingcolor] + locomotivesused < length) {
             return false; //u cant buy
@@ -118,11 +132,13 @@ public class Player {
             trainCards[8] -= locomotivesused;
             trains -= length;
             return true;
-
+        
         }
+
 
     }
     //sdfsdfsdf
+
 
     public int getNumTrains() {
         return trains;
@@ -146,6 +162,7 @@ public class Player {
 
     public int getNumStations() {
         return stations;
+        return stations;
     }
     public void addPoints(int p)
     {  
@@ -168,6 +185,7 @@ public class Player {
     public ArrayList<Route> getRoutes() {
         return routes;
 
+
     }
 
     public int getNumLocomotives() {
@@ -182,13 +200,15 @@ public class Player {
         }
         return cities;
 
-    }
+   }
 
     //returns true if player has completed the ticket
     public boolean findRoute(String s, City p, String e) //s is 'starting' city, p is previous city, e is 'ending' city; change ticket to hold city vars and not string??
     {
+    {
         City start = null;
         City end = null;
+
 
         for (City city : playerCities()) {
             if (city.getName().equals(s)) {
@@ -208,7 +228,8 @@ public class Player {
                     }
                     if (other.equals(end)) {
                         return true; //route found
-                    } else if (!other.equals(p))//it's the same route from previous recursion, just backwards
+                    }
+                    else if(!other.equals(p))//it's the same route from previous recursion, just backwards
                     {
                         findRoute(other.getName(), start, end.getName()); //continue search with 'other' as start city                        }                   
                     }
@@ -219,8 +240,31 @@ public class Player {
         return false; //not found
     }
 
+
     public int numOfColor(int color) {
         return trainCards[color];
     }
 
+
+    public boolean buyTunnel(Route r, int color, int extraCardsNeeded, int loco)
+    {
+        if(loco + numOfColor(color) == extraCardsNeeded + r.getLength())
+        {
+            buyRoute(r, loco, color);
+            return true;
+        }
+        return false;
+    }
+
+
+
+
+   
+
+
+   
 }
+
+
+
+

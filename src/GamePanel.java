@@ -10,23 +10,27 @@ import javax.swing.*;
 
 public class GamePanel extends JPanel implements MouseListener {
 
+
     private static BufferedImage map, city, deck, ticket;
     public static BufferedImage[] cards, buttons;
-    public static BufferedImage bottomBar, leftBar, rightBar, upArrow, downArrow, errorWindow, notebookPaper, textBoxLarge, textBoxSmall;
+    public static BufferedImage bottomBar, leftBar, rightBar, upArrow, downArrow, errorWindow, notebookPaper, textBoxLarge, textBoxSmall;    
     private Button[] actions, gameCards;
     public static BufferedImage[] stations, owns;
-    public static BufferedImage locomotiveTrack, locomotiveTunnelTrack; //extra stuff 
+    public static BufferedImage locomotiveTrack, locomotiveTunnelTrack; //extra stuff
     public static final int MAP_X = 305;
     public static final int MAP_Y = -10;
     public static final int MAP_WIDTH = 1295;
     public static final int MAP_HEIGHT = 824;
     private static Font font, bigFont;
 
+
     private Button back, okButton, endTurnButton, confirm, arrowup, arrowdown, arrowup2, arrowdown2;
     private int action, numberoflocomotivestheywanttouse, routebuyingcolor; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
     private City selected;
     private PrintWriter writer;
+    private boolean buyingTunnel;
+
 
     private City theywannaplacestationon;
     private Route currentlyBuying;
@@ -34,6 +38,9 @@ public class GamePanel extends JPanel implements MouseListener {
     private String[] arrayforchoosingroutecolor;
 
     private Ticket t;
+
+    private int[] threecards;
+
 
     static {
         font = new Font("Comic Sans MS", Font.BOLD, 24);
@@ -47,12 +54,14 @@ public class GamePanel extends JPanel implements MouseListener {
             locomotiveTrack = ImageIO.read(GamePanel.class.getResource("/Images/LocomotiveTrack.png"));
             locomotiveTunnelTrack = ImageIO.read(GamePanel.class.getResource("/Images/LocomotiveTunnelTrack.png"));
 
+
             //stations
-            stations = new BufferedImage[4]; //order of stations and players: red blue yellow green 
+            stations = new BufferedImage[4]; //order of stations and players: red blue yellow green
             stations[Game.RED] = ImageIO.read(GamePanel.class.getResource("/Images/RedStation.png"));
             stations[Game.BLUE] = ImageIO.read(GamePanel.class.getResource("/Images/BlueStation.png"));
             stations[Game.YELLOW] = ImageIO.read(GamePanel.class.getResource("/Images/YellowStation.png"));
             stations[Game.GREEN] = ImageIO.read(GamePanel.class.getResource("/Images/GreenStation.png"));
+
 
             //owns cars thing
             owns = new BufferedImage[4];
@@ -60,6 +69,7 @@ public class GamePanel extends JPanel implements MouseListener {
             owns[Game.RED] = ImageIO.read(GamePanel.class.getResource("/Images/RedOwns.png"));
             owns[Game.GREEN] = ImageIO.read(GamePanel.class.getResource("/Images/GreenOwns.png"));
             owns[Game.YELLOW] = ImageIO.read(GamePanel.class.getResource("/Images/YellowOwns.png"));
+
 
             //cards
             cards = new BufferedImage[9];
@@ -73,6 +83,7 @@ public class GamePanel extends JPanel implements MouseListener {
             cards[Game.RED] = ImageIO.read(GamePanel.class.getResource("/Images/RedCard.png"));
             cards[Game.ANY] = ImageIO.read(GamePanel.class.getResource("/Images/Locomotive.png"));
 
+
             //gui stuf f
             bottomBar = ImageIO.read(GamePanel.class.getResource("/Images/BottomBar.png"));
             leftBar = ImageIO.read(GamePanel.class.getResource("/Images/LeftBar.png"));
@@ -83,6 +94,7 @@ public class GamePanel extends JPanel implements MouseListener {
             notebookPaper = ImageIO.read(GamePanel.class.getResource("/Images/NotebookPaper.png"));
             textBoxLarge = ImageIO.read(GamePanel.class.getResource("/Images/TextBoxLarge.png"));
             textBoxSmall = ImageIO.read(GamePanel.class.getResource("/Images/textBoxSmall.png"));
+
 
             //gui stuff buttons
             buttons = new BufferedImage[6];
@@ -98,6 +110,7 @@ public class GamePanel extends JPanel implements MouseListener {
         }
     }
 
+
     public GamePanel() {
         game = new Game();
         t = new Ticket(game.getCities().get(0), game.getCities().get(17), 20);
@@ -106,6 +119,7 @@ public class GamePanel extends JPanel implements MouseListener {
         addMouseListener(this);
         actions = new Button[4];
         gameCards = new Button[6]; //like when you draw cards wtv it has includes the face down card ;; 0 = facedown, 1-5 = cards
+
 
         gameCards[0] = new Button(1645, 115, cards[0].getWidth() / 5, cards[0].getHeight() / 5, deck); //deck button
         for (int c = 1; c < gameCards.length; c++) {
@@ -130,6 +144,7 @@ public class GamePanel extends JPanel implements MouseListener {
         arrayforchoosingroutecolor = temp;
         currentlyBuying = null;
         theywannaplacestationon = null;
+        buyingTunnel = false;
     }
 
     @Override
@@ -147,7 +162,7 @@ public class GamePanel extends JPanel implements MouseListener {
             g.drawImage(errorWindow, 725, 300, errorWindow.getWidth() / 3, errorWindow.getHeight() / 3, null);
             okButton.paint(g);
             System.out.println(game.errorMessage);
-
+          
             g2.drawString(game.errorMessage, 759 - (game.errorMessage.length() - 28) * 6, 510);
             g2.drawString("OK", 904, 661);
 
@@ -226,29 +241,32 @@ public class GamePanel extends JPanel implements MouseListener {
                     g.drawString("" + p.getPoints(), 125, 245 + 260 * i);
                 }
 
-                numberoflocomotivestheywanttouse = 0;
-                routebuyingcolor = 0;
-                currentlyBuying = null;
-                theywannaplacestationon = null;
-                System.out.println("start of turn");
-                g2.setFont(bigFont);
-                g2.drawString("DRAW", 1695, 354);
-                g2.drawString("ROUTE", 1688, 464);
-                g2.drawString("STATION", 1664, 573);
-                g2.drawString("TICKET", 1684, 684);
-                g2.setFont(font);
-            }
-            if (action == 1) { //1 is if they decide to draw cards
-                for (int c = 1; c < gameCards.length; c++) { //paint faceup
-                    int[] faceup = game.getFaceUpCards();
+        numberoflocomotivestheywanttouse = 0;
+        routebuyingcolor = 0;
+        currentlyBuying = null;
+        theywannaplacestationon = null;
+        buyingTunnel = false;
+        buyingTunnel = false;
+        System.out.println("start of turn");
+        g2.setFont(bigFont);
+        g2.drawString("DRAW", 1695, 354);
+        g2.drawString("ROUTE", 1688, 464);
+        g2.drawString("STATION", 1664, 573);
+        g2.drawString("TICKET", 1684, 684);
+        g2.setFont(font);
+    }
+            if(action == 1) { //1 is if they decide to draw cards
+        for(int c = 1; c < gameCards.length; c++) { //paint faceup
+            int[] faceup = game.getFaceUpCards();
+         
+            gameCards[c].setImage(cards[faceup[c-1]]);
+            gameCards[c].paint(g);
+        }
+        if(game.getDeck().isEmpty() == false) { //paint deck
+          gameCards[0].paint(g);
+           
+        }
 
-                    gameCards[c].setImage(cards[faceup[c - 1]]);
-                    gameCards[c].paint(g);
-                }
-                if (game.getDeck().isEmpty() == false) { //paint deck
-                    gameCards[0].paint(g);
-
-                }
 
                 back.paint(g);
                 g2.setFont(bigFont);
@@ -302,22 +320,46 @@ public class GamePanel extends JPanel implements MouseListener {
                 }
             }
 
-            for (Route r : game.getRoutes()) {
-                r.paint(g);
-            }
-            ArrayList<City> cities = game.getCities();
-            for (int i = 0; i < cities.size(); i++) {
-                cities.get(i).paint(g);
-            }
-            for (City a : game.getCities()) {
-                if (a.hasStation()) {
-                    g.drawImage(stations[0], GamePanel.MAP_X + a.getXCoord() - 25 / 2 - 7, GamePanel.MAP_Y + a.getYCoord() - 25 / 2 - 12, stations[0].getWidth() / 50, stations[0].getHeight() / 50, null);
-                }
+    for(Route r : game.getRoutes())
+        {
+            r.paint(g);
+        }
+        ArrayList<City> cities = game.getCities();
+        for(int i = 0; i < cities.size(); i++)
+        {
+            cities.get(i).paint(g);
+        }
+        for(City a : game.getCities()) {
+            if(a.hasStation()) {
+                g.drawImage(stations[0], GamePanel.MAP_X + a.getXCoord() - 25/2 - 7, GamePanel.MAP_Y + a.getYCoord() - 25/2 - 12, stations[0].getWidth()/50, stations[0].getHeight()/50, null);
             }
         }
+    if(buyingTunnel) {
+        g.drawImage(errorWindow, 725, 300, errorWindow.getWidth()/3, errorWindow.getHeight()/3, null);
+        g.setFont(font);
+        g.drawString("Top three cards from deck:", 725 + errorWindow.getWidth()/32, 340);
+        for(int c = 0; c < 3; c++) {
+            g.drawImage(rotatecounterclockwise(cards[threecards[c]]), 725 + errorWindow.getWidth()/32 + c*100, 300 + errorWindow.getHeight()/12, rotatecounterclockwise(cards[c]).getWidth()/5, rotatecounterclockwise(cards[c]).getHeight()/5, null);
+        }
+        int extra = 0;
+        for(int color: threecards)
+        {
+            if(color == routebuyingcolor)
+            {
+                extra++;
+            }
+        }
+        System.out.println("num loco they want to use: " + numberoflocomotivestheywanttouse);
+        System.out.println("extra" + extra);
+        System.out.println("how many they have of buying color: " + game.players[game.turn].numOfColor(routebuyingcolor));
+        game.buyTunnel(currentlyBuying, routebuyingcolor, extra, numberoflocomotivestheywanttouse);
+        buyingTunnel = false;
 
-        t.paint(g);
 
+    }
+}
+   
+   
     }
 
     public static void drawCenteredString(Graphics g, String text, Rectangle rect, Font font) {
@@ -338,23 +380,33 @@ public class GamePanel extends JPanel implements MouseListener {
             int x = e.getX();
             int y = e.getY();
 
+
             if (game.errorPanel == true) {
 
                 if (okButton.isInside(x, y)) {
                     game.unerror(); //stop error
                 }
 
-            } else {// not error 
-                if (action == -1) {
-                    if (endTurnButton.isInside(x, y)) {
-                        game.turnended = false;
-                        action = 0;
-                        System.out.println("they pressed the end turn button" + action);
-                        repaint();
-                        return;
-                    }
 
+            }
+
+
+            else {// not error
+                System.out.println("action: " + action);
+            if(action == -1) {
+                if(endTurnButton.isInside(x, y)) {
+                    game.turn++;
+                    game.turn = game.turn % 4;
+
+
+                    game.turnended = false;
+                    action = 0;
+                   System.out.println("they pressed the end turn button" + action);
+                   repaint();
+                   return;
                 }
+
+            }
 
                 if (action == 0) {
 
@@ -428,22 +480,25 @@ public class GamePanel extends JPanel implements MouseListener {
                     }
                 } else if (action == 3) { //buy station
 
-                    if (arrowdown.isInside(x, y)) {
-                        if (routebuyingcolor == 0) {
-                            routebuyingcolor = 8;
-                        } else {
-                            routebuyingcolor--;
-                        }
+            if(arrowdown.isInside(x, y)) {
+                if(routebuyingcolor == 0) {
+                    routebuyingcolor = 8;
+                }
+                else {
+                    routebuyingcolor--;
+                }
+                
+            }
+            if(arrowup.isInside(x, y)) {
+                if(routebuyingcolor == 8) {
+                    routebuyingcolor = 0;
+                }
+                else {
+                    routebuyingcolor++;
+                }
+                
+            }
 
-                    }
-                    if (arrowup.isInside(x, y)) {
-                        if (routebuyingcolor == 8) {
-                            routebuyingcolor = 0;
-                        } else {
-                            routebuyingcolor++;
-                        }
-
-                    }
 
                     System.out.println("statioataotiaotan");
                     if (back.isInside(x, y)) { //if they click back button
@@ -460,15 +515,17 @@ public class GamePanel extends JPanel implements MouseListener {
                         }
                     }
 
-                }
 
-                if (game.turnended) { //if turn just ended u need to reset the screen yk
-                    action = -1;
-                    System.out.println("end of turn");
-                }
-
-            }
         }
+       
+        if(game.turnended) { //if turn just ended u need to reset the screen yk
+            action = -1;
+           System.out.println("end of turn");
+        }
+
+        
+        }
+    }
         repaint();
     }
 
@@ -476,14 +533,18 @@ public class GamePanel extends JPanel implements MouseListener {
         int width = image.getWidth();
         int height = image.getHeight();
 
+
         BufferedImage rotatedImage = new BufferedImage(height, width, image.getType());
         Graphics2D g = rotatedImage.createGraphics();
+
 
         g.translate(0, width);
         g.rotate(-Math.PI / 2); // Rotate 90 degrees counterclockwise
 
+
         g.drawImage(image, 0, 0, null);
         g.dispose();
+
 
         return rotatedImage;
     }
@@ -499,5 +560,6 @@ public class GamePanel extends JPanel implements MouseListener {
 
     public void mouseClicked(MouseEvent e) {
     }
+
 
 }
