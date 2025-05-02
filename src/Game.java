@@ -276,11 +276,10 @@ public class Game {
     public ArrayList<Integer> getDeck() {
         return deck;
     }
+    public void buyRoute(Route p, int locomotivesused, int buyingcolor, int extra) { // except tunel
 
-    public void buyRoute(Route p, int locomotivesused, int buyingcolor) { // except tunel
 
-
-        if (locomotivesused < players[turn].getNumLocomotives()) { //if they dont even have enough locomotivs 
+        if(locomotivesused > players[turn].getNumLocomotives()) { //if they dont even have enough locomotivs
             errorScreen("Don't have enough locomotives!");
 
         } else if (p.getColor() != ANY && p.getColor() != buyingcolor) { //if route is not a grey route and the color doesnt match what they tryna buy wth yk
@@ -288,6 +287,14 @@ public class Game {
         } else {
             boolean a = players[turn].buyRoute(p, locomotivesused, buyingcolor);
             if (a) { // if they buy the route mvoe the turn
+        }
+
+
+
+
+        else {
+            boolean a = players[turn].buyRoute(p, locomotivesused, buyingcolor, extra);
+            if(a) { // if they buy the route mvoe the turn
                 endTurn();
 
             } else {
@@ -335,9 +342,9 @@ public class Game {
     }
 
 
-    public boolean buyTunnel(Route r, int color, int extraCards, int locos)
+    public boolean buyTunnel(Route r, int color, int extraCards, int loco)
     {
-        if(players[turn].buyTunnel(r, color, extraCards, locos))
+        if(players[turn].buyRoute(r, color, extraCards, loco))
         {
             endTurn();
             return true;
@@ -496,7 +503,11 @@ public class Game {
 
 
     }
-
+    public void discardtop3() { //for tunnel
+        discardPile.add(deck.remove(0));
+        discardPile.add(deck.remove(0));
+        discardPile.add(deck.remove(0));
+    }
 
     //point counting stuff moved to player class
 }

@@ -71,9 +71,12 @@ public class Player {
         }
         return false;
     }
-    
-    public boolean buyRoute(Route p, int locomotivesused, int buyingcolor) { //buying color is what color u tryna buy with if its a grey route
+   
+    public boolean buyRoute(Route p, int locomotivesused, int buyingcolor, int extra) { //buying color is what color u tryna buy with if its a grey route
         //we will make sure buying color is same as route color if route has a color in the game class or wtv so they cant buy like a red route with a blue card
+
+
+
 
 
 
@@ -115,9 +118,26 @@ public class Player {
         //if regular route
 
         int length = p.getLength();
+        if(p.isTunnel())
+        {
+        //    length += extra;
+        }
 
+        System.out.println("length: " + length);
+        if(p.isTunnel())
+        {
+            if(trainCards[buyingcolor] + locomotivesused + (trainCards[Game.ANY]-locomotivesused) < length + extra)
+            {
+                System.out.println("cant buy tunnel");
+                return false;
+            }
+        }
+        if(!p.isTunnel() && trainCards[buyingcolor] + locomotivesused < length) {
+            System.out.println("player buyroute- not enough to buy");
+            System.out.println("buying color number: " + trainCards[buyingcolor]);
+            System.out.println("loco used: " + locomotivesused);
+            System.out.println("length: " + length);
 
-        if (trainCards[buyingcolor] + locomotivesused < length) {
             return false; //u cant buy
         } else {
             addRoute(p);
@@ -129,7 +149,37 @@ public class Player {
             for (int i = 0; i < locomotivesused; i++) {
                 Game.discardPile.add(Game.ANY); //add locomotives to disacrd
             }
-            trainCards[8] -= locomotivesused;
+            if(p.isTunnel())
+            {
+                int numnormsremoved = 0;
+                int numlocosremoved = 0;
+                while(extra > 0)
+                {
+                    if( trainCards[buyingcolor] > 0)
+                    {
+                        trainCards[buyingcolor]--;
+                        numnormsremoved++;
+                        extra--;
+                    }
+                    else 
+                        break;
+                }
+                while(extra > 0)
+                {
+                    if(trainCards[Game.ANY] > 0)
+                    {
+                        trainCards[Game.ANY]--;
+                        numlocosremoved++;
+                        extra--;
+                    }
+                    else
+                        break;
+                }
+                System.out.println("numnormsremoved: " + numnormsremoved);
+                System.out.println("numlocosremoved: " + numlocosremoved);
+
+            }
+            //trainCards[8] -= locomotivesused;
             trains -= length;
             return true;
         
@@ -204,7 +254,7 @@ public class Player {
 
     //returns true if player has completed the ticket
     public boolean findRoute(String s, City p, String e) //s is 'starting' city, p is previous city, e is 'ending' city; change ticket to hold city vars and not string??
-    {
+    
     {
         City start = null;
         City end = null;
@@ -245,16 +295,7 @@ public class Player {
         return trainCards[color];
     }
 
-
-    public boolean buyTunnel(Route r, int color, int extraCardsNeeded, int loco)
-    {
-        if(loco + numOfColor(color) == extraCardsNeeded + r.getLength())
-        {
-            buyRoute(r, loco, color);
-            return true;
-        }
-        return false;
-    }
+    
 
 
 
