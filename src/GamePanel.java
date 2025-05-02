@@ -194,7 +194,7 @@ public class GamePanel extends JPanel implements MouseListener {
             }
         }
 
-
+        g.drawString("action: " + action, 0, 0);
             if(action == -1) { //-1 is if the turn ended and itll juust show the end turn button
             endTurnButton.paint(g);
             g2.drawString("END TURN", 1682, 508);
@@ -328,7 +328,7 @@ public class GamePanel extends JPanel implements MouseListener {
                 g.drawImage(stations[0], GamePanel.MAP_X + a.getXCoord() - 25/2 - 7, GamePanel.MAP_Y + a.getYCoord() - 25/2 - 12, stations[0].getWidth()/50, stations[0].getHeight()/50, null);
             }
         }
-    if(buyingTunnel) {
+    if(buyingTunnel && action != -1) {
         g.drawImage(errorWindow, 725, 300, errorWindow.getWidth()/3, errorWindow.getHeight()/3, null);
         g.setFont(font);
         g.drawString("Top three cards from deck:", 725 + errorWindow.getWidth()/32, 340);
@@ -370,7 +370,6 @@ public class GamePanel extends JPanel implements MouseListener {
             }
 
             else {// not error 
-                System.out.println("action: " + action);
             if(action == -1) {
                 if(endTurnButton.isInside(x, y)) { 
                     game.turn++; 
@@ -384,8 +383,7 @@ public class GamePanel extends JPanel implements MouseListener {
                 }
 
             }
-
-            if(action == 0) {
+            else if(action == 0) {
                 
           for(int c = 0 ;c <  actions.length; c++) {
             if(actions[c].isInside(x, y)) {
