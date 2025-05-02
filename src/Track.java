@@ -5,8 +5,11 @@ import javax.imageio.ImageIO;
 public class Track {
     public static final int WIDTH = 42;
     public static final int HEIGHT = 15;
+    public static final int CAR_WIDTH = 35;
+    public static final int CAR_HEIGHT = 10;
     private static BufferedImage tracks[];
     private static BufferedImage tunnelTracks[];
+    private static BufferedImage owns[];
     private int color;
     private int x, y;
     private float rotation;
@@ -16,6 +19,7 @@ public class Track {
     static {
         tracks = new BufferedImage[10];
         tunnelTracks = new BufferedImage[10];
+        owns = new BufferedImage[4];
         try {
             tracks[Game.RED] = ImageIO.read(Track.class.getResource("/Images/RedTrack.png")); 
             tracks[Game.ORANGE] = ImageIO.read(Track.class.getResource("/Images/OrangeTrack.png"));
@@ -29,7 +33,6 @@ public class Track {
             tracks[9] = ImageIO.read(Track.class.getResource("/Images/LocomotiveTrack.png")); 
 
             //tunnel track
-            tunnelTracks = new BufferedImage[9];
             tunnelTracks[Game.BLUE] = ImageIO.read(Track.class.getResource("/Images/BlueTunnelTrack.png"));
             tunnelTracks[Game.RED] = ImageIO.read(Track.class.getResource("/Images/RedTunnelTrack.png"));
             tunnelTracks[Game.ORANGE] = ImageIO.read(Track.class.getResource("/Images/OrangeTunnelTrack.png"));
@@ -40,6 +43,11 @@ public class Track {
             tunnelTracks[Game.BLACK] = ImageIO.read(Track.class.getResource("/Images/BlackTunnelTrack.png"));
             tunnelTracks[Game.ANY] = ImageIO.read(Track.class.getResource("/Images/GrayTunnelTrack.png"));
             tunnelTracks[9] = ImageIO.read(Track.class.getResource("/Images/LocomotiveTunnelTrack.png"));
+
+            owns[0] = ImageIO.read(Track.class.getResource("/Images/BlueOwns.png"));
+            owns[1] = ImageIO.read(Track.class.getResource("/Images/RedOwns.png"));
+            owns[2] = ImageIO.read(Track.class.getResource("/Images/GreenOwns.png"));
+            owns[3] = ImageIO.read(Track.class.getResource("/Images/YellowOwns.png"));
 
 
             
@@ -57,7 +65,7 @@ public class Track {
         this.locomotive = locomotive;
     }
 
-    public void paint(Graphics g) 
+    public void paint(Graphics g, int owned) 
     {
         Graphics2D g2 = (Graphics2D) g;
         AffineTransform backup = g2.getTransform();
@@ -81,6 +89,11 @@ public class Track {
                 g2.drawImage(tracks[color], x - WIDTH/2, y - HEIGHT/2, WIDTH, HEIGHT, null);
 
             }
+        }
+
+        if(owned > -1)
+        {
+            g2.drawImage(owns[owned], x - CAR_WIDTH/2, y - CAR_HEIGHT/2, CAR_WIDTH, CAR_HEIGHT, null);
         }
         g2.setTransform(backup);
     }

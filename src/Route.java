@@ -9,7 +9,7 @@ public class Route {
     private int locomotivesRequired;
     private Player stationOwner;
     private boolean stationStart;
-    private Player player;
+    private int plr = -1;
     private Button[] buttons;
     private Track[] tracks;
 
@@ -26,7 +26,6 @@ public class Route {
 
         buttons = new Button[length];
         stationOwner = null;
-        player = null;
         stationStart = false;
 
         tracks = new Track[length];
@@ -64,10 +63,9 @@ public class Route {
         tracks[i].setY(tracks[i].getY() + moveY);
         tracks[i].rotate((float)Math.toRadians(rot));
     }
-    private void addPlayer(Player a) {
-
-        player = a;
-
+    public void setOwner(int p)
+    {
+        plr = p;
     }
     private void addStationOwner(Player a) {
         stationOwner = a;
@@ -82,8 +80,8 @@ public class Route {
         return b;
     }
 
-    public Player getPlayer() {
-        return player;
+    public int getOwner() {
+        return plr;
     }
     public int getLength() {
         return length;
@@ -119,7 +117,7 @@ public class Route {
         }
         for(int i = 0; i < length; i++) {
             if (tracks[i] != null) {
-                tracks[i].paint(g2);
+                tracks[i].paint(g2, plr);
             }
         }
     }

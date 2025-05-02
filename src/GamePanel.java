@@ -33,6 +33,8 @@ public class GamePanel extends JPanel implements MouseListener {
     private int selectedTrack;
     private String[] arrayforchoosingroutecolor;
 
+    //plr 1 blue, plr 2 red, plr 3 green, plr 4 yellow
+
     private int[] threecards;
 
     static {
