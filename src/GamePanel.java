@@ -419,7 +419,6 @@ public class GamePanel extends JPanel implements MouseListener {
 
                 for(int c = 1; c < gameCards.length; c++) { //click face up ikinda messed up so like ya 
                     if(gameCards[c].isInside(x,y)) {
-                      
                         game.drawCard(c-1);
                         repaint();
                         

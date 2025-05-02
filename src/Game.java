@@ -147,7 +147,6 @@ public class Game {
 
  
            
-            if(drawnOne == false ) {
                
             if (drawnOne == false) {
 
@@ -217,8 +216,6 @@ public class Game {
             }
 
         }
-
-    }
     }
 
     public void errorScreen(String error) {
