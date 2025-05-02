@@ -212,7 +212,6 @@ public class Player {
 
     public int getNumStations() {
         return stations;
-        return stations;
     }
     public void addPoints(int p)
     {  

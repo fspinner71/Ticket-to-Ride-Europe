@@ -218,7 +218,7 @@ public class Game {
 
         }
 
-
+    }
     }
 
     public void errorScreen(String error) {
@@ -285,14 +285,6 @@ public class Game {
         } else if (p.getColor() != ANY && p.getColor() != buyingcolor) { //if route is not a grey route and the color doesnt match what they tryna buy wth yk
             errorScreen("Color doesn't match!");
         } else {
-            boolean a = players[turn].buyRoute(p, locomotivesused, buyingcolor);
-            if (a) { // if they buy the route mvoe the turn
-        }
-
-
-
-
-        else {
             boolean a = players[turn].buyRoute(p, locomotivesused, buyingcolor, extra);
             if(a) { // if they buy the route mvoe the turn
                 endTurn();
@@ -458,8 +450,6 @@ public class Game {
 
                 Ticket temp = new Ticket(getCity(info[0]), getCity(info[0]), points);
                     points = Integer.parseInt(info[2]); //convert to int
-               
-                Ticket temp = new Ticket(info[0], info[1], points);
                 tickets.push(temp); // add normal tickets
 
                
