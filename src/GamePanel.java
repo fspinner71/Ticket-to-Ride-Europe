@@ -225,7 +225,7 @@ public class GamePanel extends JPanel implements MouseListener {
         g2.setFont(font);
        // draw current player's tickets
        ArrayList<Ticket> currentplayertickets = game.getPlayers()[game.turn].getTickets();
-       if(currentplayertickets.isEmpty() == false) {
+       if(currentplayertickets.isEmpty() == false && action != -2) {
         
        currentplayertickets.get(ticketdisplayindex).setX(800);
        currentplayertickets.get(ticketdisplayindex).setY(825);
@@ -254,6 +254,7 @@ public class GamePanel extends JPanel implements MouseListener {
             if(startofgamewhenupickthetickets == 4) { //if u finished picking the tickets for everyone
                 action = 0; //start game
                 confirm.setPosition(1600, 820);
+                repaint();
             }
             else { //startofgamehwenyoupickthetickets is the like player currently picking tickest 
                 fourtickets = game.get3regulartickets1bigticket();
@@ -284,6 +285,7 @@ public class GamePanel extends JPanel implements MouseListener {
 
         }
             if(action == 0) { //0 is like the action screen and the start of their turn
+                
         for(Button a : actions) { 
             a.paint(g);
         }
@@ -500,12 +502,20 @@ public class GamePanel extends JPanel implements MouseListener {
                      repaint();
                         }
                         else {
+                            
+                            for(int c = 0; c < pickingticketsatthestartofthegame.length; c++) {
+                                if(pickingticketsatthestartofthegame[c]){ 
+                                    game.getPlayers()[startofgamewhenupickthetickets].addTicket(fourtickets[c]);
+
+                                }
+                            }
                             startofgamewhenupickthetickets++;
                             game.removetop4();
                             pickingticketsatthestartofthegame[0] = false;
                             pickingticketsatthestartofthegame[1] = false;
                             pickingticketsatthestartofthegame[2] = false;
                             pickingticketsatthestartofthegame[3] = false;
+
                         }
 
                     }
@@ -528,7 +538,7 @@ public class GamePanel extends JPanel implements MouseListener {
             }
             else if(action == 0) {
                 ArrayList<Ticket> currentplayertickets = game.getPlayers()[game.turn].getTickets();
-                if(currentplayertickets.isEmpty() ==false) {
+                if(currentplayertickets.isEmpty() ==false && action != -2) {
                 if(x > currentplayertickets.get(ticketdisplayindex).getX() && y > currentplayertickets.get(ticketdisplayindex).getY() 
                 && x < currentplayertickets.get(ticketdisplayindex).getX() + 250 && y < currentplayertickets.get(ticketdisplayindex).getY() +165) {
                     if(ticketdisplayindex == currentplayertickets.size()-1) {
