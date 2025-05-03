@@ -236,8 +236,8 @@ public class Game {
 
     public Ticket[] drawTicket() { //returns array of 4 tickets 
 
-        Ticket[] a = new Ticket[4];
-        for (int c = 0; c < 4; c++) {
+        Ticket[] a = new Ticket[3];
+        for (int c = 0; c < 3; c++) {
      
             a[c] = tickets.get(c);
            
@@ -247,8 +247,10 @@ public class Game {
 
     }
 
-    public void replaceTicket(Ticket a) { // replaes a ticket 
-        tickets.push(a);
+    public void removetop3() { // replaes a ticket 
+        tickets.remove(0);
+        tickets.remove(0);
+        tickets.remove(0);
     }
 
     public ArrayList<City> getCities() { //returns the array of cities
@@ -256,7 +258,7 @@ public class Game {
     }
 
     public City getCity(String name) {
-        System.out.println(name);
+       
         for (City c : cities) {
            
             if (c.getName().equals(name.toUpperCase())) {
@@ -265,7 +267,7 @@ public class Game {
                 
             }
         }
-        System.out.println("psdofpsdfospdfopsdf");
+        
         return null;
         
     }
@@ -330,8 +332,7 @@ public class Game {
 
 
         }
-        turn++;
-        turn = turn % 4;
+        
         turnended = true;
 
 
