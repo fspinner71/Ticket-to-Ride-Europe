@@ -121,7 +121,7 @@ public class Game {
         turnended = false;
         discardPile = new ArrayList<Integer>();
         makeTickets();
-         distributeTickets();
+         
         // players[0].addTrainCard(0);
         // players[0].addTrainCard(0);
         // players[0].addTrainCard(0);
@@ -252,7 +252,12 @@ public class Game {
         tickets.remove(0);
         tickets.remove(0);
     }
-
+    public void removetop4() { // replaes a ticket 
+        bigtickets.remove(0);
+        tickets.remove(0);
+        tickets.remove(0);
+        tickets.remove(0);
+    }
     public ArrayList<City> getCities() { //returns the array of cities
         return cities;
     }
@@ -414,21 +419,16 @@ public class Game {
 
 
 
-    public void distributeTickets(){
+    public Ticket[] get3regulartickets1bigticket(){
 
 
-        for(Player a: players) {
+        Ticket[] a = new Ticket[4];
+        a[0] = bigtickets.peek();
+        a[1] = tickets.get(0);
+        a[2] = tickets.get(1);
+        a[3] = tickets.get(2);
 
-
-            a.addTicket(bigtickets.pop());
-            a.addTicket(tickets.pop());
-            a.addTicket(tickets.pop());
-            a.addTicket(tickets.pop());
-
-
-        }
-
-
+        return a;
     }
     public void placeStation(){
 
