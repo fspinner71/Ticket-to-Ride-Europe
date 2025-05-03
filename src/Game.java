@@ -238,8 +238,11 @@ public class Game {
 
         Ticket[] a = new Ticket[4];
         for (int c = 0; c < 4; c++) {
-            a[c] = tickets.pop();
+     
+            a[c] = tickets.get(c);
+           
         }
+     
         return a;
 
     }
@@ -253,12 +256,18 @@ public class Game {
     }
 
     public City getCity(String name) {
+        System.out.println(name);
         for (City c : cities) {
-            if (c.getName().equals(name)) {
+           
+            if (c.getName().equals(name.toUpperCase())) {
+                
                 return c;
+                
             }
         }
+        System.out.println("psdofpsdfospdfopsdf");
         return null;
+        
     }
 
     public ArrayList<Route> getRoutes() {
@@ -445,7 +454,7 @@ public class Game {
 
                 points = Integer.parseInt(info[2]); //convert to int
 
-                Ticket temp = new Ticket(getCity(info[0]), getCity(info[0]), points);
+                Ticket temp = new Ticket(getCity(info[0]), getCity(info[1]), points);
                     points = Integer.parseInt(info[2]); //convert to int
                 tickets.push(temp); // add normal tickets
 
@@ -466,7 +475,7 @@ public class Game {
 
                 points = Integer.parseInt(info[2]); //convert to int
 
-                Ticket temp = new Ticket(getCity(info[0]), getCity(info[0]), points);
+                Ticket temp = new Ticket(getCity(info[0]), getCity(info[1]), points);
                 bigtickets.push(temp); // add big tickets
                 
             }

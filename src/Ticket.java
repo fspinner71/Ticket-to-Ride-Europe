@@ -57,7 +57,7 @@ public class Ticket {
     public int getY() {
         return y;
     }
-
+    
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g.drawImage(image, x, y, WIDTH, HEIGHT, null);

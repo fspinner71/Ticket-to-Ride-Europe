@@ -20,7 +20,9 @@ public class GamePanel extends JPanel implements MouseListener {
     public static final int MAP_WIDTH = 1295;
     public static final int MAP_HEIGHT = 824;
     private static Font font, bigFont;
-
+    private boolean[] pickingtickets;
+    private Ticket[] fourtickets;
+    
     private Button back, okButton, endTurnButton, confirm, arrowup, arrowdown, arrowup2, arrowdown2, acceptButton, declineButton;
     private int action, numberoflocomotivestheywanttouse, routebuyingcolor, extraCardsNeeded; // 0 = hasnt picjed, 1 = draw, 2 = route, 3 = station, 4 = ticket
     private Game game;
@@ -136,6 +138,9 @@ public class GamePanel extends JPanel implements MouseListener {
         currentlyBuying = null;
         theywannaplacestationon = null;
         buyingTunnel = false; 
+        boolean[] pt = {false, false, false, false};
+        pickingtickets = pt;
+        fourtickets = null;
     }
 
     @Override
@@ -317,9 +322,44 @@ public class GamePanel extends JPanel implements MouseListener {
             g2.drawString(theywannaplacestationon.getName(), 1688 - (theywannaplacestationon.getName().length() -7) * 8, 474);
         }
     }
+    if(action == 4) {
+        back.paint(g);
+        confirm.paint(g);
+        g2.setFont(bigFont);
+        g2.drawString("Draw", 1707, 52);
+        g2.drawString("Tickets", 1687, 97);
+        g2.drawString("BACK", 1705, 987);
+        g2.drawString("CONFIRM", 1664, 883);
 
+            fourtickets = game.drawTicket();
+        for(int c = 0; c < fourtickets.length; c++) {
+            fourtickets[c].setX(1630);
+            fourtickets[c].setY(122 + c*170);
+            fourtickets[c].paint(g);
+        }
+        for(int c = 0; c < pickingtickets.length; c++) {
+            if(pickingtickets[c] == true) {
+                g2.drawString("whoa", fourtickets[c].getX(), fourtickets[c].getY());
+            }
+        }
+    }
+
+    
     for(Route r : game.getRoutes())
         {
+            int x = 0;
+            for(City a : game.getCities()) {
+                if(a.getName() == r.getA().getName()) {
+            
+            x++;
+                }
+                else if (a.getName().equals(r.getA().getName())) {
+            x++;
+                }
+                if(x < 2) {
+                System.out.println(r.getA().getName() + r.getB().getName() );
+                }
+            }
             r.paint(g);
         }
         ArrayList<City> cities = game.getCities();
@@ -538,6 +578,19 @@ public class GamePanel extends JPanel implements MouseListener {
 
 
         }
+
+        else if(action == 4) {
+            if (back.isInside(x, y)) { //if they click back button
+                action = 0;
+            }
+            for(int c= 0; c < fourtickets.length; c++) {
+                if(x > fourtickets[c].getX() && y > fourtickets[c].getY() && x < fourtickets[c].getX() + 250 && y < fourtickets[c].getY() +165) {
+                    pickingtickets[c] = !pickingtickets[c];
+                    System.out.println("c");
+                }
+            }
+
+        }
        
         if(game.turnended) { //if turn just ended u need to reset the screen yk
             action = -1;
@@ -577,5 +630,5 @@ public class GamePanel extends JPanel implements MouseListener {
 
     public void mouseClicked(MouseEvent e) {
     }
-
+   
 }

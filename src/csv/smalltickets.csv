@@ -6,13 +6,13 @@ Athina,Wilno,11
 Barcelona,Bruxelles,8
 Barcelona,Munchen,8
 Berlin,Bucuresti,8
-Berlin,Moskava,12
+Berlin,Moskva,12
 Berlin,Roma,9
 Brest,Marseille,7
 Brest,Venezia,8
-Bruxelles,Danzic,9
+Bruxelles,Danzig,9
 Budapest,Sofia,5
-Edinburch,Paris,7
+Edinburgh,Paris,7
 Erzurum,Rostov,5
 Essen,Kyiv,10
 Frankfurt,Kobenhavn,5
@@ -26,8 +26,8 @@ Madrid,Zurich,8
 Marseille,Essen,8
 Palermo,Constantinople,8
 Paris,Wien,8
-Paris,Zacrab,7
-Rica,Bucuresti,10
+Paris,Zagrab,7
+Riga,Bucuresti,10
 Roma,Smyrna,8
 Sarajevo,Sevastopol,8
 Smolensk,Rostov,8
@@ -35,6 +35,6 @@ Sofia,Smyrna,5
 Stockholm,Wien,11
 Venezia,Constantinople,10
 Warszawa,Smolensk,6
-Zacrab,Brindisi,6
+Zagrab,Brindisi,6
 Zurich,Budapest,6
 Zurich,Brindisi,6
