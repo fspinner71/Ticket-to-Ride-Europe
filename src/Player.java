@@ -31,6 +31,9 @@ public class Player {
     public void addRoute(Route r) {
         routes.add(r);
         //adjacencyList.get(r.getA()).add(new Pair(r.getA(), r)); //fix
+
+        //remove train card
+      
     }
 
     public int getScore() {
@@ -230,7 +233,9 @@ public class Player {
         }
         return ticketPoints;
     }
-
+    public void removeTrains(int t) {
+        trains -= t;
+    }
     public ArrayList<Route> getRoutes() {
         return routes;
 

@@ -16,7 +16,7 @@ public class Game {
     public static ArrayList<Integer> deck;
     public  int turn = 0;
     public static int shouldEnd = 0;
-    public boolean drawnOne, errorPanel, turnended;
+    public boolean drawnOne, errorPanel, turnended, gameEnded;
     public String errorMessage;
     public static final int RED = 0;
     public static final int BLUE = 1;
@@ -121,15 +121,20 @@ public class Game {
         turnended = false;
         discardPile = new ArrayList<Integer>();
         makeTickets();
-         
-        // players[0].addTrainCard(0);
-        // players[0].addTrainCard(0);
-        // players[0].addTrainCard(0);
-        // players[0].addTrainCard(0);
-        // players[0].addTrainCard(0);
-       
-        // players[0].addTrainCard(0);
+         gameEnded = false;
+       /* for(int c = 0; c < 4; c++) { for testing endgame
+            players[c].addTrainCard(0);
+            players[c].addTrainCard(0);
+            players[c].addTrainCard(0);
+            players[c].addTrainCard(0);
+            players[c].addTrainCard(0);
+            players[c].addTrainCard(0);
+            players[c].addTrainCard(0);
+            players[c].addTrainCard(0);
+            players[c].addTrainCard(0);
 
+        }
+        players[0].removeTrains(41); */
 
     }
     public void drawCard(int index ){ //0-4 is the face up cards, 5 is the deck/facedown card
@@ -333,7 +338,7 @@ public class Game {
             shouldEnd++; //????
         }
         if (shouldEnd == 4) { //everyone finsihed their one turn 
-            //END GAME 
+            gameEnded = true;
 
 
         }
@@ -396,7 +401,17 @@ public class Game {
            }
 }
            */
-   
+   public ArrayList<City> stationstheplayerhas(Player b) {
+    ArrayList<City> stations = new ArrayList<>();
+    for(City a : getCities()) {
+       
+        if(a.getStationOwner() != null && a.getStationOwner().equals(b)) { //if they have the station
+            stations.add(a);
+        }
+
+    }
+    return stations;
+   }
     public int[] getThreeCards() {
 
 
