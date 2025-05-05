@@ -87,7 +87,7 @@ public class GamePanel extends JPanel implements MouseListener {
             errorWindow = ImageIO.read(GamePanel.class.getResource("/Images/ErrorWindow.png"));
             notebookPaper = ImageIO.read(GamePanel.class.getResource("/Images/NotebookPaper.png"));
             textBoxLarge = ImageIO.read(GamePanel.class.getResource("/Images/TextBoxLarge.png"));
-            textBoxSmall = ImageIO.read(GamePanel.class.getResource("/Images/textBoxSmall.png"));
+            textBoxSmall = ImageIO.read(GamePanel.class.getResource("/Images/TextBoxSmall.png"));
 
             //gui stuff buttons
             buttons = new BufferedImage[6];
