@@ -36,9 +36,9 @@ public class Game {
     public Game() {
         try {
             cities = new ArrayList<City>();
-           
-            File citiesCSV = new File("src/csv/cities.csv"); //create file reader
-            Scanner scanner = new Scanner(citiesCSV);
+            
+            InputStream inputStream = getClass().getResourceAsStream("/csv/cities.csv");
+            Scanner scanner = new Scanner(inputStream);
             String line = scanner.nextLine();
             String[] info = line.split(","); //array of the stuff in csv file
             for (int i = 0; i < info.length; i += 5) {
@@ -54,8 +54,8 @@ public class Game {
 
 
             routes = new ArrayList<Route>();
-            File routesCSV = new File("src/csv/routes.csv"); //create file reader
-            Scanner routeScanner = new Scanner(routesCSV);
+            InputStream inputStream2 = getClass().getResourceAsStream("/csv/routes.csv");
+Scanner routeScanner = new Scanner(inputStream2);
             String routeLine = routeScanner.nextLine();
             String[] routeInfo = routeLine.split(","); //array of the stuff in csv file
             for (int i = 0; i < routeInfo.length; i += 6) {

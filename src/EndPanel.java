@@ -19,8 +19,8 @@ public class EndPanel extends JPanel{
     static {
         try
         {
-            map = ImageIO.read(GamePanel.class.getResource("/Images/Map.png"));
-            city = ImageIO.read(GamePanel.class.getResource("/Images/City.png"));
+            map = ImageIO.read(EndPanel.class.getResource("/Images/Map.png"));
+            city = ImageIO.read(EndPanel.class.getResource("/Images/City.png"));
         } catch (Exception e)
         {
             System.out.println("Failed to load EndPanel images");
