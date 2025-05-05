@@ -122,6 +122,23 @@ public class Route {
         }
     }
 
+    public void paintOffset(Graphics2D g2, int x, int y)
+    {
+        g2.setStroke(new BasicStroke(5));
+        g2.setColor(Color.BLACK);
+        g2.drawLine(a.getXCoord() + GamePanel.MAP_X, a.getYCoord() + GamePanel.MAP_Y, tracks[0].getX(), tracks[0].getY());
+        g2.drawLine(b.getXCoord() + GamePanel.MAP_X, b.getYCoord() + GamePanel.MAP_Y, tracks[length-1].getX(), tracks[length-1].getY());
+        for(int i = 0; i < length - 1; i++)
+        {
+            g2.drawLine(tracks[i].getX(), tracks[i].getY(), tracks[i+1].getX(), tracks[i+1].getY());
+        }
+        for(int i = 0; i < length; i++) {
+            if (tracks[i] != null) {
+                tracks[i].paintOffset(g2, plr, x, y);
+            }
+        }
+    }
+
     public void addTrack(Track t)
     {
         for(int i = 0; i < tracks.length; i++)

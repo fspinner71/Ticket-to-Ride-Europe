@@ -5,11 +5,11 @@ import javax.imageio.ImageIO;
 public class Track {
     public static final int WIDTH = 42;
     public static final int HEIGHT = 15;
-    public static final int CAR_WIDTH = 35;
-    public static final int CAR_HEIGHT = 10;
+    public static final int CAR_WIDTH = 42;
+    public static final int CAR_HEIGHT = 4;
     private static BufferedImage tracks[];
     private static BufferedImage tunnelTracks[];
-    private static BufferedImage owns[];
+    public static BufferedImage owns[];
     private int color;
     private int x, y;
     private float rotation;
@@ -84,6 +84,40 @@ public class Track {
             if(locomotive)
             {
                 g2.drawImage(tracks[9], x - WIDTH/2, y - HEIGHT/2, WIDTH, HEIGHT, null);
+
+            } else {
+                g2.drawImage(tracks[color], x - WIDTH/2, y - HEIGHT/2, WIDTH, HEIGHT, null);
+
+            }
+        }
+
+        if(owned > -1)
+        {
+            g2.drawImage(owns[owned], x - CAR_WIDTH/2, y - CAR_HEIGHT/2, CAR_WIDTH, CAR_HEIGHT, null);
+        }
+        g2.setTransform(backup);
+    }
+
+    public void paintOffset(Graphics2D g2, int owned, int Ox, int Oy) 
+    {
+        AffineTransform backup = g2.getTransform();
+        // AffineTransform a = AffineTransform.getRotateInstance(rotation, x, y);
+        // g2.setTransform(a);
+
+        g2.rotate(rotation, x, y);
+        if(tunnel)
+        {
+            if(locomotive)
+            {
+                g2.drawImage(tunnelTracks[9], x - WIDTH/2, y - HEIGHT/2, WIDTH, HEIGHT, null);
+
+            } else {
+                g2.drawImage(tunnelTracks[color], x - WIDTH/2, y - HEIGHT/2, WIDTH, HEIGHT, null);
+            }
+        } else {
+            if(locomotive)
+            {
+                g2.drawImage(tracks[9], x - WIDTH/2 , y - HEIGHT/2, WIDTH, HEIGHT, null);
 
             } else {
                 g2.drawImage(tracks[color], x - WIDTH/2, y - HEIGHT/2, WIDTH, HEIGHT, null);

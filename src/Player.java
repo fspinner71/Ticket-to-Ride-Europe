@@ -22,7 +22,7 @@ public class Player {
         tickets = new ArrayList<>();
         routes = new ArrayList<>();
         stations = 3;
-        adjacencyList = new TreeMap<City, ArrayList<Pair>>();
+        adjacencyList = new HashMap<City, ArrayList<Pair>>();
         points = 0;
 
 
@@ -36,14 +36,9 @@ public class Player {
       
     }
 
-    public int getScore() {
-        return 1;
-    }
-    
     public void addTrainCard(int color) {
         trainCards[color]++;
     }
-
 
     public void addTicket(Ticket a) {
         tickets.add(a);
@@ -274,6 +269,7 @@ public class Player {
         if (start != null && end != null) {
             for (Pair pairs : adjacencyList.get(start)) {
                 Route r = pairs.getRoute();
+
                 if (r.getA().equals(start) || r.getB().equals(start)) //the route has the city
                 {
                     City other = r.getB();
@@ -292,6 +288,59 @@ public class Player {
             }
         }
         return false; //not found
+    }
+
+    public ArrayList<Route> getOutgoingRoutes(City c)
+    {
+        ArrayList<Route> outgoing = new ArrayList<>();
+
+        for(Route r : routes)
+        {
+            if((r.getA().equals(c) || r.getB().equals(c)) && Game.instance.getPlayers()[r.getOwner()].equals(this))
+            {
+                outgoing.add(r);
+            }
+        }
+
+        return outgoing;
+    }
+
+    public int initLongestPath() {
+        int longest = 0;
+        for (City c : Game.instance.getCities()) {
+            for (City c2 : Game.instance.getCities()) {
+                c2.setVisited(false);
+            }
+            int current = getLongestPath(c);
+            if(current > longest)
+            {
+                longest = current;
+            }
+        }
+        return longest;
+    }
+
+    private int getLongestPath(City v) {
+        int dist, max = 0;
+        v.setVisited(true);
+        for (Route e : getOutgoingRoutes(v)) {
+            City other;
+            if(e.getA().equals(v))
+            {
+                other = e.getB();
+            } else {
+                other = e.getA();
+            }
+
+            if (!other.isVisited()) {
+                dist = e.getLength() + getLongestPath(other);
+                if (dist > max)
+                    max = dist;
+            }
+        }
+
+        v.setVisited(false);
+        return max;
     }
 
 

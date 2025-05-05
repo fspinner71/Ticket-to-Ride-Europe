@@ -17,6 +17,8 @@ public class City {
     private Player stationOwner;
     private static Font font;
 
+    private boolean visited = false;
+
     public static int SIZE = 25;
 
     static {
@@ -46,6 +48,14 @@ public class City {
 
     public ArrayList<Route> getRoutes() {
         return routes;
+    }
+    public void setVisited(boolean b)
+    {
+        visited = b;
+    }
+    public boolean isVisited()
+    {
+        return visited;
     }
 
     public void addRoute(Route r) {
@@ -84,6 +94,13 @@ public class City {
         g.setFont(font);
         g.setColor(Color.GRAY);
         g.drawString(name, nameX + GamePanel.MAP_X, nameY + GamePanel.MAP_Y);
+    }
+
+    public void paintOffset(Graphics g, int Ox, int Oy) {
+        button.paint(g);
+        g.setFont(font);
+        g.setColor(Color.GRAY);
+        g.drawString(name, nameX + Ox, nameY + GamePanel.MAP_Y + Oy);
     }
 
     public String toString() {

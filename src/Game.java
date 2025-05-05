@@ -12,9 +12,10 @@ public class Game {
     private int cards[];
     private Stack<Ticket> tickets = new Stack<Ticket>();
     private Stack<Ticket> bigtickets = new Stack<Ticket>();
-   
+    public static Game instance;
+
     public static ArrayList<Integer> deck;
-    public  int turn = 0;
+    public int turn = 0;
     public static int shouldEnd = 0;
     public boolean drawnOne, errorPanel, turnended, gameEnded;
     public String errorMessage;
@@ -28,36 +29,41 @@ public class Game {
     public static final int BLACK = 7;
     public static final int ANY = 8;
 
-
-   
     public static ArrayList<Integer> discardPile;
     public boolean buyTunnel = false;
 
     public Game() {
+
+        players = new Player[4];
+        players[0] = new Player();
+        players[1] = new Player();
+        players[2] = new Player();
+        players[3] = new Player();
+
+        instance = this;
         try {
             cities = new ArrayList<City>();
-            
+
             InputStream inputStream = getClass().getResourceAsStream("/csv/cities.csv");
             Scanner scanner = new Scanner(inputStream);
             String line = scanner.nextLine();
-            String[] info = line.split(","); //array of the stuff in csv file
+            String[] info = line.split(","); // array of the stuff in csv file
             for (int i = 0; i < info.length; i += 5) {
-                String name = info[i]; //name of city
-                int x = Integer.parseInt(info[i + 1]); //x coord of city
-                int y = Integer.parseInt(info[i + 2]); //y coord of city
+                String name = info[i]; // name of city
+                int x = Integer.parseInt(info[i + 1]); // x coord of city
+                int y = Integer.parseInt(info[i + 2]); // y coord of city
                 int nameX = Integer.parseInt(info[i + 3]);
                 int nameY = Integer.parseInt(info[i + 4]);
-                ArrayList<Route> routes = new ArrayList<Route>(); //arraylist of routes for the city
-                City temp = new City(name, routes, x, y, nameX, nameY); //create the city object
-                cities.add(temp); //add to the array of cities
+                ArrayList<Route> routes = new ArrayList<Route>(); // arraylist of routes for the city
+                City temp = new City(name, routes, x, y, nameX, nameY); // create the city object
+                cities.add(temp); // add to the array of cities
             }
-
-
+            
             routes = new ArrayList<Route>();
             InputStream inputStream2 = getClass().getResourceAsStream("/csv/routes.csv");
-Scanner routeScanner = new Scanner(inputStream2);
+            Scanner routeScanner = new Scanner(inputStream2);
             String routeLine = routeScanner.nextLine();
-            String[] routeInfo = routeLine.split(","); //array of the stuff in csv file
+            String[] routeInfo = routeLine.split(","); // array of the stuff in csv file
             for (int i = 0; i < routeInfo.length; i += 6) {
                 String city1Name = routeInfo[i];
                 String city2Name = routeInfo[i + 1];
@@ -74,8 +80,6 @@ Scanner routeScanner = new Scanner(inputStream2);
                     i += 3;
                 }
 
-
-
                 for (City c : cities) {
                     if (c.getName().equals(city1Name)) {
                         city1 = c;
@@ -84,22 +88,14 @@ Scanner routeScanner = new Scanner(inputStream2);
                     }
                 }
 
-
                 Route r = new Route(city1, city2, length, tunnel, locomotives, color);
                 r.makeTracks(trackInfo);
                 routes.add(r);
             }
 
-
         } catch (Exception e) {
             System.out.println(e);
         }
-        players = new Player[4];
-        players[0] = new Player();
-        players[1] = new Player();
-        players[2] = new Player();
-        players[3] = new Player();
-
 
         deck = new ArrayList<Integer>();
         for (int i = 0; i < 8; i++) {
@@ -111,8 +107,8 @@ Scanner routeScanner = new Scanner(inputStream2);
             deck.add(ANY);
         }
         Collections.shuffle(deck);
-       
-        cards = new int[5]; //make cards
+
+        cards = new int[5]; // make cards
         for (int c = 0; c < 5; c++) {
             cards[c] = deck.get(0);
             deck.remove(0);
@@ -121,45 +117,44 @@ Scanner routeScanner = new Scanner(inputStream2);
         turnended = false;
         discardPile = new ArrayList<Integer>();
         makeTickets();
-         gameEnded = false;
-       /* for(int c = 0; c < 4; c++) { for testing endgame
-            players[c].addTrainCard(0);
-            players[c].addTrainCard(0);
-            players[c].addTrainCard(0);
-            players[c].addTrainCard(0);
-            players[c].addTrainCard(0);
-            players[c].addTrainCard(0);
-            players[c].addTrainCard(0);
-            players[c].addTrainCard(0);
-            players[c].addTrainCard(0);
-
-        }
-        players[0].removeTrains(41); */
+        gameEnded = false;
+        /*
+         * for(int c = 0; c < 4; c++) { for testing endgame
+         * players[c].addTrainCard(0);
+         * players[c].addTrainCard(0);
+         * players[c].addTrainCard(0);
+         * players[c].addTrainCard(0);
+         * players[c].addTrainCard(0);
+         * players[c].addTrainCard(0);
+         * players[c].addTrainCard(0);
+         * players[c].addTrainCard(0);
+         * players[c].addTrainCard(0);
+         * 
+         * }
+         * players[0].removeTrains(41);
+         */
 
     }
-    public void drawCard(int index ){ //0-4 is the face up cards, 5 is the deck/facedown card
-       
+
+    public void drawCard(int index) { // 0-4 is the face up cards, 5 is the deck/facedown card
+
         System.out.println("draw card");
         int card;
         if (index == 5) {
             if (deck.isEmpty() == false) {
                 card = deck.get(0);
             } else {
-                //error
+                // error
                 return;
             }
 
-
- 
-           
-               
             if (drawnOne == false) {
 
                 players[turn].addTrainCard(card);
                 deck.remove(0);
                 drawnOne = true;
                 System.out.println("draw deck");
-            } else if (drawnOne == true) { // u end the turn 
+            } else if (drawnOne == true) { // u end the turn
                 players[turn].addTrainCard(card);
                 deck.remove(0);
                 drawnOne = false;
@@ -171,13 +166,13 @@ Scanner routeScanner = new Scanner(inputStream2);
 
         } else {
 
-            if (drawnOne == false) { //firs tturn
+            if (drawnOne == false) { // firs tturn
                 card = cards[index];
-                if (card == ANY) { //if locomotive 
+                if (card == ANY) { // if locomotive
                     players[turn].addTrainCard(card);
                     replaceCard(index);
                     endTurn();
-                } else { //colored card
+                } else { // colored card
                     System.out.println("draw one first turn");
                     players[turn].addTrainCard(card);
                     replaceCard(index);
@@ -185,13 +180,13 @@ Scanner routeScanner = new Scanner(inputStream2);
 
                 }
 
-            } else if (drawnOne == true) { //if second turn 
+            } else if (drawnOne == true) { // if second turn
                 System.out.println("second turn");
                 card = cards[index];
-                if (card == ANY) { //if locomotive 
+                if (card == ANY) { // if locomotive
                     errorScreen("You can't draw a locomotive!");
 
-                } else { //any other card and then u end the turnrnrnrnrnr
+                } else { // any other card and then u end the turnrnrnrnrnr
                     System.out.println("draw one second  turn");
                     players[turn].addTrainCard(card);
                     replaceCard(index);
@@ -229,7 +224,6 @@ Scanner routeScanner = new Scanner(inputStream2);
         errorPanel = true;
         errorMessage = error;
 
-
     }
 
     public void unerror() {
@@ -239,53 +233,64 @@ Scanner routeScanner = new Scanner(inputStream2);
         errorMessage = "";
     }
 
-    public Ticket[] drawTicket() { //returns array of 4 tickets 
+    public Ticket[] drawTicket() { // returns array of 4 tickets
 
         Ticket[] a = new Ticket[3];
         for (int c = 0; c < 3; c++) {
-     
+
             a[c] = tickets.get(c);
-           
+
         }
-     
+
         return a;
 
     }
 
-    public void removetop3() { // replaes a ticket 
+    public void removetop3() { // replaes a ticket
         tickets.remove(0);
         tickets.remove(0);
         tickets.remove(0);
     }
-    public void removetop4() { // replaes a ticket 
+
+    public void removetop4() { // replaes a ticket
         bigtickets.remove(0);
         tickets.remove(0);
         tickets.remove(0);
         tickets.remove(0);
     }
-    public ArrayList<City> getCities() { //returns the array of cities
+
+    public ArrayList<City> getCities() { // returns the array of cities
         return cities;
     }
 
     public City getCity(String name) {
-       
+
         for (City c : cities) {
-           
+
             if (c.getName().equals(name.toUpperCase())) {
-                
+
                 return c;
-                
+
             }
         }
-        
-        return null;
-        
-    }
 
+        return null;
+
+    }
+    public Route getRoute(City a, City b)
+    {
+        for(Route r : routes)
+        {
+            if((r.getA().getName().equals(a.getName()) && r.getB().getName().equals(b.getName())) || (r.getB().getName().equals(a.getName()) && r.getA().getName().equals(b.getName())))
+            {
+                return r;
+            }
+        }
+        return null;
+    }
     public ArrayList<Route> getRoutes() {
         return routes;
     }
-
 
     public int[] getFaceUpCards() {
         return cards;
@@ -294,17 +299,58 @@ Scanner routeScanner = new Scanner(inputStream2);
     public ArrayList<Integer> getDeck() {
         return deck;
     }
+
+    public ArrayList<Route> getOutgoingRoutes(City c)
+    {
+        ArrayList<Route> outgoing = new ArrayList<>();
+
+        for(Route r : routes)
+        {
+            if(r.getA().equals(c) || r.getB().equals(c))
+            {
+                outgoing.add(r);
+            }
+        }
+
+        return outgoing;
+    }
+
     public void buyRoute(Route p, int locomotivesused, int buyingcolor, int extra) { // except tunel
 
-
-        if(locomotivesused > players[turn].getNumLocomotives()) { //if they dont even have enough locomotivs
+        if (locomotivesused > players[turn].getNumLocomotives()) { // if they dont even have enough locomotivs
             errorScreen("Don't have enough locomotives!");
 
-        } else if (p.getColor() != ANY && p.getColor() != buyingcolor) { //if route is not a grey route and the color doesnt match what they tryna buy wth yk
+        } else if (p.getColor() != ANY && p.getColor() != buyingcolor) { // if route is not a grey route and the color
+                                                                         // doesnt match what they tryna buy wth yk
             errorScreen("Color doesn't match!");
+        } else if (p.getOwner() != -1) {
+            errorScreen("Someone owns that already!");
         } else {
             boolean a = players[turn].buyRoute(p, locomotivesused, buyingcolor, extra);
-            if(a) { // if they buy the route mvoe the turn
+            if (a) { // if they buy the route mvoe the turn
+                p.setOwner(turn);
+
+                switch (p.getLength()) {
+                    case 1:
+                        players[turn].addPoints(1);
+                        break;
+                    case 2:
+                        players[turn].addPoints(2);
+                        break;
+                    case 3:
+                        players[turn].addPoints(4);
+                        break;
+                    case 4:
+                        players[turn].addPoints(7);
+                        break;
+                    case 6:
+                        players[turn].addPoints(15);
+                        break;
+                    case 8:
+                        players[turn].addPoints(21);
+                        break;
+                }
+
                 endTurn();
 
             } else {
@@ -314,14 +360,13 @@ Scanner routeScanner = new Scanner(inputStream2);
 
     }
 
-
-    public void buyStation(City a, int color) { //city the player wants to plae the station on
+    public void buyStation(City a, int color) { // city the player wants to plae the station on
         if (a.hasStation()) {
             errorScreen("already has a station");
             return;
         }
 
-        if (players[turn].buyStation(color)) { //if they can buy it with the color they chooese 
+        if (players[turn].buyStation(color)) { // if they can buy it with the color they chooese
             a.addStationOwner(players[turn]);
             endTurn();
 
@@ -329,113 +374,108 @@ Scanner routeScanner = new Scanner(inputStream2);
             errorScreen("dont have enoguh cards or smtj isdfosdfodsf");
         }
 
-
     }
 
-    public void endTurn() { //move turn and check if u need to end game
+    public void endTurn() { // move turn and check if u need to end game
         System.out.println("turn eneded");
-        if (players[turn].getNumTrains() <= 2 || shouldEnd > 0) {  //if game needs ot end 
-            shouldEnd++; //????
+        if (players[turn].getNumTrains() <= 2 || shouldEnd > 0) { // if game needs ot end
+            shouldEnd++; // ????
         }
-        if (shouldEnd == 4) { //everyone finsihed their one turn 
+        if (shouldEnd == 4) { // everyone finsihed their one turn
             gameEnded = true;
 
-
         }
-        
+
         turnended = true;
-
-
-
 
     }
 
+    public boolean shouldEndGame() {
+        return gameEnded;
+    }
 
-    public boolean buyTunnel(Route r, int color, int extraCards, int loco)
-    {
-        if(players[turn].buyRoute(r, color, extraCards, loco))
-        {
+    public boolean buyTunnel(Route r, int color, int extraCards, int loco) {
+        if (players[turn].buyRoute(r, color, extraCards, loco)) {
             endTurn();
             return true;
-        }
-        else
-        {
+        } else {
             errorScreen("Can't buy tunnel");
             endTurn();
         }
         return false;
-       
+
     }
-   /*  public boolean buyTunnel(Route p, int locomotivesused, int buyingcolor) { //returns true if u succesfully buy it reutnr false if at least one card matches
+
+    /*
+     * public boolean buyTunnel(Route p, int locomotivesused, int buyingcolor) {
+     * //returns true if u succesfully buy it reutnr false if at least one card
+     * matches
+     * int[] threecards = new int[3];
+     * int nummatching = 0;
+     * for (int c = 0; c < 3; c++) { //get the 3 drawn cards from the deck, if deck
+     * is empty and u cant draw it then it becomes -1;
+     * if (deck.isEmpty() == false) {
+     * threecards[c] = deck.get(0);
+     * } else {
+     * threecards[c] = -1;
+     * }
+     * }
+     * for (int c = 0; c < threecards[c]; c++) {
+     * if (threecards[c] == buyingcolor) {
+     * nummatching++; // how many cards match
+     * }
+     * }
+     * if (nummatching <= 0) {
+     * return true;
+     * } else {
+     * if (players[turn].numOfColor(buyingcolor) + players[turn].getNumLocomotives()
+     * >= nummatching) {
+     * buyTunnel = true;
+     * return true;
+     * }
+     * else
+     * {
+     * if(players[turn].numOfColor(buyingcolor) + players[turn].getNumLocomotives()
+     * >= nummatching)
+     * {
+     * buyTunnel = true;
+     * return true;
+     * 
+     * 
+     * }
+     * return false;
+     * }
+     * }
+     */
+    public ArrayList<City> stationstheplayerhas(Player b) {
+        ArrayList<City> stations = new ArrayList<>();
+        for (City a : getCities()) {
+
+            if (a.getStationOwner() != null && a.getStationOwner().equals(b)) { // if they have the station
+                stations.add(a);
+            }
+
+        }
+        return stations;
+    }
+
+    public int[] getThreeCards() {
+
         int[] threecards = new int[3];
-        int nummatching = 0;
-        for (int c = 0; c < 3; c++) { //get the 3 drawn cards from the deck, if deck is empty and u cant draw it then it becomes -1;
+
+        for (int c = 0; c < 3; c++) { // get the 3 drawn cards from the deck, if deck is empty and u cant draw it then
+                                      // it becomes -1;
             if (deck.isEmpty() == false) {
-                threecards[c] = deck.get(0);
+                threecards[c] = deck.remove(0);
             } else {
                 threecards[c] = -1;
             }
         }
-        for (int c = 0; c < threecards[c]; c++) {
-            if (threecards[c] == buyingcolor) {
-                nummatching++; // how many cards match
-            }
-        }
-        if (nummatching <= 0) {
-            return true;
-        } else {
-            if (players[turn].numOfColor(buyingcolor) + players[turn].getNumLocomotives() >= nummatching) {
-                buyTunnel = true;
-                return true;
-            }
-           else
-           { 
-                if(players[turn].numOfColor(buyingcolor) + players[turn].getNumLocomotives() >= nummatching)
-                {
-                    buyTunnel = true;
-                    return true;
-
-
-                }
-                return false;              
-           }
-}
-           */
-   public ArrayList<City> stationstheplayerhas(Player b) {
-    ArrayList<City> stations = new ArrayList<>();
-    for(City a : getCities()) {
-       
-        if(a.getStationOwner() != null && a.getStationOwner().equals(b)) { //if they have the station
-            stations.add(a);
-        }
+        return threecards;
 
     }
-    return stations;
-   }
-    public int[] getThreeCards() {
 
-
-        int[] threecards = new int[3];
-     
-            for(int c  = 0; c < 3; c++) { //get the 3 drawn cards from the deck, if deck is empty and u cant draw it then it becomes -1;
-                if(deck.isEmpty() == false) {
-                threecards[c] = deck.remove(0);
-                }
-                else {
-                    threecards[c] = -1;
-                }
-            }
-           return threecards;
-         
-           
-         
-    }
-
-
-
-
-    public Ticket[] get3regulartickets1bigticket(){
-
+    public Ticket[] get3regulartickets1bigticket() {
 
         Ticket[] a = new Ticket[4];
         a[0] = bigtickets.peek();
@@ -445,61 +485,54 @@ Scanner routeScanner = new Scanner(inputStream2);
 
         return a;
     }
-    public void placeStation(){
+
+    public void placeStation() {
 
     }
-    
+
     public void makeTickets() {
-        tickets = new Stack<Ticket>(); //temporary patron deck that will contain all patrons from the csv file
+        tickets = new Stack<Ticket>(); // temporary patron deck that will contain all patrons from the csv file
         bigtickets = new Stack<Ticket>();
-        
-        String line; 
+
+        String line;
 
         try {
 
-            URL tem = Game.class.getResource("/csv/smalltickets.csv"); //create file reader
+            URL tem = Game.class.getResource("/csv/smalltickets.csv"); // create file reader
             BufferedReader r = new BufferedReader(new InputStreamReader(tem.openStream()));
 
             while ((line = r.readLine()) != null) {
-                String[] info = line.split(","); //array of the stuff in csv file
-                
-               
+                String[] info = line.split(","); // array of the stuff in csv file
+
                 int points;
 
-              
-
-                points = Integer.parseInt(info[2]); //convert to int
+                points = Integer.parseInt(info[2]); // convert to int
 
                 Ticket temp = new Ticket(getCity(info[0]), getCity(info[1]), points);
-                    points = Integer.parseInt(info[2]); //convert to int
+                points = Integer.parseInt(info[2]); // convert to int
                 tickets.push(temp); // add normal tickets
 
-               
             }
 
-
-            URL big = Game.class.getResource("/csv/bigticket.csv"); //create file reader
+            URL big = Game.class.getResource("/csv/bigticket.csv"); // create file reader
             BufferedReader big2 = new BufferedReader(new InputStreamReader(big.openStream()));
 
             while ((line = big2.readLine()) != null) {
-                String[] info = line.split(","); //array of the stuff in csv file
-                
-               
+                String[] info = line.split(","); // array of the stuff in csv file
+
                 int points;
 
-              
-
-                points = Integer.parseInt(info[2]); //convert to int
+                points = Integer.parseInt(info[2]); // convert to int
 
                 Ticket temp = new Ticket(getCity(info[0]), getCity(info[1]), points);
                 bigtickets.push(temp); // add big tickets
-                
+
             }
             Collections.shuffle(bigtickets);
             Collections.shuffle(tickets);
         } catch (Exception E) {
             System.out.println("tickets dont work ");
-          
+
         }
     }
 
@@ -507,23 +540,19 @@ Scanner routeScanner = new Scanner(inputStream2);
         return players;
     }
 
-    public void replaceCard(int index) { //method to replace face up card with face down card
+    public void replaceCard(int index) { // method to replace face up card with face down card
         if (deck.isEmpty() == false) {
             cards[index] = deck.get(0);
             deck.remove(0);
         }
 
-
-    }
-    public void discardtop3() { //for tunnel
-        discardPile.add(deck.remove(0));
-        discardPile.add(deck.remove(0));
-        discardPile.add(deck.remove(0));
     }
 
-    //point counting stuff moved to player class
+    public void discardtop3() { // for tunnel
+        discardPile.add(deck.remove(0));
+        discardPile.add(deck.remove(0));
+        discardPile.add(deck.remove(0));
+    }
+
+    // point counting stuff moved to player class
 }
-
-
-        
-
